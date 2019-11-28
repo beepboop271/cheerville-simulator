@@ -1,20 +1,13 @@
 import java.util.LinkedList;
 
 public class World {
-  private static final int[][] MOVEMENTS = {
-    {1, 0},
-    {0, 1},
-    {-1, 0},
-    {0, -1}
-  };
+  private static final double PLANT_SPAWN_CHANCE = 0.05;
 
-  public static final double PLANT_SPAWN_CHANCE = 0.05;
-
-  public final int HISTORY_AMOUNT = 300;
+  private int historyAmount = 300;
   private LinkedList<int[]> distributionHistory = new LinkedList<int[]>();
   private int[][] historyArray;
 
-  public final int WIDTH, HEIGHT;
+  private final int WIDTH, HEIGHT;
   private Spawnable[][] map;
 
   public World(int width, int height, int numHumans, int numZombies) {
@@ -78,7 +71,7 @@ public class World {
             } else {
               Plant newPlant = (Plant)(s.act(null));
               if (newPlant != null) {
-                this.spawnPlantNear(newPlant);
+                this.growPlantNear(newPlant);
               }
             }
           } else if ((s instanceof Moveable)
@@ -120,6 +113,11 @@ public class World {
                   // they are added into the world
                   this.spawnHumanNear((Human)newSpawnable);
                 }
+              }
+
+              if (s instanceof Human) {
+                ((Human)s).setStepsUntilFertile(((Human)s).getStepsUntilFertile()-1);
+                ((Human)s).incrementAge();
               }
               
             }
@@ -174,14 +172,8 @@ public class World {
     int x = h.getX();
     int y = h.getY();
     int[][] possibleLocations = {
-      {x+1, y},
-      {x, y+1},
-      {x-1, y},
-      {x, y-1},
-      {x+1, y+1},
-      {x-1, y+1},
-      {x-1, y-1},
-      {x+1, y-1}
+      {x+1, y}, {x, y+1}, {x-1, y}, {x, y-1},
+      {x+1, y+1}, {x-1, y+1}, {x-1, y-1}, {x+1, y-1}
     };
     int newX, newY;
     for(int i = 0; i < possibleLocations.length; ++i) {
@@ -198,15 +190,8 @@ public class World {
 
   public void spawnZombieNear(int x, int y) {
     int[][] possibleLocations = {
-      {x, y},
-      {x+1, y},
-      {x, y+1},
-      {x-1, y},
-      {x, y-1},
-      {x+1, y+1},
-      {x-1, y+1},
-      {x-1, y-1},
-      {x+1, y-1}
+      {x, y}, {x+1, y}, {x, y+1}, {x-1, y}, {x, y-1},
+      {x+1, y+1}, {x-1, y+1}, {x-1, y-1}, {x+1, y-1}
     };
     int newX, newY;
     for(int i = 0; i < possibleLocations.length; ++i) {
@@ -219,15 +204,11 @@ public class World {
     }
   }
 
-  public void spawnPlantNear(Plant p) {
+  public void growPlantNear(Plant p) {
     int x = p.getX();
     int y = p.getY();
     int[][] possibleLocations = {
-      {x, y},
-      {x+1, y},
-      {x, y+1},
-      {x-1, y},
-      {x, y-1}
+      {x, y}, {x+1, y}, {x, y+1}, {x-1, y}, {x, y-1}
     };
     int idx;
     int newX, newY;
@@ -240,9 +221,13 @@ public class World {
               || this.hasMoveableAt(newX, newY))
              && attempts++ < possibleLocations.length);
     if(this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
-      p.act(this.getMapAt(newX, newY));
-      p.setPos(newX, newY);
-      this.setMapAt(p);
+      if(this.isOccupiedAt(newX, newY)) {
+        this.getMapAt(newX, newY).act(p);
+      } else {
+        p.act(this.getMapAt(newX, newY));
+        p.setPos(newX, newY);
+        this.setMapAt(p);
+      }
     }
   }
 
@@ -255,7 +240,7 @@ public class World {
       (this.WIDTH*this.HEIGHT)-counts[0]-counts[1]-counts[2]-counts[3]
     };
     this.distributionHistory.addLast(record);
-    if(this.distributionHistory.size() > this.HISTORY_AMOUNT) {
+    while(this.distributionHistory.size() > this.getHistoryAmount()) {
       this.distributionHistory.removeFirst();
     }
     this.historyArray = this.distributionHistory.toArray(new int[0][0]);
@@ -266,6 +251,25 @@ public class World {
   // }
   public int[][] getDistributionHistory() {
     return this.historyArray;
+  }
+
+  public int getHistoryAmount() {
+    return this.historyAmount;
+  }
+
+  public void setHistoryAmount(int historyAmount) {
+    this.historyAmount = historyAmount;
+    while(this.distributionHistory.size() > this.historyAmount) {
+      this.distributionHistory.removeFirst();
+    }
+  }
+
+  public int getWidth() {
+    return this.WIDTH;
+  }
+
+  public int getHeight() {
+    return this.HEIGHT;
   }
 
   public boolean isInWorld(int x, int y) {

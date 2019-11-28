@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.Font;
 import java.awt.Graphics;
 
@@ -7,23 +9,21 @@ import javax.swing.border.BevelBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public abstract class GraphPanel extends JPanel {
   private Font graphFont = new Font("Courier New", Font.BOLD, 20);
-  private int width;
-  private int height = 200;
   private int graphWidth;
   private World worldToDisplay;
 
-  public GraphPanel(int width,
+  public GraphPanel(int graphWidth,
                     World worldToDisplay) {
     super();
     this.worldToDisplay = worldToDisplay;
     this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-    this.graphWidth = width;
-    this.width = width+60;
+    this.graphWidth = graphWidth;
+    addComponentListener(new GraphPanelResizeListener());
     
-    this.setMinimumSize(new Dimension(this.width, this.height));
-    this.setPreferredSize(new Dimension(this.width, this.height));
+    this.setPreferredSize(new Dimension(this.graphWidth+60, 200));
 
     this.setOpaque(true);
   }
@@ -60,16 +60,8 @@ public abstract class GraphPanel extends JPanel {
     return textRow;
   }
 
-  public int getWidth() {
-    return this.width;
-  }
-
   public int getGraphWidth() {
     return this.graphWidth;
-  }
-
-  public int getHeight() {
-    return this.height;
   }
 
   public int[][] getDistributionHistory() {
@@ -126,5 +118,18 @@ public abstract class GraphPanel extends JPanel {
       }
     }
     this.plotGraph(g, convertedData, colours, scaleFactor, fstring);
+  }
+
+  public void resize() {
+    this.graphWidth = this.getWidth()-60;
+    this.worldToDisplay.setHistoryAmount(graphWidth);
+  }
+
+  public class GraphPanelResizeListener extends ComponentAdapter {
+    public void componentResized(ComponentEvent e) {
+      // call method in GraphPanel so that
+      // CountGraphPanel can override it
+      resize();
+    }
   }
 }

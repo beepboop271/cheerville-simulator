@@ -15,17 +15,20 @@ public class Zombie extends Moveable {
   public Zombie(Human victim) {
     super(victim.getX(), victim.getY(),
           victim.getHealth());
+    victim.setDead();
   }
 
   @Override
   public String toString() {
-    return "Z";
+    return "Zombie#"+this.getID();
   }
 
   public Spawnable act(Spawnable other) {
     if (other instanceof Plant) {
       // null = zombie can move to the spot
       // and nothing new spawns
+      other.setDead();
+      other.addDescendant(this);
       return null;
     } else if (other instanceof Human) {
       // attackHuman -> null = zombie eats it, moves to spot
@@ -42,47 +45,14 @@ public class Zombie extends Moveable {
     return null;
   }
 
-  // public void act() {
-  //   this.getContainingWorld().removeMapAt(this.getX(), this.getY());
-  //   int lastX, lastY;
-  //   lastX = this.getX();
-  //   lastY = this.getY();
-  //   int[] nextPos = this.generateRandomMove();
-  //   if (this.getContainingWorld().isOccupiedAt(nextPos[0], nextPos[1])) {
-  //     Spawnable collidedSpawnable = this.getContainingWorld()
-  //                                       .getMapAt(nextPos[0], nextPos[1]);
-  //     if (collidedSpawnable instanceof Plant) {
-  //       // System.out.println("hit plant");
-  //       this.moveTo(nextPos[0], nextPos[1]);
-  //     } else if (collidedSpawnable instanceof Human) {
-  //       // System.out.println("wtf");
-  //       Zombie newZombie = this.attackHuman((Human)collidedSpawnable);
-  //       if (newZombie != null) {
-  //         newZombie.moveTo(nextPos[0], nextPos[1]);
-  //         this.moveTo(lastX, lastY);
-  //       } else {
-  //         this.moveTo(nextPos[0], nextPos[1]);
-  //       }
-  //     } else if (collidedSpawnable instanceof Zombie) {
-  //       // System.out.println("hit zombie");
-  //       // System.out.printf("going from (%d, %d) back to (%d, %d)\n",
-  //       //                   this.getX(), this.getY(),
-  //       //                   lastX, lastY);
-  //       this.moveTo(lastX, lastY);
-  //     }
-  //   } else {
-  //     // System.out.println("hit nothing");
-  //     this.moveTo(nextPos[0], nextPos[1]);
-  //   }
-  // }
-
   public Zombie attackHuman(Human victim) {
     // System.out.println("attack");
     if(this.getHealth() > victim.getHealth()) {
       this.heal((int)(victim.getHealth()*Zombie.HUMAN_ENERGY_FACTOR));
+      victim.setDead();
       return null;
     } else {
-      return new Zombie(victim);
+      return (Zombie)victim.addDescendant(new Zombie(victim));
     }
   }
 

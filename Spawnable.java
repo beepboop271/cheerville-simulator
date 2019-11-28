@@ -1,8 +1,14 @@
+import java.util.LinkedList;
+import java.util.Iterator;
+
 public abstract class Spawnable {
   private int x, y;
   private int health;
-  static int ID = 0;
-  final int id;
+
+  // for display
+  private LinkedList<Spawnable> descendants = new LinkedList<Spawnable>();
+  private static long ID = 0;
+  private final long id;
 
   public Spawnable(int x, int y, int initialHealth) {
     this.x = x;
@@ -11,8 +17,45 @@ public abstract class Spawnable {
     this.id = ID++;
   }
 
-  public int getID() {
+  public long getID() {
     return this.id;
+  }
+
+  public void printDescendants() {
+    System.out.println(this.descendants.toString());
+  }
+
+  public String[] getDescendantStrings() {
+    String[] s = new String[this.descendants.size()];
+    Iterator<Spawnable> descendentIterator = this.descendants.iterator();
+    int i = 0;
+    while(descendentIterator.hasNext()) {
+      s[i++] = descendentIterator.next().toString();
+    }
+    return s;
+  }
+
+  public Spawnable getFirstDescendant() {
+    if(this.descendants.isEmpty()) {
+      return null;
+    } else {
+      return this.descendants.getFirst();
+    }
+  }
+
+  public Spawnable addDescendant(Spawnable descendant) {
+    this.descendants.addLast(descendant);
+    this.removeDeadDescendants();
+    return descendant;
+  }
+
+  public void removeDeadDescendants() {
+    Iterator<Spawnable> descendentIterator = this.descendants.iterator();
+    while(descendentIterator.hasNext()) {
+      if(descendentIterator.next().getHealth() <= 0) {
+        descendentIterator.remove();
+      }
+    }
   }
 
   public int decay() {
@@ -50,6 +93,10 @@ public abstract class Spawnable {
   }
 
   public int getHealth() {
+    if(this.health < 0) {
+      System.out.println("whaaaaaaaaaaat");
+      return 0;
+    }
     return this.health;
   }
 

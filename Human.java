@@ -39,15 +39,15 @@ public abstract class Human extends Moveable {
 
   @Override
   public String toString() {
-    return "H";
+    return "Human#"+this.getID();
   }
 
   public Spawnable act(Spawnable other) {
-    ++this.age;
-    this.setStepsUntilFertile(this.stepsUntilFertile-1);
     if (other instanceof Plant) {
       // System.out.println("plant");
       this.heal((int)(other.getHealth()*Human.PLANT_ENERGY_FACTOR));
+      other.setDead();
+      other.addDescendant(this);
       return null;
     } else if (other instanceof Human) {
       // System.out.println("human");
@@ -55,7 +55,7 @@ public abstract class Human extends Moveable {
       if (newHuman == null) {
         return this;
       } else {
-        return newHuman;
+        return this.addDescendant(newHuman);
       }
     } else if (other instanceof Zombie) {
       // System.out.println("zombie");
@@ -69,35 +69,6 @@ public abstract class Human extends Moveable {
     }
     return null;
   }
-
-  // public void act() {
-  //   this.getContainingWorld().removeMapAt(this.getX(), this.getY());
-  //   // System.out.println("bad bad bad");
-  //   int lastX, lastY;
-  //   lastX = this.getX();
-  //   lastY = this.getY();
-  //   int[] nextPos = this.generateRandomMove();
-  //   if (this.getContainingWorld().isOccupiedAt(nextPos[0], nextPos[1])) {
-  //     Spawnable collidedSpawnable = this.getContainingWorld()
-  //                                       .getMapAt(nextPos[0], nextPos[1]);
-  //     if (collidedSpawnable instanceof Plant) {
-  //       this.heal((int)(collidedSpawnable.getHealth()*Human.PLANT_ENERGY_FACTOR));
-  //       this.moveTo(nextPos[0], nextPos[1]);
-  //     } else if (collidedSpawnable instanceof Human) {
-  //       this.moveTo(lastX, lastY);
-  //       this.tryReproduceWith((Human)collidedSpawnable);
-  //     } else if (collidedSpawnable instanceof Zombie) {
-  //       Zombie newZombie = ((Zombie)collidedSpawnable).attackHuman(this);
-  //       if(newZombie != null) {
-  //         newZombie.moveTo(lastX, lastY);
-  //       }
-  //     }
-  //   } else {
-  //     this.moveTo(nextPos[0], nextPos[1]);
-  //   }
-  //   ++this.age;
-  //   this.setStepsUntilFertile(this.stepsUntilFertile-1);
-  // }
 
   public int getMaxHealth() {
     return Human.MAX_HEALTH;
@@ -113,6 +84,10 @@ public abstract class Human extends Moveable {
 
   public int getAge() {
     return this.age;
+  }
+
+  public void incrementAge() {
+    ++this.age;
   }
 
   public int getStepsUntilFertile() {

@@ -7,6 +7,8 @@ public class Plant extends Spawnable {
 
   private static final double SPREAD_CHANCE = 0.1;
 
+  private Plant ancestor;
+
   public Plant(int x, int y) {
     super(x, y,
           (Plant.INITIAL_HEALTH
@@ -16,7 +18,7 @@ public class Plant extends Spawnable {
 
   @Override
   public String toString() {
-    return ".";
+    return "Plant#"+this.getID();
   }
 
   @Override
@@ -27,14 +29,30 @@ public class Plant extends Spawnable {
     return this.getHealth();
   }
 
+  @Override
+  public Spawnable addDescendant(Spawnable descendant) {
+    if(this == descendant) {
+      return descendant;
+    }
+    super.addDescendant(descendant);
+    if(descendant instanceof Plant) {
+      ((Plant)descendant).ancestor = this;
+    }
+    return descendant;
+  }
+
   public Spawnable act(Spawnable other) {
     if(other instanceof Plant && other != this) {
       // other is only non null when a plant
       // spreads onto another plant
       this.heal((int)(other.getHealth()*Plant.PLANT_ENERGY_FACTOR));
+      other.setDead();
+      if(((Plant)other).ancestor != null) {
+        ((Plant)other).ancestor.addDescendant(this);
+      }
     } else {
       if(Math.random() < Plant.SPREAD_CHANCE) {
-        return new Plant(this.getX(), this.getY());
+        return this.addDescendant(new Plant(this.getX(), this.getY()));
         // this.getContainingWorld().spawnPlantNear(this.getX(), this.getY());
       }
     }

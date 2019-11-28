@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
+@SuppressWarnings("serial")
 public class CountGraphPanel extends GraphPanel {
   private int maxMoveableCount = -1;
   public final Color[] COLOURS = {
@@ -46,5 +47,12 @@ public class CountGraphPanel extends GraphPanel {
                    this.COLOURS,
                    ((double)this.getHeight())/this.maxMoveableCount,
                    "%d");
+  }
+
+  @Override
+  public void resize() {
+    super.resize();
+    this.maxMoveableCount = GraphPanel.findMax(
+        this.extractMoveableCounts(this.getDistributionHistory()), 0);
   }
 }

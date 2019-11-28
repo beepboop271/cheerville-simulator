@@ -34,10 +34,4 @@ public abstract class Moveable extends Spawnable {
     }
     return pos;
   }
-
-  // public void moveTo(int x, int y) {
-  //   this.setPos(x, y);
-  //   this.getContainingWorld().setMapAt(x, y, this);
-  //   this.setMoved(true);
-  // }
 }

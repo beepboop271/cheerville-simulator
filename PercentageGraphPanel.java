@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
+@SuppressWarnings("serial")
 public class PercentageGraphPanel extends GraphPanel {
   private double totalSpaces;
   public final Color[] COLOURS = {

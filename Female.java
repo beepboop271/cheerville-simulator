@@ -25,19 +25,6 @@ public class Female extends Human {
     super(x, y, initialHealth);
   }
 
-  // public Human tryReproduceWith(Human other) {
-  //   if ((other instanceof Male)
-  //         && this.canReproduce()
-  //         && other.canReproduce()) {
-  //     // this.getContainingWorld()
-  //     //     .spawnHumanNear(this.getX(), this.getY(),
-  //     //                     (this.getHealth()+other.getHealth())/2);
-  //     this.setStepsUntilFertile(Female.MIN_BIRTH_INTERVAL);
-  //     return Human.createHuman(this.getX(), this.getY(), initialHealth)
-  //   }
-  //   return null;
-  // }
-
   public int getMinBirthInterval() {
     return Female.MIN_BIRTH_INTERVAL;
   }
