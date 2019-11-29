@@ -1,7 +1,5 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.Graphics;
 
@@ -9,6 +7,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class SpawnableInfoPanel extends JPanel {
   private Font infoFont = new Font("Comic Sans MS", Font.PLAIN, 20);
   private Spawnable spawnableToShow;

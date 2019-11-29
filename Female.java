@@ -25,6 +25,11 @@ public class Female extends Human {
     super(x, y, initialHealth);
   }
 
+  public int[] generateSmartMove() {
+    // TODO: implement
+    return this.generateRandomMove();
+  }
+
   public int getMinBirthInterval() {
     return Female.MIN_BIRTH_INTERVAL;
   }

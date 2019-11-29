@@ -39,7 +39,8 @@ public abstract class Human extends Moveable {
 
   @Override
   public String toString() {
-    return "Human#"+this.getID();
+    // return "Human#"+this.getID();
+    return "H";
   }
 
   public Spawnable act(Spawnable other) {

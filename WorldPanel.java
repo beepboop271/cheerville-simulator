@@ -80,7 +80,7 @@ public class WorldPanel extends JPanel {
           } else {
             g.fillRect(x*this.cellSize, y*this.cellSize, this.cellSize, this.cellSize);
             g.setColor(Color.BLACK);
-            g.drawString(""+s.getID(), x*this.cellSize, y*this.cellSize+(this.cellSize/2));
+            // g.drawString(""+s.getID(), x*this.cellSize, y*this.cellSize+(this.cellSize/2));
           }
         } else {
           g.setColor(Color.WHITE);

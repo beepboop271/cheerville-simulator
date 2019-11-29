@@ -77,17 +77,19 @@ public class World {
           } else if ((s instanceof Moveable)
                 && !((Moveable)s).getMoved()) {
             ((Moveable)s).setMoved(true);
-            // System.out.print("dmg moveable ");
             if(s.decay() <= 0) {
-              // System.out.println("killed");
               this.removeMapAt(s);
             } else {
               // System.out.println(s.getHealth());
-              moveAttempts = 0;
-              do {
-                newPos = ((Moveable)s).generateRandomMove();
-              } while (!this.isInWorld(newPos[0], newPos[1])
-                       && (moveAttempts++ < 5));
+              ((Moveable)s).setVision(this.getVision((Moveable)s));
+              newPos = ((Moveable)s).generateSmartMove();
+              if(!this.isInWorld(newPos[0], newPos[1])) {
+                moveAttempts = 0;
+                do {
+                  newPos = ((Moveable)s).generateRandomMove();
+                } while (!this.isInWorld(newPos[0], newPos[1])
+                         && (moveAttempts++ < 5));
+              }
 
               if(this.isInWorld(newPos[0], newPos[1]) && !(newPos[0] == x && newPos[1] == y)) {
                 // System.out.printf("%s at (%d, %d)\n",
@@ -166,6 +168,29 @@ public class World {
     }
     this.addHistory(counts);
     return counts;
+  }
+
+  private static final int VISION_SIZE = 4;
+  private static final int[][] VISION_OFFSETS = {
+    {0, 0, 0, 0},    //nothing
+    {-VISION_SIZE, -VISION_SIZE, (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y-4) to (x+4, y) - NORTH
+    {0           , -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1},  // scan 5x9 from (x, y-4) to (x+4, y+4) - EAST
+    {-VISION_SIZE, 0           , (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y) to (x+4, y+4) - SOUTH
+    {-VISION_SIZE, -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1}   // scan 5x9 from (x-4, y-4) to (x, y+4) - WEST
+  };
+  public Spawnable[][] getVision(Moveable viewer) {
+    int facingDirection = viewer.getFacingDirection();
+    int[] offsets = VISION_OFFSETS[facingDirection];
+    Spawnable[][] vision = new Spawnable[offsets[3]][offsets[2]];
+    for(int i = 0; i < offsets[3]; ++i) {
+      for(int j = 0; j < offsets[2]; ++j) {
+        if(this.isInWorld(viewer.getX()+j+offsets[0], viewer.getY()+i+offsets[1])) {
+          vision[i][j] = this.getMapAt(viewer.getX()+j+offsets[0],
+                                       viewer.getY()+i+offsets[1]);
+        }
+      }
+    }
+    return vision;
   }
 
   public void spawnHumanNear(Human h) {
