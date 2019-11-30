@@ -22,7 +22,7 @@ public class Cheerville {
       // System.out.printf("P:%d H:%d Z:%d\n",
       //                   counts[0], counts[1]+counts[2], counts[3]);
       display.refresh();
-      Thread.sleep(200);
+      Thread.sleep(100);
     }
     // display.dispose();
   }

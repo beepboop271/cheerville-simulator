@@ -94,11 +94,7 @@ public class Vector2D {
     }
   }
 
-  public Vector2D add(Vector2D other) {
-    return new Vector2D(this.x+other.x, this.y+other.y);
-  }
-
-  public Vector2D add(Vector2D other, double length) {
-    return new Vector2D(this.x+other.x, this.y+other.y, length);
+  public void add(Vector2D other) {
+    this.setPos(this.x+other.x, this.y+other.y);
   }
 }

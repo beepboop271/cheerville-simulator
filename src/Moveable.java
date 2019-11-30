@@ -56,30 +56,46 @@ public abstract class Moveable extends Spawnable {
   }
 
   public int[] generateRandomMove() {
-    int direction = (int)(Math.random()*5);
-    int[] pos = new int[2];
-    if (direction == 0) {
-      pos[0] = this.getX()+1;
-      pos[1] = this.getY();
-      this.setFacingDirection(Cheerville.EAST);
-    } else if (direction == 1) {
-      pos[0] = this.getX()-1;
-      pos[1] = this.getY();
-      this.setFacingDirection(Cheerville.WEST);
-    } else if (direction == 2) {
-      pos[0] = this.getX();
-      pos[1] = this.getY()+1;
-      this.setFacingDirection(Cheerville.SOUTH);
-    } else if (direction == 3) {
-      pos[0] = this.getX();
-      pos[1] = this.getY()-1;
-      this.setFacingDirection(Cheerville.NORTH);
-    } else {
-      pos[0] = this.getX();
-      pos[1] = this.getY();
+    int move = (int)(Math.random()*5);
+    // int[] pos = new int[2];
+    if(move != Cheerville.NO_MOVE) {
+      this.setFacingDirection(move);
     }
+    return this.moveIntToPos(move);
+  }
+
+  public int[] generateSmartMove() {
+    if(this.getVisionValue() == 0) {
+      return this.generateRandomMove();
+    }
+    Vector2D direction = new Vector2D(0, 0);
+    Spawnable[][] vision = this.getVision();
+    Spawnable s;
+    for(int i = 0; i < vision.length; ++i) {
+      for(int j = 0; j < vision[0].length; ++j) {
+        s = vision[i][j];
+        if(s != null && s != this) {
+          direction.add(this.getInfluenceVectorFor(s));
+        }
+      }
+    }
+
+    int move = direction.asMoveInteger();
+    if(move == 0) {
+      return this.generateRandomMove();
+    } else {
+      this.setFacingDirection(move);
+      return this.moveIntToPos(move);
+    }
+  }
+
+  public int[] moveIntToPos(int moveInt) {
+    int[] pos = {this.getX()+Cheerville.MOVEMENTS[moveInt][0],
+                 this.getY()+Cheerville.MOVEMENTS[moveInt][1]};
     return pos;
   }
 
-  abstract int[] generateSmartMove();
+  abstract Vector2D getInfluenceVectorFor(Spawnable other);
+
+  abstract int getVisionValue();
 }

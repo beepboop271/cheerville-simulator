@@ -1,11 +1,11 @@
 public class Plant extends Spawnable {
   private static final int INITIAL_HEALTH = 15;
   private static final int HEALTH_VARIANCE = 5;
-  private static final int MAX_HEALTH = 20;
+  private static final int MAX_HEALTH = 25;
 
-  private static final double PLANT_ENERGY_FACTOR = 0.6;
+  private static final double PLANT_ENERGY_FACTOR = 0.75;
 
-  private static final double SPREAD_CHANCE = 0.1;
+  private static final double SPREAD_CHANCE = 0.25;
 
   private Plant ancestor;
 

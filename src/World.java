@@ -14,7 +14,7 @@ public class World {
     this.WIDTH = width;
     this.HEIGHT = height;
     this.map = new Spawnable[height][width];
-    for (int i = 0; i < 25; ++i) {
+    for (int i = 0; i < 10; ++i) {
     // for (int i = 0; i < 5; ++i) {
       this.doSimulationStep();  // let some plants grow
     }

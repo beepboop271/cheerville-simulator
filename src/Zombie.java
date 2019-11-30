@@ -1,7 +1,7 @@
 public class Zombie extends Moveable {
-  private static final int INITIAL_HEALTH = 20;
+  private static final int INITIAL_HEALTH = 10;
   private static final int HEALTH_VARIANCE = 5;
-  private static final int MAX_HEALTH = 30;
+  private static final int MAX_HEALTH = 20;
 
   private static final double HUMAN_ENERGY_FACTOR = 0.1;
 
@@ -14,7 +14,7 @@ public class Zombie extends Moveable {
 
   public Zombie(Human victim) {
     super(victim.getX(), victim.getY(),
-          victim.getHealth());
+          Math.min(Zombie.MAX_HEALTH, victim.getHealth()));
     victim.setDead();
   }
 
@@ -24,49 +24,86 @@ public class Zombie extends Moveable {
     return "Z";
   }
 
-  public int[] generateSmartMove() {
-    Vector2D direction = new Vector2D(0, 0);
-    Vector2D influence;
+  public int getVisionValue() {
     Spawnable[][] vision = this.getVision();
-    Spawnable s;
-    int humansSpotted = 0;
-    for(int i = 0; i < vision.length; ++i) {
-      for(int j = 0; j < vision[0].length; ++j) {
-        s = vision[i][j];
-        if(s != null && s != this && s instanceof Moveable) {
-          influence = this.getDistanceVectorTo(s);
-          if(s instanceof Human) {
-            ++humansSpotted;
-            // inversely proportional to zombie's health
-            // proportional to the human's health
-            // inversely proportional to human's distance
-            influence.setLength((10.0/this.getHealth())
-                                * s.getHealth()
-                                * (5.0/influence.getLength()));
-            direction = direction.add(influence);
-          } else if (s instanceof Zombie) {
-            // inversely proportional to zombie's distance
-            influence.setLength(3.0/influence.getLength());
-            // move away, not towards
-            influence.flip();
-            direction = direction.add(influence);
+    int value = 0;
+    if(vision != null) {
+      for(int i = 0; i < vision.length; ++i) {
+        for(int j = 0; j < vision[0].length; ++j) {
+          if(vision[i][j] instanceof Human) {
+            ++value;
           }
         }
       }
     }
-
-    int move = direction.asMoveInteger();
-    if(humansSpotted == 0 || move == 0) {
-      return this.generateRandomMove();
-    } else {
-      int[] pos = {
-        this.getX()+Cheerville.MOVEMENTS[move][0],
-        this.getY()+Cheerville.MOVEMENTS[move][1]
-      };
-      this.setFacingDirection(move);
-      return pos;
-    }
+    return value;
   }
+
+  public Vector2D getInfluenceVectorFor(Spawnable other) {
+    Vector2D influence;
+    influence = this.getDistanceVectorTo(other);
+    if(other instanceof Human) {
+      // ++humansSpotted;
+      // inversely proportional to zombie's health
+      // proportional to the human's health
+      // inversely proportional to human's distance
+      influence.setLength((10.0/this.getHealth())
+                          * other.getHealth()
+                          * (5.0/influence.getLength()));
+    } else if (other instanceof Zombie) {
+      // inversely proportional to zombie's distance
+      influence.setLength(3.0/influence.getLength());
+      // move away, not towards
+      influence.flip();
+    } else {
+      influence.setLength(0);
+    }
+    return influence;
+  }
+
+  // public int[] generateSmartMove() {
+  //   Vector2D direction = new Vector2D(0, 0);
+  //   Vector2D influence;
+  //   Spawnable[][] vision = this.getVision();
+  //   Spawnable s;
+  //   int humansSpotted = 0;
+  //   for(int i = 0; i < vision.length; ++i) {
+  //     for(int j = 0; j < vision[0].length; ++j) {
+  //       s = vision[i][j];
+  //       if(s != null && s != this && s instanceof Moveable) {
+  //         influence = this.getDistanceVectorTo(s);
+  //         if(s instanceof Human) {
+  //           ++humansSpotted;
+  //           // inversely proportional to zombie's health
+  //           // proportional to the human's health
+  //           // inversely proportional to human's distance
+  //           influence.setLength((10.0/this.getHealth())
+  //                               * s.getHealth()
+  //                               * (5.0/influence.getLength()));
+  //           direction = direction.add(influence);
+  //         } else if (s instanceof Zombie) {
+  //           // inversely proportional to zombie's distance
+  //           influence.setLength(3.0/influence.getLength());
+  //           // move away, not towards
+  //           influence.flip();
+  //           direction = direction.add(influence);
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   int move = direction.asMoveInteger();
+  //   if(humansSpotted == 0 || move == 0) {
+  //     return this.generateRandomMove();
+  //   } else {
+  //     int[] pos = {
+  //       this.getX()+Cheerville.MOVEMENTS[move][0],
+  //       this.getY()+Cheerville.MOVEMENTS[move][1]
+  //     };
+  //     this.setFacingDirection(move);
+  //     return pos;
+  //   }
+  // }
 
   public Spawnable act(Spawnable other) {
     if (other instanceof Plant) {
