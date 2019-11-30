@@ -29,48 +29,40 @@ public class Zombie extends Moveable {
     Vector2D influence;
     Spawnable[][] vision = this.getVision();
     Spawnable s;
-    // StringBuilder visionString = new StringBuilder(100);
     int humansSpotted = 0;
     for(int i = 0; i < vision.length; ++i) {
       for(int j = 0; j < vision[0].length; ++j) {
         s = vision[i][j];
         if(s != null && s != this && s instanceof Moveable) {
-          // visionString.append(vision[i][j].toString()+" ");
           influence = this.getDistanceVectorTo(s);
           if(s instanceof Human) {
             ++humansSpotted;
-            influence.setLength((10.0/this.getHealth())*s.getHealth()*(5.0/influence.getLength()));
-            // System.out.printf("human at (%d, %d) added\n%s\n\n",
-            //                   j, i, influence.toString());
+            // inversely proportional to zombie's health
+            // proportional to the human's health
+            // inversely proportional to human's distance
+            influence.setLength((10.0/this.getHealth())
+                                * s.getHealth()
+                                * (5.0/influence.getLength()));
             direction = direction.add(influence);
           } else if (s instanceof Zombie) {
+            // inversely proportional to zombie's distance
             influence.setLength(3.0/influence.getLength());
+            // move away, not towards
             influence.flip();
-            // System.out.printf("zombie at (%d, %d) added\n%s\n\n",
-            //                      j, i, influence.toString());
             direction = direction.add(influence);
           }
-        // } else {
-        //   if(vision[i][j] == this) {
-        //     visionString.append("X ");
-        //   } else {
-        //     visionString.append(". ");
-        //   }
         }
       }
-      // visionString.append('\n');
     }
-    // System.out.println(direction);
+
     int move = direction.asMoveInteger();
     if(humansSpotted == 0 || move == 0) {
-      // int[] pos = this.generateRandomMove();
-      // System.out.printf("looked to %d\n", this.getFacingDirection());
       return this.generateRandomMove();
     } else {
-      int[] deltas = Cheerville.MOVEMENTS[move];
-      int[] pos = {this.getX()+deltas[0], this.getY()+deltas[1]};
-      // System.out.printf("(%d, %d)\n", deltas[0], deltas[1]);
-      // System.out.println(visionString.toString());
+      int[] pos = {
+        this.getX()+Cheerville.MOVEMENTS[move][0],
+        this.getY()+Cheerville.MOVEMENTS[move][1]
+      };
       this.setFacingDirection(move);
       return pos;
     }

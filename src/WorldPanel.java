@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.Graphics;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
@@ -28,6 +27,7 @@ public class WorldPanel extends JPanel {
     this.worldToDisplay = worldToDisplay;
     addMouseListener(new WorldPanelClickListener());
     addComponentListener(new WorldPanelResizeListener());
+    this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
     // this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
     this.setPreferredSize(new Dimension(this.width, this.height));
     this.setOpaque(true);

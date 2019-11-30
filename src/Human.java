@@ -138,5 +138,15 @@ public abstract class Human extends Moveable {
 
   abstract int getMinBirthInterval();
 
-  abstract double getBirthChance();
+  abstract double[][] getAgeBirthChances();
+
+  abstract double[][] getHealthBirthChances();
+
+  public double getBirthChance() {
+    if(this.getStepsUntilFertile() > 0) {
+      return 0;
+    }
+    return Human.getChanceByInterpolation(this.getAgeBirthChances(), this.getAge())
+           + Human.getChanceByInterpolation(this.getHealthBirthChances(), this.getHealth());
+  }
 }
