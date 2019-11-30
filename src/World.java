@@ -313,6 +313,10 @@ public class World {
     return this.map[y][x];
   }
 
+  public Spawnable[][] getMap() {
+    return this.map;
+  }
+
   public void setMapAt(int x, int y, Spawnable s) {
     // if(s instanceof Moveable) {
     //   if(this.map[y][x] != null) {

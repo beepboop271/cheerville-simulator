@@ -112,4 +112,13 @@ public class Zombie extends Moveable {
   public int getHealthVariance() {
     return Zombie.HEALTH_VARIANCE;
   }
+
+  public int[] getColor() {
+    int[] color = {
+      255,
+      this.getColorChannelValue(),
+      this.getColorChannelValue()
+    };
+    return color;
+  }
 }

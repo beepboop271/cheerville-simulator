@@ -107,4 +107,10 @@ public abstract class Spawnable {
   abstract int getInitialHealth();
 
   abstract int getHealthVariance();
+
+  abstract int[] getColor();
+
+  public int getColorChannelValue() {
+    return (this.getMaxHealth()-this.getHealth())*(255/this.getMaxHealth());
+  }
 }

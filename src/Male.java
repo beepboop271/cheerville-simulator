@@ -89,4 +89,13 @@ public class Male extends Human {
   public double[][] getHealthBirthChances() {
     return Male.HEALTH_BIRTH_CHANCES;
   }
+
+  public int[] getColor() {
+    int[] color = {
+      this.getColorChannelValue(),
+      this.getColorChannelValue(),
+      255
+    };
+    return color;
+  }
 }

@@ -90,4 +90,13 @@ public class Female extends Human {
   public double[][] getHealthBirthChances() {
     return Female.HEALTH_BIRTH_CHANCES;
   }
+
+  public int[] getColor() {
+    int[] color = {
+      255,
+      this.getColorChannelValue(),
+      255
+    };
+    return color;
+  }
 }

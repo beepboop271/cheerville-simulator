@@ -70,4 +70,13 @@ public class Plant extends Spawnable {
   public int getHealthVariance() {
     return Plant.HEALTH_VARIANCE;
   }
+
+  public int[] getColor() {
+    int[] color = {
+      this.getColorChannelValue(),
+      255,
+      this.getColorChannelValue()
+    };
+    return color;
+  }
 }
