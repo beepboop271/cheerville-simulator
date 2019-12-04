@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class Male extends Human {
   private static final int MIN_BIRTH_INTERVAL = 2;
   private static final double[][] AGE_BIRTH_CHANCES = {
@@ -137,12 +139,7 @@ public class Male extends Human {
     return Male.HEALTH_BIRTH_CHANCES;
   }
 
-  public int[] getColor() {
-    int[] color = {
-      this.getColorChannelValue(),
-      this.getColorChannelValue(),
-      255
-    };
-    return color;
+  public Color getColor() {
+    return new Color(this.getColorChannelValue(), this.getColorChannelValue(), 255);
   }
 }

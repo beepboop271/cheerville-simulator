@@ -3,6 +3,15 @@ import java.util.LinkedList;
 public class World {
   private static final double PLANT_SPAWN_CHANCE = 0.05;
 
+  private static final int VISION_SIZE = 4;
+  private static final int[][] VISION_OFFSETS = {
+    {0, 0, 0, 0},    //nothing
+    {-VISION_SIZE, -VISION_SIZE, (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y-4) to (x+4, y) - NORTH
+    {0           , -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1},  // scan 5x9 from (x, y-4) to (x+4, y+4) - EAST
+    {-VISION_SIZE, 0           , (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y) to (x+4, y+4) - SOUTH
+    {-VISION_SIZE, -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1}   // scan 5x9 from (x-4, y-4) to (x, y+4) - WEST
+  };
+
   private int historyAmount = 300;
   private LinkedList<int[]> distributionHistory = new LinkedList<int[]>();
   private int[][] historyArray;
@@ -170,14 +179,6 @@ public class World {
     return counts;
   }
 
-  private static final int VISION_SIZE = 4;
-  private static final int[][] VISION_OFFSETS = {
-    {0, 0, 0, 0},    //nothing
-    {-VISION_SIZE, -VISION_SIZE, (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y-4) to (x+4, y) - NORTH
-    {0           , -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1},  // scan 5x9 from (x, y-4) to (x+4, y+4) - EAST
-    {-VISION_SIZE, 0           , (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y) to (x+4, y+4) - SOUTH
-    {-VISION_SIZE, -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1}   // scan 5x9 from (x-4, y-4) to (x, y+4) - WEST
-  };
   public Spawnable[][] getVision(Moveable viewer) {
     int facingDirection = viewer.getFacingDirection();
     int[] offsets = VISION_OFFSETS[facingDirection];
@@ -249,7 +250,7 @@ public class World {
       if(this.isOccupiedAt(newX, newY)) {
         this.getMapAt(newX, newY).act(p);
       } else {
-        p.act(this.getMapAt(newX, newY));
+        // p.act(this.getMapAt(newX, newY));
         p.setPos(newX, newY);
         this.setMapAt(p);
       }
@@ -287,6 +288,14 @@ public class World {
     while(this.distributionHistory.size() > this.historyAmount) {
       this.distributionHistory.removeFirst();
     }
+  }
+
+  public int getVisionSize() {
+    return World.VISION_SIZE;
+  }
+
+  public int[] getVisionOffsets(int direction) {
+    return World.VISION_OFFSETS[direction];
   }
 
   public int getWidth() {

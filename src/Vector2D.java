@@ -1,8 +1,11 @@
-public class Vector2D {
+import java.awt.Color;
+
+public class Vector2D implements Cloneable {
   private double x;
   private double y;
   private double length;
   private double angle;
+  private Color vectorColor;
 
   private static final int LENGTH = 0b0001;
   private static final int ANGLE  = 0b0010;
@@ -16,11 +19,9 @@ public class Vector2D {
     this.update(Vector2D.LENGTH|Vector2D.ANGLE);
   }
 
-  public Vector2D(double x, double y, double length) {
-    this.x = x;
-    this.y = y;
-    this.length = length;
-    this.update(Vector2D.ANGLE|Vector2D.X|Vector2D.Y);
+  public Vector2D(double x, double y, Color vectorColor) {
+    this(x, y);
+    this.vectorColor = vectorColor;
   }
 
   @Override
@@ -28,12 +29,29 @@ public class Vector2D {
     return "Vector2D "+this.x+" "+this.y+" "+Math.toDegrees(this.angle)+" "+this.length;
   }
 
-  public double getLength() {
-    return this.length;
+  @Override
+  public Object clone() {
+    try {
+      return super.clone();  
+    } catch (CloneNotSupportedException e){ 
+      return null; 
+    }
   }
 
-  public double getAngle() {
-    return this.angle;
+  public Color getColor() {
+    return this.vectorColor;
+  }
+
+  public void setColor(Color vectorColor) {
+    this.vectorColor = vectorColor;
+  }
+
+  public double getX() {
+    return this.x;
+  }
+
+  public double getY() {
+    return this.y;
   }
 
   public Vector2D setPos(double x, double y) {
@@ -43,10 +61,18 @@ public class Vector2D {
     return this;
   }
 
+  public double getLength() {
+    return this.length;
+  }
+
   public Vector2D setLength(double length) {
     this.length = length;
     this.update(Vector2D.POS);
     return this;
+  }
+
+  public double getAngle() {
+    return this.angle;
   }
 
   public Vector2D setAngle(double angle) {

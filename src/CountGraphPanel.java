@@ -10,9 +10,8 @@ public class CountGraphPanel extends GraphPanel {
     Color.RED
   };
 
-  public CountGraphPanel(int width,
-                         World worldToDisplay) {
-    super(width, worldToDisplay);
+  public CountGraphPanel(World worldToDisplay) {
+    super(worldToDisplay);
   }
 
   public int[][] extractMoveableCounts(int[][] data) {

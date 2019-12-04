@@ -27,10 +27,7 @@ public class CheervilleFrame extends JFrame {
     c.insets = new Insets(10, 10, 10, 10);
     int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
     int cellSize = (int)((screenHeight*0.7)/worldToDisplay.getHeight());
-    WorldPanel worldPane = new WorldPanel(cellSize*worldToDisplay.getWidth()+1,
-                                          cellSize*worldToDisplay.getHeight()+1,
-                                          cellSize,
-                                          worldToDisplay);
+    WorldPanel worldPane = new WorldPanel(cellSize, worldToDisplay);
     mainPane.add(worldPane, c);
 
     c = new GridBagConstraints();
@@ -40,12 +37,9 @@ public class CheervilleFrame extends JFrame {
     c.gridheight = 1;
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.6;
-    c.weighty = 1.0;
+    c.weighty = 0.2;
     c.insets = new Insets(10, 0, 10, 10);
-    mainPane.add(new PercentageGraphPanel(worldToDisplay.getHistoryAmount(),
-                                          worldToDisplay,
-                                          worldToDisplay.getWidth()*worldToDisplay.getHeight()),
-                 c);
+    mainPane.add(new PercentageGraphPanel(worldToDisplay), c);
 
     c = new GridBagConstraints();
     c.gridx = 1;
@@ -54,21 +48,21 @@ public class CheervilleFrame extends JFrame {
     c.gridheight = 1;
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.6;
-    c.weighty = 1.0;
+    c.weighty = 0.2;
     c.insets = new Insets(0, 0, 10, 10);
-    mainPane.add(new CountGraphPanel(worldToDisplay.getHistoryAmount(),
-                                     worldToDisplay),
-                 c);
+    mainPane.add(new CountGraphPanel(worldToDisplay), c);
     
     c = new GridBagConstraints();
     c.gridx = 1;
     c.gridy = 2;
     c.gridwidth = 1;
     c.gridheight = 1;
-    c.fill = GridBagConstraints.HORIZONTAL;
+    c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.6;
+    c.weighty = 1.0;
     c.insets = new Insets(0, 0, 10, 10);
-    worldPane.setInfoPanel(new SpawnableInfoPanel(worldToDisplay.getHistoryAmount()+60, 300));
+    worldPane.setInfoPanel(new SpawnableInfoPanel(new SpawnableVisionPanel(20, worldToDisplay, null),
+                                                  new SpawnableTextPanel(200, 300)));
     mainPane.add(worldPane.getInfoPanel(), c);
 
     mainPane.setOpaque(true);

@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class Plant extends Spawnable {
   private static final int INITIAL_HEALTH = 15;
   private static final int HEALTH_VARIANCE = 5;
@@ -29,30 +31,38 @@ public class Plant extends Spawnable {
     return this.getHealth();
   }
 
-  @Override
-  public Spawnable addDescendant(Spawnable descendant) {
-    if(this == descendant) {
-      return descendant;
-    }
-    super.addDescendant(descendant);
-    if(descendant instanceof Plant) {
-      ((Plant)descendant).ancestor = this;
-    }
+  // @Override
+  // public Spawnable addDescendant(Spawnable descendant) {
+  //   if(this == descendant) {
+  //     return descendant;
+  //   }
+  //   super.addDescendant(descendant);
+  //   if(descendant instanceof Plant) {
+  //     ((Plant)descendant).ancestor = this;
+  //   }
+  //   return descendant;
+  // }
+
+  public Spawnable addDescendantWithAncestor(Plant descendant) {
+    descendant.ancestor = this;
+    this.addDescendant(descendant);
     return descendant;
   }
 
   public Spawnable act(Spawnable other) {
-    if(other instanceof Plant && other != this) {
+    if(other instanceof Plant) {// && other != this) {
       // other is only non null when a plant
       // spreads onto another plant
       this.heal((int)(other.getHealth()*Plant.PLANT_ENERGY_FACTOR));
       other.setDead();
-      if(((Plant)other).ancestor != null) {
-        ((Plant)other).ancestor.addDescendant(this);
-      }
+      ((Plant)other).ancestor.addDescendant(this);
+      // if(((Plant)other).ancestor != null) {
+      //   ((Plant)other).ancestor.addDescendant(this);
+      // }
     } else {
       if(Math.random() < Plant.SPREAD_CHANCE) {
-        return this.addDescendant(new Plant(this.getX(), this.getY()));
+        return this.addDescendantWithAncestor(new Plant(this.getX(), this.getY()));
+        // return this.addDescendant(new Plant(this.getX(), this.getY()));
         // this.getContainingWorld().spawnPlantNear(this.getX(), this.getY());
       }
     }
@@ -71,12 +81,7 @@ public class Plant extends Spawnable {
     return Plant.HEALTH_VARIANCE;
   }
 
-  public int[] getColor() {
-    int[] color = {
-      this.getColorChannelValue(),
-      255,
-      this.getColorChannelValue()
-    };
-    return color;
+  public Color getColor() {
+    return new Color(this.getColorChannelValue(), 255, this.getColorChannelValue());
   }
 }

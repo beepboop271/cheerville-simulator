@@ -2,6 +2,7 @@ public abstract class Moveable extends Spawnable {
   private boolean moved = false;
   private int facingDirection;
   private Spawnable[][] vision;
+  private Vector2D[][] influences;  // for display
 
   public Moveable(int x, int y, int initialHealth) {
     super(x, y, initialHealth);
@@ -48,11 +49,15 @@ public abstract class Moveable extends Spawnable {
     this.vision = vision;
   }
 
+  public Vector2D[][] getInfluences() {
+    return this.influences;
+  }
+
   public Vector2D getDistanceVectorTo(Spawnable other) {
     // System.out.printf("at (%d, %d), other is at (%d, %d), so vec is %s\n",
     //                   this.getX(), this.getY(), other.getX(), other.getY(),
     //                   new Vector2D(other.getX()-this.getX(), other.getY()-this.getY()).toString());
-    return new Vector2D(other.getX()-this.getX(), other.getY()-this.getY());
+    return new Vector2D(other.getX()-this.getX(), other.getY()-this.getY(), other.getColor());
   }
 
   public int[] generateRandomMove() {
@@ -70,16 +75,27 @@ public abstract class Moveable extends Spawnable {
     }
     Vector2D direction = new Vector2D(0, 0);
     Spawnable[][] vision = this.getVision();
+    this.influences = new Vector2D[vision.length][vision[0].length];
+
+    Vector2D influence;
     Spawnable s;
     for(int i = 0; i < vision.length; ++i) {
       for(int j = 0; j < vision[0].length; ++j) {
         s = vision[i][j];
-        if(s != null && s != this) {
-          direction.add(this.getInfluenceVectorFor(s));
+        if(s != null) {
+          if (s != this) {
+            influence = this.getInfluenceVectorFor(s);
+            this.influences[i][j] = influence;
+            direction.add(influence);
+          } else {
+            // store the decision vector in influences as well
+            // so that we can draw it
+            this.influences[i][j] = direction;
+          }
         }
       }
     }
-
+    direction.setLength(1.0);
     int move = direction.asMoveInteger();
     if(move == 0) {
       return this.generateRandomMove();

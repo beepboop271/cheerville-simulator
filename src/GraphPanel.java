@@ -15,12 +15,11 @@ public abstract class GraphPanel extends JPanel {
   private int graphWidth;
   private World worldToDisplay;
 
-  public GraphPanel(int graphWidth,
-                    World worldToDisplay) {
+  public GraphPanel(World worldToDisplay) {
     super();
     this.worldToDisplay = worldToDisplay;
     this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-    this.graphWidth = graphWidth;
+    this.graphWidth = this.worldToDisplay.getHistoryAmount();
     addComponentListener(new GraphPanelResizeListener());
     
     this.setPreferredSize(new Dimension(this.graphWidth+60, 200));

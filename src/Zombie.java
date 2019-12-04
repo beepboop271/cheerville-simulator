@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class Zombie extends Moveable {
   private static final int INITIAL_HEALTH = 10;
   private static final int HEALTH_VARIANCE = 5;
@@ -61,50 +63,6 @@ public class Zombie extends Moveable {
     return influence;
   }
 
-  // public int[] generateSmartMove() {
-  //   Vector2D direction = new Vector2D(0, 0);
-  //   Vector2D influence;
-  //   Spawnable[][] vision = this.getVision();
-  //   Spawnable s;
-  //   int humansSpotted = 0;
-  //   for(int i = 0; i < vision.length; ++i) {
-  //     for(int j = 0; j < vision[0].length; ++j) {
-  //       s = vision[i][j];
-  //       if(s != null && s != this && s instanceof Moveable) {
-  //         influence = this.getDistanceVectorTo(s);
-  //         if(s instanceof Human) {
-  //           ++humansSpotted;
-  //           // inversely proportional to zombie's health
-  //           // proportional to the human's health
-  //           // inversely proportional to human's distance
-  //           influence.setLength((10.0/this.getHealth())
-  //                               * s.getHealth()
-  //                               * (5.0/influence.getLength()));
-  //           direction = direction.add(influence);
-  //         } else if (s instanceof Zombie) {
-  //           // inversely proportional to zombie's distance
-  //           influence.setLength(3.0/influence.getLength());
-  //           // move away, not towards
-  //           influence.flip();
-  //           direction = direction.add(influence);
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   int move = direction.asMoveInteger();
-  //   if(humansSpotted == 0 || move == 0) {
-  //     return this.generateRandomMove();
-  //   } else {
-  //     int[] pos = {
-  //       this.getX()+Cheerville.MOVEMENTS[move][0],
-  //       this.getY()+Cheerville.MOVEMENTS[move][1]
-  //     };
-  //     this.setFacingDirection(move);
-  //     return pos;
-  //   }
-  // }
-
   public Spawnable act(Spawnable other) {
     if (other instanceof Plant) {
       // null = zombie can move to the spot
@@ -150,12 +108,7 @@ public class Zombie extends Moveable {
     return Zombie.HEALTH_VARIANCE;
   }
 
-  public int[] getColor() {
-    int[] color = {
-      255,
-      this.getColorChannelValue(),
-      this.getColorChannelValue()
-    };
-    return color;
+  public Color getColor() {
+    return new Color(255, this.getColorChannelValue(), this.getColorChannelValue());
   }
 }

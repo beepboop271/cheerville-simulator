@@ -12,11 +12,10 @@ public class PercentageGraphPanel extends GraphPanel {
     Color.LIGHT_GRAY
   };
 
-  public PercentageGraphPanel(int width,
-                              World worldToDisplay,
-                              int totalSpaces) {
-    super(width, worldToDisplay);
-    this.totalSpaces = (double)totalSpaces;
+  public PercentageGraphPanel(World worldToDisplay) {
+    super(worldToDisplay);
+    this.totalSpaces = (double)(worldToDisplay.getHeight()
+                                * worldToDisplay.getWidth());
   }
 
   public double[][] getPercentagesFromCounts(int[][] data) {

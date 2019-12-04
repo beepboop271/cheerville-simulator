@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import java.util.LinkedList;
 import java.util.Iterator;
 
@@ -22,10 +24,12 @@ public abstract class Spawnable {
   }
 
   public void printDescendants() {
+    // this.removeDeadDescendants();    
     System.out.println(this.descendants.toString());
   }
 
   public String[] getDescendantStrings() {
+    this.removeDeadDescendants();    
     String[] s = new String[this.descendants.size()];
     Iterator<Spawnable> descendentIterator = this.descendants.iterator();
     int i = 0;
@@ -36,6 +40,8 @@ public abstract class Spawnable {
   }
 
   public Spawnable getFirstDescendant() {
+    this.removeDeadDescendants();
+    this.printDescendants();
     if(this.descendants.isEmpty()) {
       return null;
     } else {
@@ -49,13 +55,16 @@ public abstract class Spawnable {
     return descendant;
   }
 
-  public void removeDeadDescendants() {
+  private void removeDeadDescendants() {
+    // this.printDescendants();
     Iterator<Spawnable> descendentIterator = this.descendants.iterator();
     while(descendentIterator.hasNext()) {
       if(descendentIterator.next().getHealth() <= 0) {
+        // System.out.println("kms");
         descendentIterator.remove();
       }
     }
+    // this.printDescendants();
   }
 
   public int decay() {
@@ -108,7 +117,7 @@ public abstract class Spawnable {
 
   abstract int getHealthVariance();
 
-  abstract int[] getColor();
+  abstract Color getColor();
 
   public int getColorChannelValue() {
     return (this.getMaxHealth()-this.getHealth())*(255/this.getMaxHealth());

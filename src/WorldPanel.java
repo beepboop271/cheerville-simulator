@@ -1,23 +1,52 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class WorldPanel extends MapPanel {
+public class WorldPanel extends JPanel {
   private World worldToDisplay;
   private SpawnableInfoPanel infoPanel;
+  private int cellSize;
+  private int mapX, mapY;
 
   private Font smallFont = new Font("Courier New", Font.BOLD, 25);
 
-  public WorldPanel(int width, int height,
-                    int cellSize,
-                    World worldToDisplay) {
-    super(width, height, cellSize, worldToDisplay.getMap());
+  public WorldPanel(int cellSize, World worldToDisplay) {
+    this.cellSize = cellSize;
     this.worldToDisplay = worldToDisplay;
-    // this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+    addMouseListener(new MapPanelClickListener());
+    addComponentListener(new MapPanelResizeListener());
+    this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+    this.setPreferredSize(new Dimension(cellSize*this.worldToDisplay.getWidth(),
+                                        cellSize*this.worldToDisplay.getHeight()));
+    this.setOpaque(true);
+  }
+
+  public static Color colorToGrayscale(Color clr) {
+    int minChannel = Math.min(Math.min(clr.getRed(), clr.getGreen()), clr.getBlue());
+    return new Color(minChannel, minChannel, minChannel);
+  }
+
+  public void setMapPos(int x, int y) {
+    this.mapX = x;
+    this.mapY = y;
+  }
+
+  public int getCellSize() {
+    return this.cellSize;
+  }
+
+  public void setCellSize(int cellSize) {
+    this.cellSize = cellSize;
   }
 
   public SpawnableInfoPanel getInfoPanel() {
@@ -28,83 +57,103 @@ public class WorldPanel extends MapPanel {
     this.infoPanel = infoPanel;
   }
 
-  public void paintComponent(Graphics g) {
-    // System.out.println("paint world");
-    super.paintComponent(g);
-
-    // g.setColor(Color.WHITE);
-    // g.fillRect(0, 0, this.getWidth(), this.getHeight());
-    g.setFont(this.smallFont);
-
-    if(this.getInfoPanel() != null && this.infoPanel.getSpawnableToShow() != null) {
-      int x = this.infoPanel.getSpawnableToShow().getX();
-      int y = this.infoPanel.getSpawnableToShow().getY();
-      g.setColor(Color.BLACK);
-      g.fillRect(x*this.getCellSize(), y*this.getCellSize(),
-                 this.getCellSize(), this.getCellSize());
-      g.setColor(MapPanel.intsToColor(this.infoPanel.getSpawnableToShow().getColor()));
-      g.fillRect((x*this.getCellSize())+(int)(this.getCellSize()*0.15),
-                 (y*this.getCellSize())+(int)(this.getCellSize()*0.15),
-                 (int)(this.getCellSize()*0.7),
-                 (int)(this.getCellSize()*0.7));
-    }
-    // Spawnable s;
-    // int channelValue;
-    // for (int y = 0; y < this.worldToDisplay.getHeight(); ++y) {
-    //   for (int x = 0; x < this.worldToDisplay.getWidth(); ++x) {
-    //     if (this.worldToDisplay.isOccupiedAt(x, y)) {
-    //       s = this.worldToDisplay.getMapAt(x, y);
-    //       channelValue = (s.getMaxHealth()-s.getHealth())*(255/s.getMaxHealth());
-    //       if(infoPanel != null && infoPanel.getSpawnableToShow() == s) {
-    //         g.setColor(Color.BLACK);
-    //         g.fillRect(x*this.cellSize, y*this.cellSize, this.cellSize, this.cellSize); 
-    //       }
-    //       if (s instanceof Plant) {
-    //         g.setColor(new Color(channelValue, 255, channelValue));
-    //       } else if (s instanceof Human) {
-    //         if (s instanceof Female) {
-    //           g.setColor(new Color(255, channelValue, 255));
-    //         } else {
-    //           g.setColor(new Color(channelValue, channelValue, 255));
-    //         }
-    //       } else if (s instanceof Zombie) {
-    //         g.setColor(new Color(255, channelValue, channelValue));
-    //       }
-    //       if(infoPanel != null && infoPanel.getSpawnableToShow() == s) {
-    //         g.fillRect((x*this.cellSize)+(int)(this.cellSize*0.15),
-    //                    (y*this.cellSize)+(int)(this.cellSize*0.15),
-    //                    (int)(this.cellSize*0.7),
-    //                    (int)(this.cellSize*0.7));
-    //       } else {
-    //         g.fillRect(x*this.cellSize, y*this.cellSize, this.cellSize, this.cellSize);
-    //         g.setColor(Color.BLACK);
-    //         // g.drawString(""+s.getID(), x*this.cellSize, y*this.cellSize+(this.cellSize/2));
-    //       }
-    //     } else {
-    //       g.setColor(Color.WHITE);
-    //       g.fillRect(x*this.cellSize, y*this.cellSize, this.cellSize, this.cellSize);
-    //     }
-    //   }
-    // }
+  public World getWorldToDisplay() {
+    return this.worldToDisplay;
   }
 
-  @Override
+  public void paintComponent(Graphics g) {
+    this.paintComponent(g, new Rectangle(0, 0,
+                                         this.worldToDisplay.getWidth(),
+                                         this.worldToDisplay.getHeight()));
+  }
+
+  public void paintComponent(Graphics g, Rectangle drawRect) {
+    this.paintComponent(g, drawRect, drawRect);
+  }
+
+  public void paintComponent(Graphics g, Rectangle drawRect, Rectangle colourRect) {
+    super.repaint();
+    setDoubleBuffered(true);
+
+    g.setColor(Color.GRAY);
+    g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+    for (int y = drawRect.y; y < drawRect.y+drawRect.height; ++y) {
+      for (int x = drawRect.x; x < drawRect.x+drawRect.width; ++x) {
+        if (this.worldToDisplay.isInWorld(x, y)) {
+          if (this.worldToDisplay.getMapAt(x, y) != null) {
+            if (colourRect.contains(x, y)) {
+              g.setColor(this.worldToDisplay.getMapAt(x, y).getColor());
+            } else {
+              g.setColor(WorldPanel.colorToGrayscale(this.worldToDisplay
+                                                         .getMapAt(x, y)
+                                                         .getColor()));
+            }
+            g.fillRect((this.mapX+x)*this.cellSize,
+                       (this.mapY+y)*this.cellSize,
+                       this.cellSize, this.cellSize);
+            // g.setColor(Color.BLACK);
+            // g.drawString(""+s.getID(), x*this.cellSize, y*this.cellSize+(this.cellSize/2));
+          } else {
+            g.setColor(Color.WHITE);
+            g.fillRect((this.mapX+x)*this.cellSize,
+                       (this.mapY+y)*this.cellSize,
+                       this.cellSize, this.cellSize);
+          }
+        }
+      }
+    }
+
+    g.setFont(this.smallFont);
+
+    if(this.infoPanel != null && this.infoPanel.getSpawnableToShow() != null) {
+      this.paintSelectedCell(g,
+                             this.infoPanel.getSpawnableToShow().getX(),
+                             this.infoPanel.getSpawnableToShow().getY());
+      this.infoPanel.update();
+    }
+  }
+
+  public void paintSelectedCell(Graphics g, int x, int y) {
+    g.setColor(Color.BLACK);
+    g.fillRect((this.mapX+x)*this.getCellSize(), (this.mapY+y)*this.getCellSize(),
+               this.getCellSize(), this.getCellSize());
+
+    g.setColor(this.infoPanel.getSpawnableToShow().getColor());
+    g.fillRect(((this.mapX+x)*this.getCellSize())+(int)(this.getCellSize()*0.15),
+               ((this.mapY+y)*this.getCellSize())+(int)(this.getCellSize()*0.15),
+               (int)(this.getCellSize()*0.7),
+               (int)(this.getCellSize()*0.7));
+  }
+
   public void onResize(ComponentEvent e) {
-    this.setCellSize((int)(Math.min(getWidth(), getHeight())
-                           / this.worldToDisplay.getHeight()));
+    this.setCellSize(Math.min(this.getWidth()/this.worldToDisplay.getWidth(),
+                              this.getHeight()/this.worldToDisplay.getHeight()));
     this.setSize(new Dimension(this.getCellSize()*this.worldToDisplay.getWidth()+1,
                                this.getCellSize()*this.worldToDisplay.getHeight()+1));
   }
 
-  @Override
   public void onClick(MouseEvent e) {
     int button = e.getButton();
     if(button == MouseEvent.BUTTON1) {
-      worldToDisplay.spawnZombieNear(e.getX()/this.getCellSize(),
+      this.worldToDisplay.spawnZombieNear(e.getX()/this.getCellSize(),
                                      e.getY()/this.getCellSize());
-    } else if(button == MouseEvent.BUTTON3 && infoPanel != null) {
-      infoPanel.setSpawnableToShow(worldToDisplay.getMapAt(e.getX()/this.getCellSize(),
-                                                           e.getY()/this.getCellSize()));
+    } else if(button == MouseEvent.BUTTON3 && this.infoPanel != null) {
+      this.infoPanel.setSpawnableToShow(this.worldToDisplay
+                                            .getMapAt(e.getX()/this.getCellSize(),
+                                                      e.getY()/this.getCellSize()));
+    }
+  }
+
+  public class MapPanelResizeListener extends ComponentAdapter {
+    public void componentResized(ComponentEvent e) {
+      onResize(e);
+    }
+  }
+
+  public class MapPanelClickListener extends MouseAdapter {
+    public void mouseClicked(MouseEvent e) {
+      onClick(e);
     }
   }
 }
