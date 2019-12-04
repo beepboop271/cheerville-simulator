@@ -7,6 +7,8 @@ public class Zombie extends Moveable {
 
   private static final double HUMAN_ENERGY_FACTOR = 0.1;
 
+  private static final double RANDOM_MOVE_CHANCE = 0.8;
+
   public Zombie(int x, int y) {
     super(x, y,
           (Zombie.INITIAL_HEALTH
@@ -79,6 +81,7 @@ public class Zombie extends Moveable {
     } else if (other instanceof Zombie) {
       // non null = zombie is prevented from moving
       // set the world at this position to this, i.e. do nothing
+      this.turnAround();
       return this;
     }
     // otherwise allow the movement
@@ -106,6 +109,10 @@ public class Zombie extends Moveable {
 
   public int getHealthVariance() {
     return Zombie.HEALTH_VARIANCE;
+  }
+
+  public double getRandomMoveChance() {
+    return Zombie.RANDOM_MOVE_CHANCE;
   }
 
   public Color getColor() {

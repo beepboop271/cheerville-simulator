@@ -23,10 +23,10 @@ public class World {
     this.WIDTH = width;
     this.HEIGHT = height;
     this.map = new Spawnable[height][width];
-    for (int i = 0; i < 10; ++i) {
+    // for (int i = 0; i < 10; ++i) {
     // for (int i = 0; i < 5; ++i) {
       this.doSimulationStep();  // let some plants grow
-    }
+    // }
     int x, y;
     for (int i = 0; i < numHumans; ++i) {
       x = (int)(Math.random()*width);
@@ -113,16 +113,16 @@ public class World {
                   this.setMapAt(s);
                 } else if (newSpawnable.getHealth() <= 0) {
                   this.removeMapAt(s);
-                } else if (newSpawnable == s) {
-
-                } else if (newSpawnable instanceof Zombie) {
-                  // zombies only spawn here if they replace a human
-                  // so just replace the map spot with the human
-                  this.setMapAt(newSpawnable);
-                } else if (newSpawnable instanceof Human) {
-                  // humans do not replace existing things,
-                  // they are added into the world
-                  this.spawnHumanNear((Human)newSpawnable);
+                } else if (newSpawnable != s) {
+                  if (newSpawnable instanceof Zombie) {
+                    // zombies only spawn here if they replace a human
+                    // so just replace the map spot with the human
+                    this.setMapAt(newSpawnable);
+                  } else if (newSpawnable instanceof Human) {
+                    // humans do not replace existing things,
+                    // they are added into the world
+                    this.spawnHumanNear((Human)newSpawnable);
+                  }
                 }
               }
 
@@ -206,6 +206,25 @@ public class World {
       newX = possibleLocations[i][0];
       newY = possibleLocations[i][1];
       if(this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
+        h.act(this.getMapAt(newX, newY));
+        h.setPos(newX, newY);
+        this.setMapAt(h);
+        return;
+      }
+    }
+  }
+
+  public void spawnHumanNear(int x, int y) {
+    int[][] possibleLocations = {
+      {x+1, y}, {x, y+1}, {x-1, y}, {x, y-1},
+      {x+1, y+1}, {x-1, y+1}, {x-1, y-1}, {x+1, y-1}
+    };
+    int newX, newY;
+    for(int i = 0; i < possibleLocations.length; ++i) {
+      newX = possibleLocations[i][0];
+      newY = possibleLocations[i][1];
+      if(this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
+        Human h = Human.createHuman(newX, newY);
         h.act(this.getMapAt(newX, newY));
         h.setPos(newX, newY);
         this.setMapAt(h);
@@ -326,35 +345,10 @@ public class World {
     return this.map;
   }
 
-  public void setMapAt(int x, int y, Spawnable s) {
-    // if(s instanceof Moveable) {
-    //   if(this.map[y][x] != null) {
-    //     System.out.printf("(%d, %d) replace set %d, %s with %d, %s\n",
-    //                       x, y,
-    //                       this.map[y][x].getID(), this.map[y][x].toString(),
-    //                       s.getID(), s.toString());
-    //   } else {
-    //     System.out.printf("(%d, %d) set %d, %s\n", x, y, s.getID(), s.toString());
-    //   }
-    // }
-    this.map[y][x] = s;
-  }
-
   public void setMapAt(Spawnable s) {
     // System.out.printf("set world at %d, %d\n", s.getX(), s.getY());
     this.map[s.getY()][s.getX()] = s;
     // System.out.println(this);
-  }
-
-  public void removeMapAt(int x, int y) {
-    // if(this.map[y][x] != null && this.map[y][x] instanceof Moveable) {
-    //   System.out.printf("(%d, %d) remove %d, %s\n",
-    //                     x, y,
-    //                     this.map[y][x].getID(), this.map[y][x].toString());
-    // } else {
-    //   System.out.printf("(%d, %d) nothing happened", x, y);
-    // }
-    this.map[y][x] = null;
   }
 
   public void removeMapAt(Spawnable s) {

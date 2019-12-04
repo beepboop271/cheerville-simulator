@@ -7,6 +7,8 @@ public abstract class Human extends Moveable {
 
   private static final double PLANT_ENERGY_FACTOR = 0.5;
 
+  private static final double RANDOM_MOVE_CHANCE = 0.1;
+
   private int age = 0;
   private int stepsUntilFertile = 0;
 
@@ -54,6 +56,7 @@ public abstract class Human extends Moveable {
       // System.out.println("human");
       Human newHuman = this.tryReproduceWith((Human)other);
       if (newHuman == null) {
+        this.turnAround();
         return this;
       } else {
         return this.addDescendant(newHuman);
@@ -81,6 +84,10 @@ public abstract class Human extends Moveable {
 
   public int getHealthVariance() {
     return Human.HEALTH_VARIANCE;
+  }
+
+  public double getRandomMoveChance() {
+    return Human.RANDOM_MOVE_CHANCE;
   }
 
   public int getAge() {

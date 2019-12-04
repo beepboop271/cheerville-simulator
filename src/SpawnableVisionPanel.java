@@ -42,7 +42,9 @@ public class SpawnableVisionPanel extends WorldPanel {
                                            this.spawnableToShow.getY()+offsets[1],
                                            offsets[2], offsets[3]);
       super.paintComponent(g, drawRect, colourRect);
-      if(this.spawnableToShow != null) {
+      if((this.spawnableToShow != null) 
+            && (((Moveable)this.spawnableToShow).getInfluences() != null)) {
+        // e.g. human converted to zombie and it hasn't moved yet so no influces
         this.paintInfluenceVectors((Graphics2D)g,
                                    ((Moveable)this.spawnableToShow).getInfluences());
       }
@@ -52,12 +54,16 @@ public class SpawnableVisionPanel extends WorldPanel {
   }
 
   public void paintInfluenceVectors(Graphics2D g2, Vector2D[][] vectorsToDraw) {
-    double maxLength = Double.NEGATIVE_INFINITY;
+    Vector2D maxLengthVector = new Vector2D(0, 0);
+    double secondMaxLength = Double.NEGATIVE_INFINITY;
     for(int i = 0; i < vectorsToDraw.length; ++i) {
       for(int j = 0; j < vectorsToDraw[0].length; ++j) {
-        if ((vectorsToDraw[i][j] != null)
-              && (vectorsToDraw[i][j].getLength() > maxLength)) {
-          maxLength = vectorsToDraw[i][j].getLength();
+        if (vectorsToDraw[i][j] != null) {
+          if (vectorsToDraw[i][j].getLength() > maxLengthVector.getLength()) {
+            maxLengthVector = vectorsToDraw[i][j];
+          } else if (vectorsToDraw[i][j].getLength() > secondMaxLength) {
+            secondMaxLength = vectorsToDraw[i][j].getLength();
+          }
         }
       }
     }
@@ -65,18 +71,15 @@ public class SpawnableVisionPanel extends WorldPanel {
                         RenderingHints.VALUE_ANTIALIAS_ON);
     Vector2D vectorToDraw;
     double newLength;
+    maxLengthVector.setLength(secondMaxLength);
     for(int i = 0; i < vectorsToDraw.length; ++i) {
       for(int j = 0; j < vectorsToDraw[0].length; ++j) {
         if(vectorsToDraw[i][j] != null) {
-          newLength = (vectorsToDraw[i][j].getLength()/maxLength)
+          newLength = (vectorsToDraw[i][j].getLength()/secondMaxLength)
                       * (this.getCellSize()*this.getWorldToDisplay().getVisionSize());
           vectorToDraw = (Vector2D)vectorsToDraw[i][j].clone();
           vectorToDraw.setLength(newLength);
           g2.setStroke(new BasicStroke(2.5f));
-          // g2.setStroke(new BasicStroke(Math.max((float)(5.0
-          //                                               * vectorsToDraw[i][j].getLength()
-          //                                               / maxLength),
-          //                                       1.0f)));
           g2.setColor(Color.BLACK);
           g2.draw(new Line2D.Double(this.getWidth()/2.0,
                                     this.getHeight()/2.0,

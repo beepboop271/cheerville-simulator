@@ -137,7 +137,10 @@ public class WorldPanel extends JPanel {
     int button = e.getButton();
     if(button == MouseEvent.BUTTON1) {
       this.worldToDisplay.spawnZombieNear(e.getX()/this.getCellSize(),
-                                     e.getY()/this.getCellSize());
+                                          e.getY()/this.getCellSize());
+    } else if(button == MouseEvent.BUTTON2) {
+      this.worldToDisplay.spawnHumanNear(e.getX()/this.getCellSize(),
+                                         e.getY()/this.getCellSize());
     } else if(button == MouseEvent.BUTTON3 && this.infoPanel != null) {
       this.infoPanel.setSpawnableToShow(this.worldToDisplay
                                             .getMapAt(e.getX()/this.getCellSize(),

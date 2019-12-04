@@ -48,16 +48,23 @@ public class Male extends Human {
       // inversely proportional to human's health
       // proportional to plant's health
       // inversely proportional to plant's distance
-      influence.setLength((10.0/this.getHealth())
+      influence.setLength((15.0/this.getHealth())
                           * (other.getHealth())
                           * (5.0/influence.getLength()));
     } else if(other instanceof Female) {
       // proportional to male's birth chance
       // proportional to female's birth chance
       // inversely proportional to female's distance
-      influence.setLength((4.0*this.getBirthChance())
+      influence.setLength((3.0*this.getBirthChance())
                           * (2.0*((Female)other).getBirthChance())
                           * (5.0/influence.getLength()));
+      if(this.getBirthChance() < 0.5) {
+        influence.flip();
+      }
+    } else if(other instanceof Male) {
+      // proportional to difference in birth chances
+      influence.setLength(4.0*(this.getBirthChance()
+                               - ((Male)other).getBirthChance()));
     } else if(other instanceof Zombie) {
       // inversely proportional to male's birth chance
       // (lower birth chance = closer to death)

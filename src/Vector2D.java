@@ -17,6 +17,7 @@ public class Vector2D implements Cloneable {
     this.x = x;
     this.y = y;
     this.update(Vector2D.LENGTH|Vector2D.ANGLE);
+    this.vectorColor = new Color(255, 255, 255);
   }
 
   public Vector2D(double x, double y, Color vectorColor) {
@@ -66,8 +67,14 @@ public class Vector2D implements Cloneable {
   }
 
   public Vector2D setLength(double length) {
-    this.length = length;
-    this.update(Vector2D.POS);
+    if(length < 0) {
+      this.length = Math.abs(length);
+      this.update(Vector2D.POS);
+      this.flip();
+    } else {
+      this.length = length;
+      this.update(Vector2D.POS);
+    }
     return this;
   }
 

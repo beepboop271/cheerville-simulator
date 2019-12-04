@@ -54,9 +54,6 @@ public abstract class Moveable extends Spawnable {
   }
 
   public Vector2D getDistanceVectorTo(Spawnable other) {
-    // System.out.printf("at (%d, %d), other is at (%d, %d), so vec is %s\n",
-    //                   this.getX(), this.getY(), other.getX(), other.getY(),
-    //                   new Vector2D(other.getX()-this.getX(), other.getY()-this.getY()).toString());
     return new Vector2D(other.getX()-this.getX(), other.getY()-this.getY(), other.getColor());
   }
 
@@ -70,7 +67,11 @@ public abstract class Moveable extends Spawnable {
   }
 
   public int[] generateSmartMove() {
+    if(Math.random() < this.getRandomMoveChance()) {
+      return this.generateRandomMove();
+    }
     if(this.getVisionValue() == 0) {
+      this.influences = null;
       return this.generateRandomMove();
     }
     Vector2D direction = new Vector2D(0, 0);
@@ -95,7 +96,7 @@ public abstract class Moveable extends Spawnable {
         }
       }
     }
-    direction.setLength(1.0);
+
     int move = direction.asMoveInteger();
     if(move == 0) {
       return this.generateRandomMove();
@@ -114,4 +115,6 @@ public abstract class Moveable extends Spawnable {
   abstract Vector2D getInfluenceVectorFor(Spawnable other);
 
   abstract int getVisionValue();
+
+  abstract double getRandomMoveChance();
 }
