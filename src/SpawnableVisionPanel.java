@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
-import java.awt.Font;
 import java.awt.geom.Line2D;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,20 +18,29 @@ public class SpawnableVisionPanel extends WorldPanel {
                               Spawnable spawnableToShow) {
     super(cellSize, worldToDisplay);
     this.spawnableToShow = spawnableToShow;
-    this.setPreferredSize(new Dimension(cellSize*((worldToDisplay.getVisionSize()*2)+1),
-                                        cellSize*((worldToDisplay.getVisionSize()*2)+1)));
+    this.setPreferredSize(new Dimension(cellSize*this.getNumCells(),
+                                        cellSize*this.getNumCells()));
+    // this.setMinimumSize(new Dimension(cellSize*((worldToDisplay.getVisionSize()*2)+1),
+    //                                   cellSize*((worldToDisplay.getVisionSize()*2)+1)));
+    this.setOpaque(true);
+  }
+
+  public int getNumCells() {
+    return (2*this.getWorldToDisplay().getVisionSize())+1;
   }
 
   public void paintComponent(Graphics g) {
     if(this.spawnableToShow == null) {
       g.setColor(Color.GRAY);
-      g.fillRect(0, 0, this.getWidth(), this.getHeight());
+      g.fillRect(0, 0,
+                 this.getCellSize()*this.getNumCells(),
+                 this.getCellSize()*this.getNumCells());
       return;
     }
     int visionSize = this.getWorldToDisplay().getVisionSize();
     Rectangle drawRect = new Rectangle(this.spawnableToShow.getX()-visionSize,
                                        this.spawnableToShow.getY()-visionSize,
-                                       (2*visionSize)+1, (2*visionSize)+1);
+                                       this.getNumCells(), this.getNumCells());
     this.setMapPos(-drawRect.x, -drawRect.y);
     if(this.spawnableToShow instanceof Moveable) {
       int[] offsets = this.getWorldToDisplay()
@@ -107,7 +115,10 @@ public class SpawnableVisionPanel extends WorldPanel {
 
   @Override
   public void onResize(ComponentEvent e) {
-    // do nothing
+    this.setCellSize(Math.min(this.getWidth()/this.getNumCells(),
+                              this.getHeight()/this.getNumCells()));
+    this.setSize(new Dimension(this.getCellSize()*this.getNumCells(),
+                               this.getCellSize()*this.getNumCells()));
   }
 
   @Override

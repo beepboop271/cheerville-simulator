@@ -37,7 +37,7 @@ public class CheervilleFrame extends JFrame {
     c.gridheight = 1;
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.6;
-    c.weighty = 0.2;
+    c.weighty = 1.0;
     c.insets = new Insets(10, 0, 10, 10);
     mainPane.add(new PercentageGraphPanel(worldToDisplay), c);
 
@@ -48,7 +48,7 @@ public class CheervilleFrame extends JFrame {
     c.gridheight = 1;
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.6;
-    c.weighty = 0.2;
+    c.weighty = 1.0;
     c.insets = new Insets(0, 0, 10, 10);
     mainPane.add(new CountGraphPanel(worldToDisplay), c);
     
@@ -59,10 +59,11 @@ public class CheervilleFrame extends JFrame {
     c.gridheight = 1;
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.6;
-    c.weighty = 1.0;
+    c.weighty = 0.9;
     c.insets = new Insets(0, 0, 10, 10);
     worldPane.setInfoPanel(new SpawnableInfoPanel(new SpawnableVisionPanel(20, worldToDisplay, null),
-                                                  new SpawnableTextPanel(200, 300)));
+                                                  new SpawnableTextPanel(190, 200),
+                                                  new SpawnableButtonPanel(worldToDisplay)));
     mainPane.add(worldPane.getInfoPanel(), c);
 
     mainPane.setOpaque(true);

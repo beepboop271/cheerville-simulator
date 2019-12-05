@@ -24,8 +24,8 @@ public class Zombie extends Moveable {
 
   @Override
   public String toString() {
-    // return "Zombie#"+this.getID();
-    return "Z";
+    return "Zombie#"+this.getID();
+    // return "Z";
   }
 
   public int getVisionValue() {

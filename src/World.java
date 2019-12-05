@@ -276,6 +276,74 @@ public class World {
     }
   }
 
+  public Zombie selectRandomZombie() {
+    int[] start = {
+      (int)(Math.random()*this.getWidth()),
+      (int)(Math.random()*this.getHeight())
+    };
+
+    LinkedList<int[]> queue = new LinkedList<int[]>();
+    queue.addLast(start);
+
+    boolean[][] visited = new boolean[this.getHeight()][this.getWidth()];
+
+    int[] current;
+    int[] next = new int[2];
+    while(!queue.isEmpty()) {
+      current = queue.removeFirst();
+      if(this.getMapAt(current[0], current[1]) instanceof Zombie) {
+        return (Zombie)(this.getMapAt(current[0], current[1]));
+      } else {
+        for(int i = 1; i <= 4; ++i) {
+          if(this.isInWorld(current[0]+Cheerville.MOVEMENTS[i][0],
+                            current[1]+Cheerville.MOVEMENTS[i][1])
+                && !visited[current[1]+Cheerville.MOVEMENTS[i][1]]
+                           [current[0]+Cheerville.MOVEMENTS[i][0]]) {
+            next[0] = current[0]+Cheerville.MOVEMENTS[i][0];
+            next[1] = current[1]+Cheerville.MOVEMENTS[i][1];
+            visited[next[1]][next[0]] = true;
+            queue.addLast(next.clone());
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  public Human selectRandomHuman() {
+    int[] start = {
+      (int)(Math.random()*this.getWidth()),
+      (int)(Math.random()*this.getHeight())
+    };
+
+    LinkedList<int[]> queue = new LinkedList<int[]>();
+    queue.addLast(start);
+
+    boolean[][] visited = new boolean[this.getHeight()][this.getWidth()];
+
+    int[] current;
+    int[] next = new int[2];
+    while(!queue.isEmpty()) {
+      current = queue.removeFirst();
+      if(this.getMapAt(current[0], current[1]) instanceof Human) {
+        return (Human)(this.getMapAt(current[0], current[1]));
+      } else {
+        for(int i = 1; i <= 4; ++i) {
+          if(this.isInWorld(current[0]+Cheerville.MOVEMENTS[i][0],
+                            current[1]+Cheerville.MOVEMENTS[i][1])
+                && !visited[current[1]+Cheerville.MOVEMENTS[i][1]]
+                           [current[0]+Cheerville.MOVEMENTS[i][0]]) {
+            next[0] = current[0]+Cheerville.MOVEMENTS[i][0];
+            next[1] = current[1]+Cheerville.MOVEMENTS[i][1];
+            visited[next[1]][next[0]] = true;
+            queue.addLast(next.clone());
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   public void addHistory(int[] counts) {
     int[] record = {
       counts[0],  // plants
