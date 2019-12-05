@@ -112,9 +112,9 @@ public abstract class Moveable extends Spawnable {
     return pos;
   }
 
-  abstract Vector2D getInfluenceVectorFor(Spawnable other);
+  public abstract Vector2D getInfluenceVectorFor(Spawnable other);
 
-  abstract int getVisionValue();
+  public abstract int getVisionValue();
 
-  abstract double getRandomMoveChance();
+  public abstract double getRandomMoveChance();
 }

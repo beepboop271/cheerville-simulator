@@ -9,6 +9,8 @@ public class Zombie extends Moveable {
 
   private static final double RANDOM_MOVE_CHANCE = 0.8;
 
+  private static long NUM_ZOMBIES = 0;
+
   public Zombie(int x, int y) {
     super(x, y,
           (Zombie.INITIAL_HEALTH
@@ -24,8 +26,12 @@ public class Zombie extends Moveable {
 
   @Override
   public String toString() {
-    // return "Zombie#"+this.getID();
-    return "Z";
+    return "Zombie#"+this.getID();
+    // return "Z";
+  }
+
+  public long generateID() {
+    return Zombie.NUM_ZOMBIES++;
   }
 
   public int getVisionValue() {

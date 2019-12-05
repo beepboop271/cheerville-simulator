@@ -9,6 +9,8 @@ public class Plant extends Spawnable {
 
   private static final double SPREAD_CHANCE = 0.05;
 
+  private static long NUM_PLANTS = 0;
+
   private Plant ancestor;
 
   public Plant(int x, int y) {
@@ -29,6 +31,10 @@ public class Plant extends Spawnable {
       return super.decay();
     }
     return this.getHealth();
+  }
+
+  public long generateID() {
+    return Plant.NUM_PLANTS++;
   }
 
   // @Override

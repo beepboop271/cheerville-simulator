@@ -1,35 +1,40 @@
 import java.awt.Color;
 
-import java.util.LinkedList;
+import java.util.TreeSet;
 import java.util.Iterator;
 
-public abstract class Spawnable {
+public abstract class Spawnable implements Comparable<Spawnable> {
   private int x, y;
   private int health;
 
   // for display
-  private LinkedList<Spawnable> descendants = new LinkedList<Spawnable>();
-  private static long ID = 0;
+  private TreeSet<Spawnable> descendants = new TreeSet<Spawnable>();
   private final long id;
 
   public Spawnable(int x, int y, int initialHealth) {
     this.x = x;
     this.y = y;
     this.health = initialHealth;
-    this.id = ID++;
+    this.id = this.generateID();
   }
+
+  public abstract long generateID();
 
   public long getID() {
     return this.id;
   }
 
+  public int compareTo(Spawnable other) {
+    return (int)(this.getID()-other.getID());
+  }
+
   public void printDescendants() {
-    // this.removeDeadDescendants();    
+    // this.removeDeadDescendants();
     System.out.println(this.descendants.toString());
   }
 
   public String[] getDescendantStrings() {
-    this.removeDeadDescendants();    
+    this.removeDeadDescendants();
     String[] s = new String[this.descendants.size()];
     Iterator<Spawnable> descendentIterator = this.descendants.iterator();
     int i = 0;
@@ -45,12 +50,14 @@ public abstract class Spawnable {
     if(this.descendants.isEmpty()) {
       return null;
     } else {
-      return this.descendants.getFirst();
+      return this.descendants.first();
     }
   }
 
   public Spawnable addDescendant(Spawnable descendant) {
-    this.descendants.addLast(descendant);
+    if(!this.descendants.contains(descendant)) {
+      this.descendants.add(descendant);
+    }
     this.removeDeadDescendants();
     return descendant;
   }
@@ -109,15 +116,15 @@ public abstract class Spawnable {
     return this.health;
   }
 
-  abstract Spawnable act(Spawnable other);
+  public abstract Spawnable act(Spawnable other);
 
-  abstract int getMaxHealth();
+  public abstract int getMaxHealth();
 
-  abstract int getInitialHealth();
+  public abstract int getInitialHealth();
 
-  abstract int getHealthVariance();
+  public abstract int getHealthVariance();
 
-  abstract Color getColor();
+  public abstract Color getColor();
 
   public int getColorChannelValue() {
     return (this.getMaxHealth()-this.getHealth())*(255/this.getMaxHealth());

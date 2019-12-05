@@ -9,6 +9,8 @@ public abstract class Human extends Moveable {
 
   private static final double RANDOM_MOVE_CHANCE = 0.1;
 
+  private static long NUM_HUMANS = 0;
+
   private int age = 0;
   private int stepsUntilFertile = 0;
 
@@ -21,6 +23,10 @@ public abstract class Human extends Moveable {
 
   public Human(int x, int y, int initialHealth) {
     super(x, y, initialHealth);
+  }
+
+  public long generateID() {
+    return Human.NUM_HUMANS++;
   }
 
   public static Human createHuman(int x, int y) {
@@ -41,8 +47,8 @@ public abstract class Human extends Moveable {
 
   @Override
   public String toString() {
-    // return "Human#"+this.getID();
-    return "H";
+    return "Human#"+this.getID();
+    // return "H";
   }
 
   public Spawnable act(Spawnable other) {
@@ -114,7 +120,8 @@ public abstract class Human extends Moveable {
   public Human tryReproduceWith(Human other) {
     if(this.canReproduce() && other.canReproduce()
           && (((this instanceof Male) && (other instanceof Female))
-              || ((this instanceof Female) && (other instanceof Male)))) {
+              || ((this instanceof Female) && (other instanceof Male)))
+          && ()) {
       this.setStepsUntilFertile(this.getMinBirthInterval());
       return Human.createHuman(this.getX(), this.getY(),
                                (this.getHealth()+other.getHealth())/2);
@@ -143,11 +150,11 @@ public abstract class Human extends Moveable {
     return chances[chances.length-1][1];
   }
 
-  abstract int getMinBirthInterval();
+  public abstract int getMinBirthInterval();
 
-  abstract double[][] getAgeBirthChances();
+  public abstract double[][] getAgeBirthChances();
 
-  abstract double[][] getHealthBirthChances();
+  public abstract double[][] getHealthBirthChances();
 
   public double getBirthChance() {
     if(this.getStepsUntilFertile() > 0) {
