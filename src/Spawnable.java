@@ -36,10 +36,8 @@ public abstract class Spawnable implements Comparable<Spawnable> {
   public String[] getDescendantStrings() {
     this.removeDeadDescendants();
     String[] s = new String[this.descendants.size()];
-    Iterator<Spawnable> descendentIterator = this.descendants.iterator();
-    int i = 0;
-    while(descendentIterator.hasNext()) {
-      s[i++] = descendentIterator.next().toString();
+    for(int i = 0; i < this.descendants.size(); ++i) {
+      s[i] = this.descendants.get(i).toString();
     }
     return s;
   }
@@ -60,6 +58,10 @@ public abstract class Spawnable implements Comparable<Spawnable> {
     }
     this.removeDeadDescendants();
     return descendant;
+  }
+
+  public boolean hasDescendant(Spawnable descendant) {
+    return this.descendants.contains(descendant);
   }
 
   private void removeDeadDescendants() {

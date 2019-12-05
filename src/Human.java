@@ -65,6 +65,7 @@ public abstract class Human extends Moveable {
         this.turnAround();
         return this;
       } else {
+        ((Human)other).addDescendant(newHuman);
         return this.addDescendant(newHuman);
       }
     } else if (other instanceof Zombie) {
@@ -121,7 +122,7 @@ public abstract class Human extends Moveable {
     if(this.canReproduce() && other.canReproduce()
           && (((this instanceof Male) && (other instanceof Female))
               || ((this instanceof Female) && (other instanceof Male)))
-          && ()) {
+          && !(this.hasDescendant(other) || other.hasDescendant(this))) {
       this.setStepsUntilFertile(this.getMinBirthInterval());
       return Human.createHuman(this.getX(), this.getY(),
                                (this.getHealth()+other.getHealth())/2);
@@ -160,7 +161,11 @@ public abstract class Human extends Moveable {
     if(this.getStepsUntilFertile() > 0) {
       return 0;
     }
-    return Human.getChanceByInterpolation(this.getAgeBirthChances(), this.getAge())
-           + Human.getChanceByInterpolation(this.getHealthBirthChances(), this.getHealth());
+    return Math.min(Math.max((Human.getChanceByInterpolation(this.getAgeBirthChances(),
+                                                             this.getAge())
+                              + Human.getChanceByInterpolation(this.getHealthBirthChances(),
+                                                               this.getHealth())),
+                             0.0),
+                    1.0);
   }
 }

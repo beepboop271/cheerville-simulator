@@ -1,7 +1,3 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -16,7 +12,8 @@ public class SpawnableInfoPanel extends JPanel {
   private SpawnableTextPanel textPanel;
 
   public SpawnableInfoPanel(SpawnableVisionPanel visionPanel,
-                            SpawnableTextPanel textPanel) {
+                            SpawnableTextPanel textPanel,
+                            SpawnableButtonPanel buttonPanel) {
     this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
     this.setLayout(new GridBagLayout());
@@ -26,9 +23,9 @@ public class SpawnableInfoPanel extends JPanel {
     c.gridwidth = 1;
     c.gridheight = 2;
     c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.6;
-    c.weighty = 1.0;
-    c.insets = new Insets(10, 10, 10, 10);
+    c.weightx = 0;
+    c.weighty = 0;
+    c.insets = new Insets(5, 5, 5, 5);
     this.add(textPanel, c);
     this.textPanel = textPanel;
     
@@ -37,14 +34,25 @@ public class SpawnableInfoPanel extends JPanel {
     c.gridy = 0;
     c.gridwidth = 1;
     c.gridheight = 1;
-    // c.fill = GridBagConstraints.BOTH;
-    // c.weightx = 0.4;
-    // c.weighty = 1.0;
-    c.insets = new Insets(10, 0, 10, 10);
+    c.fill = GridBagConstraints.NONE;
+    c.anchor = GridBagConstraints.WEST;
+    c.weightx = 0;
+    c.weighty = 0;
+    this.add(buttonPanel, c);
+    buttonPanel.setContainingPanel(this);
+    
+    c = new GridBagConstraints();
+    c.gridx = 1;
+    c.gridy = 1;
+    c.gridwidth = 1;
+    c.gridheight = 1;
+    c.fill = GridBagConstraints.BOTH;
+    c.weightx = 0.5;
+    c.weighty = 1.0;
     this.add(visionPanel, c);
     this.visionPanel = visionPanel;
     this.visionPanel.setInfoPanel(this);
-
+    
     this.setOpaque(true);
   }
 

@@ -13,7 +13,7 @@ public class Cheerville {
   };
 
   public static void main(String[] args) throws InterruptedException {
-    World cheervilleWorld = new World(25, 25, 100, 0);
+    World cheervilleWorld = new World(35, 35, 400, 0);
     CheervilleFrame display = new CheervilleFrame("Duber 2: Electric Boogaloo",
                                                   cheervilleWorld);
     int[] counts = {-1, -1, -1, -1};

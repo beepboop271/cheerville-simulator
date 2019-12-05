@@ -76,7 +76,7 @@ public class WorldPanel extends JPanel {
     setDoubleBuffered(true);
 
     g.setColor(Color.GRAY);
-    g.fillRect(0, 0, this.getWidth(), this.getHeight());
+    g.fillRect(0, 0, this.getCellSize()*drawRect.width, this.getCellSize()*drawRect.height);
 
     for (int y = drawRect.y; y < drawRect.y+drawRect.height; ++y) {
       for (int x = drawRect.x; x < drawRect.x+drawRect.width; ++x) {
@@ -129,8 +129,8 @@ public class WorldPanel extends JPanel {
   public void onResize(ComponentEvent e) {
     this.setCellSize(Math.min(this.getWidth()/this.worldToDisplay.getWidth(),
                               this.getHeight()/this.worldToDisplay.getHeight()));
-    this.setSize(new Dimension(this.getCellSize()*this.worldToDisplay.getWidth()+1,
-                               this.getCellSize()*this.worldToDisplay.getHeight()+1));
+    this.setSize(new Dimension(this.getCellSize()*this.worldToDisplay.getWidth(),
+                               this.getCellSize()*this.worldToDisplay.getHeight()));
   }
 
   public void onClick(MouseEvent e) {
