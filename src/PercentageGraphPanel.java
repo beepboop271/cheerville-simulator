@@ -18,22 +18,8 @@ public class PercentageGraphPanel extends GraphPanel {
                                 * worldToDisplay.getWidth());
   }
 
-  public double[][] getPercentagesFromCounts(int[][] data) {
-    double[][] percentageData = new double[data.length][5];
-    double sum;
-    for(int i = 0; i < data.length; ++i) {
-      sum = 0;
-      for(int j = 0; j < 4; ++j) {
-        percentageData[i][j] = (data[i][j]/this.totalSpaces)*100;
-        sum += percentageData[i][j];
-      }
-      percentageData[i][4] = 100-sum;
-    }
-    return percentageData;
-  }
-
+  @Override
   public void paintComponent(Graphics g) {
-    // System.out.println("paint % graph");
     super.paintComponent(g);
 
     this.plotGraph(g,
@@ -41,5 +27,19 @@ public class PercentageGraphPanel extends GraphPanel {
                     this.COLOURS,
                     this.getHeight()/100.0,
                     "%d%%");  // %% produces a literal '%' character
+  }
+
+  public double[][] getPercentagesFromCounts(int[][] data) {
+    double[][] percentageData = new double[data.length][5];
+    double sum;
+    for (int i = 0; i < data.length; ++i) {
+      sum = 0;
+      for (int j = 0; j < 4; ++j) {
+        percentageData[i][j] = (data[i][j]/this.totalSpaces)*100;
+        sum += percentageData[i][j];
+      }
+      percentageData[i][4] = 100-sum;
+    }
+    return percentageData;
   }
 }

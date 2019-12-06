@@ -14,7 +14,7 @@ public class Zombie extends Moveable {
   public Zombie(int x, int y) {
     super(x, y,
           (Zombie.INITIAL_HEALTH
-           + (int)(((Math.random()-0.5)*2)  // [-1, 1) * (variance+1)
+           + (int)(((Math.random()-0.5)*2)
                    * (Zombie.HEALTH_VARIANCE+1))));
   }
 
@@ -25,52 +25,6 @@ public class Zombie extends Moveable {
   }
 
   @Override
-  public String toString() {
-    return "Zombie#"+this.getID();
-    // return "Z";
-  }
-
-  public long generateID() {
-    return Zombie.NUM_ZOMBIES++;
-  }
-
-  public int getVisionValue() {
-    Spawnable[][] vision = this.getVision();
-    int value = 0;
-    if(vision != null) {
-      for(int i = 0; i < vision.length; ++i) {
-        for(int j = 0; j < vision[0].length; ++j) {
-          if(vision[i][j] instanceof Human) {
-            ++value;
-          }
-        }
-      }
-    }
-    return value;
-  }
-
-  public Vector2D getInfluenceVectorFor(Spawnable other) {
-    Vector2D influence;
-    influence = this.getDistanceVectorTo(other);
-    if(other instanceof Human) {
-      // ++humansSpotted;
-      // inversely proportional to zombie's health
-      // proportional to the human's health
-      // inversely proportional to human's distance
-      influence.setLength((10.0/this.getHealth())
-                          * other.getHealth()
-                          * (5.0/influence.getLength()));
-    } else if (other instanceof Zombie) {
-      // inversely proportional to zombie's distance
-      influence.setLength(3.0/influence.getLength());
-      // move away, not towards
-      influence.flip();
-    } else {
-      influence.setLength(0);
-    }
-    return influence;
-  }
-
   public Spawnable act(Spawnable other) {
     if (other instanceof Plant) {
       // null = zombie can move to the spot
@@ -94,9 +48,46 @@ public class Zombie extends Moveable {
     return null;
   }
 
+  @Override
+  public int getVisionValue() {
+    Spawnable[][] vision = this.getVision();
+    int value = 0;
+    if (vision != null) {
+      for (int i = 0; i < vision.length; ++i) {
+        for (int j = 0; j < vision[0].length; ++j) {
+          if (vision[i][j] instanceof Human) {
+            ++value;
+          }
+        }
+      }
+    }
+    return value;
+  }
+
+  @Override
+  public Vector2D getInfluenceVectorFor(Spawnable other) {
+    Vector2D influence;
+    influence = this.getDistanceVectorTo(other);
+    if (other instanceof Human) {
+      // inversely proportional to zombie's health
+      // proportional to the human's health
+      // inversely proportional to human's distance
+      influence.setLength((10.0/this.getHealth())
+                          * other.getHealth()
+                          * (5.0/influence.getLength()));
+    } else if (other instanceof Zombie) {
+      // inversely proportional to zombie's distance
+      influence.setLength(3.0/influence.getLength());
+      // move away, not towards
+      influence.flip();
+    } else {
+      influence.setLength(0);
+    }
+    return influence;
+  }
+
   public Zombie attackHuman(Human victim) {
-    // System.out.println("attack");
-    if(this.getHealth() > victim.getHealth()) {
+    if (this.getHealth() > victim.getHealth()) {
       this.heal((int)(victim.getHealth()*Zombie.HUMAN_ENERGY_FACTOR));
       victim.setDead();
       return null;
@@ -105,23 +96,38 @@ public class Zombie extends Moveable {
     }
   }
 
+  @Override
+  public String toString() {
+    return "Zombie#"+this.getID();
+  }
+
+  @Override
   public int getMaxHealth() {
     return Zombie.MAX_HEALTH;
   }
 
+  @Override
   public int getInitialHealth() {
     return Zombie.INITIAL_HEALTH;
   }
 
+  @Override
   public int getHealthVariance() {
     return Zombie.HEALTH_VARIANCE;
   }
 
+  @Override
   public double getRandomMoveChance() {
     return Zombie.RANDOM_MOVE_CHANCE;
   }
 
+  @Override
   public Color getColor() {
     return new Color(255, this.getColorChannelValue(), this.getColorChannelValue());
+  }
+
+  @Override
+  public long generateID() {
+    return Zombie.NUM_ZOMBIES++;
   }
 }

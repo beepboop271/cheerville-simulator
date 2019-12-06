@@ -57,20 +57,17 @@ public class SpawnableInfoPanel extends JPanel {
   }
 
   public void update() {
-    if(this.getSpawnableToShow().getHealth() <= 0) {
-      System.out.println("aaaadsffds");
+    if (this.getSpawnableToShow().getHealth() <= 0) {
       this.setSpawnableToShow(this.getSpawnableToShow().getFirstDescendant());
-      System.out.println(this.getSpawnableToShow());
-      // System.out.println(this.getSpawnableToShow().getHealth());
     }
+  }
+
+  public Spawnable getSpawnableToShow() {
+    return this.textPanel.getSpawnableToShow();
   }
 
   public void setSpawnableToShow(Spawnable spawnableToShow) {
     this.textPanel.setSpawnableToShow(spawnableToShow);
     this.visionPanel.setSpawnableToShow(spawnableToShow);   
-  }
-
-  public Spawnable getSpawnableToShow() {
-    return this.textPanel.getSpawnableToShow();
   }
 }

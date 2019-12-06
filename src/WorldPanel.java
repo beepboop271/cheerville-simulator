@@ -41,26 +41,7 @@ public class WorldPanel extends JPanel {
     this.mapY = y;
   }
 
-  public int getCellSize() {
-    return this.cellSize;
-  }
-
-  public void setCellSize(int cellSize) {
-    this.cellSize = cellSize;
-  }
-
-  public SpawnableInfoPanel getInfoPanel() {
-    return this.infoPanel;
-  }
-
-  public void setInfoPanel(SpawnableInfoPanel infoPanel) {
-    this.infoPanel = infoPanel;
-  }
-
-  public World getWorldToDisplay() {
-    return this.worldToDisplay;
-  }
-
+  @Override
   public void paintComponent(Graphics g) {
     this.paintComponent(g, new Rectangle(0, 0,
                                          this.worldToDisplay.getWidth(),
@@ -106,7 +87,7 @@ public class WorldPanel extends JPanel {
 
     g.setFont(this.smallFont);
 
-    if(this.infoPanel != null && this.infoPanel.getSpawnableToShow() != null) {
+    if ((this.infoPanel != null) && (this.infoPanel.getSpawnableToShow() != null)) {
       this.paintSelectedCell(g,
                              this.infoPanel.getSpawnableToShow().getX(),
                              this.infoPanel.getSpawnableToShow().getY());
@@ -135,17 +116,37 @@ public class WorldPanel extends JPanel {
 
   public void onClick(MouseEvent e) {
     int button = e.getButton();
-    if(button == MouseEvent.BUTTON1) {
+    if (button == MouseEvent.BUTTON1) {
       this.worldToDisplay.spawnZombieNear(e.getX()/this.getCellSize(),
                                           e.getY()/this.getCellSize());
-    } else if(button == MouseEvent.BUTTON2) {
+    } else if (button == MouseEvent.BUTTON2) {
       this.worldToDisplay.spawnHumanNear(e.getX()/this.getCellSize(),
                                          e.getY()/this.getCellSize());
-    } else if(button == MouseEvent.BUTTON3 && this.infoPanel != null) {
+    } else if ((button == MouseEvent.BUTTON3) && (this.infoPanel != null)) {
       this.infoPanel.setSpawnableToShow(this.worldToDisplay
                                             .getMapAt(e.getX()/this.getCellSize(),
                                                       e.getY()/this.getCellSize()));
     }
+  }
+
+  public int getCellSize() {
+    return this.cellSize;
+  }
+
+  public void setCellSize(int cellSize) {
+    this.cellSize = cellSize;
+  }
+
+  public SpawnableInfoPanel getInfoPanel() {
+    return this.infoPanel;
+  }
+
+  public void setInfoPanel(SpawnableInfoPanel infoPanel) {
+    this.infoPanel = infoPanel;
+  }
+
+  public World getWorldToDisplay() {
+    return this.worldToDisplay;
   }
 
   public class MapPanelResizeListener extends ComponentAdapter {

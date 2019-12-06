@@ -23,10 +23,7 @@ public class World {
     this.WIDTH = width;
     this.HEIGHT = height;
     this.map = new Spawnable[height][width];
-    // for (int i = 0; i < 10; ++i) {
-    // for (int i = 0; i < 5; ++i) {
-      this.doSimulationStep();  // let some plants grow
-    // }
+    this.doSimulationStep();  // let some plants grow
     int x, y;
     for (int i = 0; i < numHumans; ++i) {
       x = (int)(Math.random()*width);
@@ -40,22 +37,6 @@ public class World {
     }
   }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder(this.HEIGHT*this.WIDTH);
-    for (int y = 0; y < this.HEIGHT; ++y) {
-      for (int x = 0; x < this.WIDTH; ++x) {
-        if (this.isOccupiedAt(x, y)) {
-          sb.append(this.getMapAt(x, y).toString());
-        } else {
-          sb.append(' ');
-        }
-      }
-      sb.append('\n');
-    }
-    return sb.toString();
-  }
-
   public int[] doSimulationStep() {
     Spawnable s;
     int[] newPos;
@@ -65,17 +46,8 @@ public class World {
       for (int x = 0; x < this.WIDTH; ++x) {
         if (this.isOccupiedAt(x, y)) {
           s = this.getMapAt(x, y);
-          // if (!(s instanceof Plant)) {
-          //   System.out.println(s.toString());
-          //   System.out.println(s.getID());
-          //   if (s instanceof Moveable) {
-          //     System.out.printf("AT %s %d, (%d, %d)\n", s.toString(), s.getID(),
-          //                       s.getX(), s.getY());
-          //   }
-          // }
-
-          if(s instanceof Plant) {
-            if(s.decay() <= 0) {
+          if (s instanceof Plant) {
+            if (s.decay() <= 0) {
               this.removeMapAt(s);
             } else {
               Plant newPlant = (Plant)(s.act(null));
@@ -84,15 +56,14 @@ public class World {
               }
             }
           } else if ((s instanceof Moveable)
-                && !((Moveable)s).getMoved()) {
+                     && !(((Moveable)s).getMoved())) {
             ((Moveable)s).setMoved(true);
-            if(s.decay() <= 0) {
+            if (s.decay() <= 0) {
               this.removeMapAt(s);
             } else {
-              // System.out.println(s.getHealth());
               ((Moveable)s).setVision(this.getVision((Moveable)s));
               newPos = ((Moveable)s).generateSmartMove();
-              if(!this.isInWorld(newPos[0], newPos[1])) {
+              if (!this.isInWorld(newPos[0], newPos[1])) {
                 moveAttempts = 0;
                 do {
                   newPos = ((Moveable)s).generateRandomMove();
@@ -100,14 +71,11 @@ public class World {
                          && (moveAttempts++ < 5));
               }
 
-              if(this.isInWorld(newPos[0], newPos[1]) && !(newPos[0] == x && newPos[1] == y)) {
-                // System.out.printf("%s at (%d, %d)\n",
-                //  this.getMapAt(newPos[0], newPos[1]),
-                //  newPos[0], newPos[1]);
+              if (this.isInWorld(newPos[0], newPos[1])
+                    && !((newPos[0] == x) && (newPos[1] == y))) {
                 newSpawnable = ((Moveable)s).act(this.getMapAt(newPos[0],
                                                                newPos[1]));
                 if (newSpawnable == null) {
-                  // System.out.println("nothing happened");
                   this.removeMapAt(s);
                   s.setPos(newPos[0], newPos[1]);
                   this.setMapAt(s);
@@ -125,14 +93,11 @@ public class World {
                   }
                 }
               }
-
               if (s instanceof Human) {
                 ((Human)s).setStepsUntilFertile(((Human)s).getStepsUntilFertile()-1);
                 ((Human)s).incrementAge();
               }
-              
             }
-            // System.out.println("");
           }
         } else if (Math.random() < PLANT_SPAWN_CHANCE) {
           this.setMapAt(new Plant(x, y));
@@ -142,25 +107,16 @@ public class World {
     return this.resetAndCount();
   }
 
-  private int[] resetAndCount() {
+  public int[] resetAndCount() {
     Spawnable s;
     int[] counts = {0, 0, 0, 0};
     for (int y = 0; y < this.HEIGHT; ++y) {
       for (int x = 0; x < this.WIDTH; ++x) {
         if (this.isOccupiedAt(x, y)) {
           s = this.getMapAt(x, y);
-          if(s.getX() != x || s.getY() != y) {
-            System.out.println(this.toString());
-            System.out.printf("%s at (%d, %d) thought it was at (%d, %d)\n",
-                              s.toString(), x, y, s.getX(), s.getY());
-            System.out.println("something terrible has happened");
-            System.exit(1);
-          }
-          // System.out.printf("%s %d\n", s.toString(), s.getID());
           if (s instanceof Plant) {
             ++counts[0];
           } else if (s instanceof Moveable) {
-            // System.out.printf("%s %d\n", s.toString(), s.getID());
             ((Moveable)s).setMoved(false);
             if (s instanceof Human) {
               if (s instanceof Female) {
@@ -183,9 +139,10 @@ public class World {
     int facingDirection = viewer.getFacingDirection();
     int[] offsets = VISION_OFFSETS[facingDirection];
     Spawnable[][] vision = new Spawnable[offsets[3]][offsets[2]];
-    for(int i = 0; i < offsets[3]; ++i) {
-      for(int j = 0; j < offsets[2]; ++j) {
-        if(this.isInWorld(viewer.getX()+j+offsets[0], viewer.getY()+i+offsets[1])) {
+    for (int i = 0; i < offsets[3]; ++i) {
+      for (int j = 0; j < offsets[2]; ++j) {
+        if (this.isInWorld(viewer.getX()+j+offsets[0],
+                           viewer.getY()+i+offsets[1])) {
           vision[i][j] = this.getMapAt(viewer.getX()+j+offsets[0],
                                        viewer.getY()+i+offsets[1]);
         }
@@ -202,10 +159,10 @@ public class World {
       {x+1, y+1}, {x-1, y+1}, {x-1, y-1}, {x+1, y-1}
     };
     int newX, newY;
-    for(int i = 0; i < possibleLocations.length; ++i) {
+    for (int i = 0; i < possibleLocations.length; ++i) {
       newX = possibleLocations[i][0];
       newY = possibleLocations[i][1];
-      if(this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
+      if (this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
         h.act(this.getMapAt(newX, newY));
         h.setPos(newX, newY);
         this.setMapAt(h);
@@ -220,10 +177,10 @@ public class World {
       {x+1, y+1}, {x-1, y+1}, {x-1, y-1}, {x+1, y-1}
     };
     int newX, newY;
-    for(int i = 0; i < possibleLocations.length; ++i) {
+    for (int i = 0; i < possibleLocations.length; ++i) {
       newX = possibleLocations[i][0];
       newY = possibleLocations[i][1];
-      if(this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
+      if (this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
         Human h = Human.createHuman(newX, newY);
         h.act(this.getMapAt(newX, newY));
         h.setPos(newX, newY);
@@ -239,10 +196,10 @@ public class World {
       {x+1, y+1}, {x-1, y+1}, {x-1, y-1}, {x+1, y-1}
     };
     int newX, newY;
-    for(int i = 0; i < possibleLocations.length; ++i) {
+    for (int i = 0; i < possibleLocations.length; ++i) {
       newX = possibleLocations[i][0];
       newY = possibleLocations[i][1];
-      if(this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
+      if (this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
         this.setMapAt(new Zombie(newX, newY));
         return;
       }
@@ -264,9 +221,9 @@ public class World {
       newY = possibleLocations[idx][1];
     } while ((!this.isInWorld(newX, newY)
               || this.hasMoveableAt(newX, newY))
-             && attempts++ < possibleLocations.length);
-    if(this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
-      if(this.isOccupiedAt(newX, newY)) {
+             && (attempts++ < possibleLocations.length));
+    if (this.isInWorld(newX, newY) && !this.hasMoveableAt(newX, newY)) {
+      if (this.isOccupiedAt(newX, newY)) {
         this.getMapAt(newX, newY).act(p);
       } else {
         // p.act(this.getMapAt(newX, newY));
@@ -289,14 +246,14 @@ public class World {
 
     int[] current;
     int[] next = new int[2];
-    while(!queue.isEmpty()) {
+    while (!queue.isEmpty()) {
       current = queue.removeFirst();
-      if(this.getMapAt(current[0], current[1]) instanceof Zombie) {
+      if (this.getMapAt(current[0], current[1]) instanceof Zombie) {
         return (Zombie)(this.getMapAt(current[0], current[1]));
       } else {
-        for(int i = 1; i <= 4; ++i) {
-          if(this.isInWorld(current[0]+Cheerville.MOVEMENTS[i][0],
-                            current[1]+Cheerville.MOVEMENTS[i][1])
+        for (int i = 1; i <= 4; ++i) {
+          if (this.isInWorld(current[0]+Cheerville.MOVEMENTS[i][0],
+                             current[1]+Cheerville.MOVEMENTS[i][1])
                 && !visited[current[1]+Cheerville.MOVEMENTS[i][1]]
                            [current[0]+Cheerville.MOVEMENTS[i][0]]) {
             next[0] = current[0]+Cheerville.MOVEMENTS[i][0];
@@ -323,14 +280,14 @@ public class World {
 
     int[] current;
     int[] next = new int[2];
-    while(!queue.isEmpty()) {
+    while (!queue.isEmpty()) {
       current = queue.removeFirst();
-      if(this.getMapAt(current[0], current[1]) instanceof Human) {
+      if (this.getMapAt(current[0], current[1]) instanceof Human) {
         return (Human)(this.getMapAt(current[0], current[1]));
       } else {
-        for(int i = 1; i <= 4; ++i) {
-          if(this.isInWorld(current[0]+Cheerville.MOVEMENTS[i][0],
-                            current[1]+Cheerville.MOVEMENTS[i][1])
+        for (int i = 1; i <= 4; ++i) {
+          if (this.isInWorld(current[0]+Cheerville.MOVEMENTS[i][0],
+                             current[1]+Cheerville.MOVEMENTS[i][1])
                 && !visited[current[1]+Cheerville.MOVEMENTS[i][1]]
                            [current[0]+Cheerville.MOVEMENTS[i][0]]) {
             next[0] = current[0]+Cheerville.MOVEMENTS[i][0];
@@ -353,15 +310,12 @@ public class World {
       (this.WIDTH*this.HEIGHT)-counts[0]-counts[1]-counts[2]-counts[3]
     };
     this.distributionHistory.addLast(record);
-    while(this.distributionHistory.size() > this.getHistoryAmount()) {
+    while (this.distributionHistory.size() > this.getHistoryAmount()) {
       this.distributionHistory.removeFirst();
     }
     this.historyArray = this.distributionHistory.toArray(new int[0][0]);
   }
 
-  // public LinkedList<int[]> getDistributionHistory() {
-  //   return this.distributionHistory;
-  // }
   public int[][] getDistributionHistory() {
     return this.historyArray;
   }
@@ -372,7 +326,7 @@ public class World {
 
   public void setHistoryAmount(int historyAmount) {
     this.historyAmount = historyAmount;
-    while(this.distributionHistory.size() > this.historyAmount) {
+    while (this.distributionHistory.size() > this.historyAmount) {
       this.distributionHistory.removeFirst();
     }
   }
@@ -394,11 +348,15 @@ public class World {
   }
 
   public boolean isInWorld(int x, int y) {
-    return x >= 0 && x < this.WIDTH && y >= 0 && y < this.HEIGHT;
+    return ((x >= 0) && (x < this.WIDTH) && (y >= 0) && (y < this.HEIGHT));
   }
 
   public boolean isOccupiedAt(int x, int y) {
     return this.map[y][x] != null;
+  }
+
+  public void removeMapAt(Spawnable s) {
+    this.map[s.getY()][s.getX()] = null;
   }
 
   public boolean hasMoveableAt(int x, int y) {
@@ -409,21 +367,7 @@ public class World {
     return this.map[y][x];
   }
 
-  public Spawnable[][] getMap() {
-    return this.map;
-  }
-
   public void setMapAt(Spawnable s) {
-    // System.out.printf("set world at %d, %d\n", s.getX(), s.getY());
     this.map[s.getY()][s.getX()] = s;
-    // System.out.println(this);
-  }
-
-  public void removeMapAt(Spawnable s) {
-    if(this.getMapAt(s.getX(), s.getY()) != s) {
-      System.out.println("hmmmmm");
-    }
-    // System.out.printf("remove world at %d, %d\n", s.getX(), s.getY());
-    this.map[s.getY()][s.getX()] = null;
   }
 }

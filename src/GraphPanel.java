@@ -33,7 +33,7 @@ public abstract class GraphPanel extends JPanel {
 
   public static int sum(int[] record) {
     int total = 0;
-    for(int i = 0; i < record.length; ++i) {
+    for (int i = 0; i < record.length; ++i) {
       total += record[i];
     }
     return total;
@@ -42,9 +42,9 @@ public abstract class GraphPanel extends JPanel {
   public static int findMax(int[][] history, int startIdx) {
     int count;
     int maxValue = -1;
-    for(int i = startIdx; i < history.length; ++i) {
+    for (int i = startIdx; i < history.length; ++i) {
       count = GraphPanel.sum(history[i]);
-      if(count > maxValue) {
+      if (count > maxValue) {
         maxValue = count;
       }
     }
@@ -53,20 +53,13 @@ public abstract class GraphPanel extends JPanel {
 
   public static int getTextRow(int graphRow, int lastTextRow, int height) {
     int textRow = GraphPanel.clamp(graphRow+8, 20, height-5);
-    if(lastTextRow != -1 && (textRow-lastTextRow < 20)) {
+    if ((lastTextRow != -1) && (textRow-lastTextRow < 20)) {
       textRow = GraphPanel.clamp(lastTextRow+20, 20, height-5);
     }
     return textRow;
   }
 
-  public int getGraphWidth() {
-    return this.graphWidth;
-  }
-
-  public int[][] getDistributionHistory() {
-    return this.worldToDisplay.getDistributionHistory();
-  }
-
+  @Override
   public void paintComponent(Graphics g) {
     super.repaint();
     setDoubleBuffered(true);
@@ -85,19 +78,19 @@ public abstract class GraphPanel extends JPanel {
     double[] record;
     int row;
     int lastTextRow = -1;
-    for(int col = 0; col < data.length; ++col) {
+    for (int col = 0; col < data.length; ++col) {
       record = data[col];
       row = 0;
-      for(int i = 0; i < record.length; ++i) {
+      for (int i = 0; i < record.length; ++i) {
         g.setColor(colours[i]);
-        if(col == data.length-1) {
+        if (col == data.length-1) {
           lastTextRow = GraphPanel.getTextRow(row, lastTextRow,
                                               this.getHeight());
           g.drawString(String.format(fstring, (int)(record[i])),
                        col+10, lastTextRow);
         }
         
-        if(record[i] > 0) {
+        if (record[i] > 0) {
           g.drawLine(col, row, col, row+((int)(record[i]*scaleFactor)));
           row += (int)(record[i]*scaleFactor);
         }
@@ -111,24 +104,28 @@ public abstract class GraphPanel extends JPanel {
                         double scaleFactor,
                         String fstring) {
     double[][] convertedData = new double[data.length][data[0].length];
-    for(int i = 0; i < data.length; ++i) {
-      for(int j = 0; j < data[0].length; ++j) {
+    for (int i = 0; i < data.length; ++i) {
+      for (int j = 0; j < data[0].length; ++j) {
         convertedData[i][j] = (double)(data[i][j]);
       }
     }
     this.plotGraph(g, convertedData, colours, scaleFactor, fstring);
   }
 
-  public void resize() {
+  public void onResize() {
     this.graphWidth = this.getWidth()-60;
     this.worldToDisplay.setHistoryAmount(graphWidth);
+  }
+
+  public int[][] getDistributionHistory() {
+    return this.worldToDisplay.getDistributionHistory();
   }
 
   public class GraphPanelResizeListener extends ComponentAdapter {
     public void componentResized(ComponentEvent e) {
       // call method in GraphPanel so that
       // CountGraphPanel can override it
-      resize();
+      onResize();
     }
   }
 }

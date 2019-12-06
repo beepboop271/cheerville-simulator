@@ -11,8 +11,6 @@ public class CheervilleFrame extends JFrame {
   public CheervilleFrame(String title, World worldToDisplay) {
     super(title);
 
-    // actually not that bad tutorial:
-    // https://docs.oracle.com/javase/tutorial/uiswing/layout/gridbag.html
     JPanel mainPane = new JPanel();
     mainPane.setLayout(new GridBagLayout());
 
@@ -74,7 +72,6 @@ public class CheervilleFrame extends JFrame {
   }
 
   public void refresh() {
-    // System.out.println("refresh");
     this.repaint();
   }
 }

@@ -55,24 +55,24 @@ public class SpawnableButtonPanel extends JPanel implements ActionListener{
     this.setMinimumSize(new Dimension(100, 100));
     this.setOpaque(false);
   }
-  
-  public void setContainingPanel(SpawnableInfoPanel containingPanel) {
-    this.containingPanel = containingPanel;
-  }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if(this.containingPanel == null) {
+    if (this.containingPanel == null) {
       return;
     }
     String command = e.getActionCommand();
-    if(command.equals("selectZombie")) {
+    if (command.equals("selectZombie")) {
       this.containingPanel
           .setSpawnableToShow(this.worldToControl.selectRandomZombie());
-    } else if(command.equals("selectHuman")) {
+    } else if (command.equals("selectHuman")) {
       System.out.println("hiii");
       this.containingPanel
           .setSpawnableToShow(this.worldToControl.selectRandomHuman());
     }
+  }
+  
+  public void setContainingPanel(SpawnableInfoPanel containingPanel) {
+    this.containingPanel = containingPanel;
   }
 }

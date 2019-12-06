@@ -26,11 +26,6 @@ public class Vector2D implements Cloneable {
   }
 
   @Override
-  public String toString() {
-    return "Vector2D "+this.x+" "+this.y+" "+Math.toDegrees(this.angle)+" "+this.length;
-  }
-
-  @Override
   public Object clone() {
     try {
       return super.clone();  
@@ -39,12 +34,51 @@ public class Vector2D implements Cloneable {
     }
   }
 
-  public Color getColor() {
-    return this.vectorColor;
+  public int asMoveInteger() {
+    if (this.getLength() == 0) {
+      return Cheerville.NO_MOVE;
+    } else {
+      int angle = (int)(Math.toDegrees(this.getAngle()));
+      if ((angle >= -45) && (angle < 45)) {
+        return Cheerville.EAST;
+      } else if ((angle >= 45) && (angle < 180-45)) {
+        return Cheerville.SOUTH;
+      } else if ((angle >= -180+45) && (angle < -45)) {
+        return Cheerville.NORTH;
+      } else {
+        return Cheerville.WEST;
+      }
+    }
   }
 
-  public void setColor(Color vectorColor) {
-    this.vectorColor = vectorColor;
+  private void update(int flags) {
+    if ((flags&Vector2D.LENGTH) > 0) {
+      this.length = Math.sqrt((x*x)+(y*y));
+    }
+    if ((flags&Vector2D.ANGLE) > 0) {
+      this.angle = Math.atan2(this.y, this.x);
+    }
+    if ((flags&Vector2D.X) > 0) {
+      this.x = Math.cos(this.angle)*this.length;
+    }
+    if ((flags&Vector2D.Y) > 0) {
+      this.y = Math.sin(this.angle)*this.length;
+    }
+  }
+  
+  public Vector2D flip() {
+    this.x = -this.x;
+    this.y = -this.y;
+    this.update(Vector2D.ANGLE);
+    return this;
+  }
+
+  public void add(Vector2D other) {
+    this.setPos(this.x+other.x, this.y+other.y);
+  }
+
+  public Color getColor() {
+    return this.vectorColor;
   }
 
   public double getX() {
@@ -67,7 +101,7 @@ public class Vector2D implements Cloneable {
   }
 
   public Vector2D setLength(double length) {
-    if(length < 0) {
+    if (length < 0) {
       this.length = Math.abs(length);
       this.update(Vector2D.POS);
       this.flip();
@@ -80,54 +114,5 @@ public class Vector2D implements Cloneable {
 
   public double getAngle() {
     return this.angle;
-  }
-
-  public Vector2D setAngle(double angle) {
-    this.angle = angle%(2*Math.PI);
-    this.update(Vector2D.POS);
-    return this;
-  }
-
-  public Vector2D flip() {
-    this.x = -this.x;
-    this.y = -this.y;
-    this.update(Vector2D.ANGLE);
-    return this;
-  }
-
-  public int asMoveInteger() {
-    if(this.getLength() == 0) {
-      return Cheerville.NO_MOVE;
-    } else {
-      int angle = (int)(Math.toDegrees(this.getAngle()));
-      if(angle >= -45 && angle < 45) {
-        return Cheerville.EAST;
-      } else if(angle >= 45 && angle < 180-45) {
-        return Cheerville.SOUTH;
-      } else if(angle >= -180+45 && angle < -45) {
-        return Cheerville.NORTH;
-      } else {
-        return Cheerville.WEST;
-      }
-    }
-  }
-
-  public void update(int bitmask) {
-    if((bitmask&Vector2D.LENGTH) > 0) {
-      this.length = Math.sqrt((x*x)+(y*y));
-    }
-    if((bitmask&Vector2D.ANGLE) > 0) {
-      this.angle = Math.atan2(this.y, this.x);
-    }
-    if((bitmask&Vector2D.X) > 0) {
-      this.x = Math.cos(this.angle)*this.length;
-    }
-    if((bitmask&Vector2D.Y) > 0) {
-      this.y = Math.sin(this.angle)*this.length;
-    }
-  }
-
-  public void add(Vector2D other) {
-    this.setPos(this.x+other.x, this.y+other.y);
   }
 }

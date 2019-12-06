@@ -27,13 +27,14 @@ public class Female extends Human {
     super(x, y, initialHealth);
   }
 
+  @Override
   public int getVisionValue() {
     Spawnable[][] vision = this.getVision();
     int value = 0;
-    if(vision != null) {
-      for(int i = 0; i < vision.length; ++i) {
-        for(int j = 0; j < vision[0].length; ++j) {
-          if(vision[i][j] instanceof Plant || vision[i][j] instanceof Male) {
+    if (vision != null) {
+      for (int i = 0; i < vision.length; ++i) {
+        for (int j = 0; j < vision[0].length; ++j) {
+          if (vision[i][j] instanceof Plant || vision[i][j] instanceof Male) {
             ++value;
           }
         }
@@ -42,30 +43,31 @@ public class Female extends Human {
     return value;
   }
 
+  @Override
   public Vector2D getInfluenceVectorFor(Spawnable other) {
     Vector2D influence;
     influence = this.getDistanceVectorTo(other);
-    if(other instanceof Plant) {
+    if (other instanceof Plant) {
       // inversely proportional to human's health
       // proportional to plant's health
       // inversely proportional to plant's distance
       influence.setLength((20.0/this.getHealth())
                           * (other.getHealth())
                           * (5.0/influence.getLength()));
-    } else if(other instanceof Male) {
+    } else if (other instanceof Male) {
       // proportional to female's birth chance
       // proportional to male's birth chance
       // inversely proportional to female's distance
       influence.setLength((2.0*this.getBirthChance())
                           * (2.0*((Male)other).getBirthChance())
                           * (5.0/influence.getLength()));
-      if(this.getBirthChance() < 0.5) {
+      if (this.getBirthChance() < 0.5) {
         influence.flip();
       }
-    } else if(other instanceof Female) {
+    } else if (other instanceof Female) {
       influence.setLength(6.0*(this.getBirthChance()
                                - ((Female)other).getBirthChance()));
-    } else if(other instanceof Zombie) {
+    } else if (other instanceof Zombie) {
       // inversely proportional to male's birth chance
       // (lower birth chance = closer to death)
       // inversely proportional to zombie's distance
@@ -80,18 +82,22 @@ public class Female extends Human {
     return influence;
   }
 
+  @Override
   public int getMinBirthInterval() {
     return Female.MIN_BIRTH_INTERVAL;
   }
   
+  @Override
   public double[][] getAgeBirthChances() {
     return Female.AGE_BIRTH_CHANCES;
   }
   
+  @Override
   public double[][] getHealthBirthChances() {
     return Female.HEALTH_BIRTH_CHANCES;
   }
 
+  @Override
   public Color getColor() {
     return new Color(255, this.getColorChannelValue(), 255);
   }

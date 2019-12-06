@@ -7,7 +7,6 @@ public abstract class Spawnable implements Comparable<Spawnable> {
   private int x, y;
   private int health;
 
-  // for display
   private TreeSet<Spawnable> descendants = new TreeSet<Spawnable>();
   private final long id;
 
@@ -18,26 +17,25 @@ public abstract class Spawnable implements Comparable<Spawnable> {
     this.id = this.generateID();
   }
 
-  public abstract long generateID();
-
-  public long getID() {
-    return this.id;
-  }
-
+  @Override
   public int compareTo(Spawnable other) {
     return (int)(this.getID()-other.getID());
   }
 
   public void printDescendants() {
-    // this.removeDeadDescendants();
     System.out.println(this.descendants.toString());
   }
 
   public String[] getDescendantStrings() {
     this.removeDeadDescendants();
+    if (this.descendants.isEmpty()) {
+      return new String[0];
+    }
     String[] s = new String[this.descendants.size()];
-    for(int i = 0; i < this.descendants.size(); ++i) {
-      s[i] = this.descendants.get(i).toString();
+    Spawnable next = this.descendants.first();
+    for (int i = 0; i < this.descendants.size(); ++i) {
+      s[i] = next.toString();
+      next = this.descendants.higher(next);
     }
     return s;
   }
@@ -45,35 +43,42 @@ public abstract class Spawnable implements Comparable<Spawnable> {
   public Spawnable getFirstDescendant() {
     this.removeDeadDescendants();
     this.printDescendants();
-    if(this.descendants.isEmpty()) {
+    if (this.descendants.isEmpty()) {
       return null;
     } else {
       return this.descendants.first();
     }
   }
 
-  public Spawnable addDescendant(Spawnable descendant) {
-    if(!this.descendants.contains(descendant)) {
-      this.descendants.add(descendant);
-    }
-    this.removeDeadDescendants();
-    return descendant;
-  }
-
   public boolean hasDescendant(Spawnable descendant) {
     return this.descendants.contains(descendant);
   }
 
+  public Spawnable addDescendant(Spawnable descendant) {
+    this.descendants.add(descendant);
+    this.removeDeadDescendants();
+    return descendant;
+  }
+
   private void removeDeadDescendants() {
-    // this.printDescendants();
     Iterator<Spawnable> descendentIterator = this.descendants.iterator();
-    while(descendentIterator.hasNext()) {
-      if(descendentIterator.next().getHealth() <= 0) {
-        // System.out.println("kms");
+    while (descendentIterator.hasNext()) {
+      if (descendentIterator.next().getHealth() <= 0) {
         descendentIterator.remove();
       }
     }
-    // this.printDescendants();
+  }
+
+  public int getHealth() {
+    return this.health;
+  }
+
+  public int heal(int amount) {
+    if (amount > 0) {
+      this.health += amount;
+      this.health = Math.min(this.health, this.getMaxHealth());
+    }
+    return this.health;
   }
 
   public int decay() {
@@ -85,23 +90,6 @@ public abstract class Spawnable implements Comparable<Spawnable> {
     this.health = 0;
   }
 
-  public int heal(int amount) {
-    if (amount > 0) {
-      this.health += amount;
-      this.health = Math.min(this.health, this.getMaxHealth());
-    }
-    return this.health;
-  }
-
-  public void setPos(int x, int y) {
-    // if(this instanceof Moveable) {
-    //   System.out.printf("set to %d, %d\n", x, y);
-    // }
-    
-    this.x = x;
-    this.y = y;
-  }
-
   public int getX() {
     return this.x;
   }
@@ -110,12 +98,17 @@ public abstract class Spawnable implements Comparable<Spawnable> {
     return this.y;
   }
 
-  public int getHealth() {
-    if(this.health < 0) {
-      System.out.println("whaaaaaaaaaaat");
-      return 0;
-    }
-    return this.health;
+  public void setPos(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public int getColorChannelValue() {
+    return (this.getMaxHealth()-this.getHealth())*(255/this.getMaxHealth());
+  }
+
+  public long getID() {
+    return this.id;
   }
 
   public abstract Spawnable act(Spawnable other);
@@ -128,7 +121,5 @@ public abstract class Spawnable implements Comparable<Spawnable> {
 
   public abstract Color getColor();
 
-  public int getColorChannelValue() {
-    return (this.getMaxHealth()-this.getHealth())*(255/this.getMaxHealth());
-  }
+  public abstract long generateID();
 }

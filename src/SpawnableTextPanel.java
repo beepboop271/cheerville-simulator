@@ -17,6 +17,7 @@ public class SpawnableTextPanel extends JPanel {
     this.setOpaque(false);
   }
 
+  @Override
   public void paintComponent(Graphics g) {
     super.repaint();
     setDoubleBuffered(true);
@@ -24,7 +25,7 @@ public class SpawnableTextPanel extends JPanel {
     g.setFont(this.infoFont);
     g.setColor(Color.BLACK);
 
-    if(this.spawnableToShow == null) {
+    if (this.spawnableToShow == null) {
       this.paintRow(g, 1, "NOTHING");
       this.paintRow(g, 2, "SELECTED");
     } else {
@@ -42,7 +43,7 @@ public class SpawnableTextPanel extends JPanel {
                       "Position:",
                       this.spawnableToShow.getX(), this.spawnableToShow.getY())
       );
-      if(this.spawnableToShow instanceof Human) {
+      if (this.spawnableToShow instanceof Human) {
         this.paintRow(g, row++,
           String.format("%-10s%d",
                         "Age:",
@@ -58,10 +59,9 @@ public class SpawnableTextPanel extends JPanel {
 
       String[] descendants = this.spawnableToShow.getDescendantStrings();
       g.setFont(descendantFont);
-      for(int i = 0; i < descendants.length; ++i) {
+      for (int i = 0; i < descendants.length; ++i) {
         g.drawString(descendants[i], 10, row*25+i*15);
       }
-
     }
   }
 
@@ -69,11 +69,11 @@ public class SpawnableTextPanel extends JPanel {
     g.drawString(rowStr, 10, row*25);
   }
 
-  public void setSpawnableToShow(Spawnable spawnableToShow) {
-    this.spawnableToShow = spawnableToShow;
-  }
-
   public Spawnable getSpawnableToShow() {
     return this.spawnableToShow;
+  }
+
+  public void setSpawnableToShow(Spawnable spawnableToShow) {
+    this.spawnableToShow = spawnableToShow;
   }
 }

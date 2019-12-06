@@ -16,7 +16,7 @@ public class Plant extends Spawnable {
   public Plant(int x, int y) {
     super(x, y,
           (Plant.INITIAL_HEALTH
-           + (int)(((Math.random()-0.5)*2)  // [-1, 1) * (variance+1)
+           + (int)(((Math.random()-0.5)*2)
                    * (Plant.HEALTH_VARIANCE+1))));
   }
 
@@ -27,27 +27,27 @@ public class Plant extends Spawnable {
 
   @Override
   public int decay() {
-    if(Math.random() < 0.5) {
+    if (Math.random() < 0.5) {
       return super.decay();
     }
     return this.getHealth();
   }
 
-  public long generateID() {
-    return Plant.NUM_PLANTS++;
+  @Override
+  public Spawnable act(Spawnable other) {
+    if (other instanceof Plant) {
+      // other is only non null when a plant
+      // spreads onto another plant
+      this.heal((int)(other.getHealth()*Plant.PLANT_ENERGY_FACTOR));
+      other.setDead();
+      ((Plant)other).ancestor.addDescendant(this);
+    } else {
+      if (Math.random() < Plant.SPREAD_CHANCE) {
+        return this.addDescendantWithAncestor(new Plant(this.getX(), this.getY()));
+      }
+    }
+    return null;
   }
-
-  // @Override
-  // public Spawnable addDescendant(Spawnable descendant) {
-  //   if(this == descendant) {
-  //     return descendant;
-  //   }
-  //   super.addDescendant(descendant);
-  //   if(descendant instanceof Plant) {
-  //     ((Plant)descendant).ancestor = this;
-  //   }
-  //   return descendant;
-  // }
 
   public Spawnable addDescendantWithAncestor(Plant descendant) {
     descendant.ancestor = this;
@@ -55,39 +55,28 @@ public class Plant extends Spawnable {
     return descendant;
   }
 
-  public Spawnable act(Spawnable other) {
-    if(other instanceof Plant) {// && other != this) {
-      // other is only non null when a plant
-      // spreads onto another plant
-      this.heal((int)(other.getHealth()*Plant.PLANT_ENERGY_FACTOR));
-      other.setDead();
-      ((Plant)other).ancestor.addDescendant(this);
-      // if(((Plant)other).ancestor != null) {
-      //   ((Plant)other).ancestor.addDescendant(this);
-      // }
-    } else {
-      if(Math.random() < Plant.SPREAD_CHANCE) {
-        return this.addDescendantWithAncestor(new Plant(this.getX(), this.getY()));
-        // return this.addDescendant(new Plant(this.getX(), this.getY()));
-        // this.getContainingWorld().spawnPlantNear(this.getX(), this.getY());
-      }
-    }
-    return null;
-  }
-
+  @Override
   public int getMaxHealth() {
     return Plant.MAX_HEALTH;
   }
 
+  @Override
   public int getInitialHealth() {
     return Plant.INITIAL_HEALTH;
   }
 
+  @Override
   public int getHealthVariance() {
     return Plant.HEALTH_VARIANCE;
   }
 
+  @Override
   public Color getColor() {
     return new Color(this.getColorChannelValue(), 255, this.getColorChannelValue());
+  }
+
+  @Override
+  public long generateID() {
+    return Plant.NUM_PLANTS++;
   }
 }

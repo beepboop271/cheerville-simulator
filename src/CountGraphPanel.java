@@ -14,25 +14,15 @@ public class CountGraphPanel extends GraphPanel {
     super(worldToDisplay);
   }
 
-  public int[][] extractMoveableCounts(int[][] data) {
-    int[][] moveableData = new int[data.length][3];
-    for(int i = 0; i < data.length; ++i) {
-      moveableData[i][0] = data[i][1];
-      moveableData[i][1] = data[i][2];
-      moveableData[i][2] = data[i][3];
-    }
-    return moveableData;
-  }
-
+  @Override
   public void paintComponent(Graphics g) {
-    // System.out.println("print count graph");
     super.paintComponent(g);
 
     int[][] history = this.extractMoveableCounts(this.getDistributionHistory());
 
-    if(this.maxMoveableCount == -1) {
+    if (this.maxMoveableCount == -1) {
       this.maxMoveableCount = GraphPanel.findMax(history, 0);
-    } else if(GraphPanel.sum(history[0]) == this.maxMoveableCount) {
+    } else if (GraphPanel.sum(history[0]) == this.maxMoveableCount) {
       // if the max is in the first record, it means it is the
       // oldest and will be removed immediately after, so
       // recalculate the max
@@ -49,9 +39,19 @@ public class CountGraphPanel extends GraphPanel {
   }
 
   @Override
-  public void resize() {
-    super.resize();
+  public void onResize() {
+    super.onResize();
     this.maxMoveableCount = GraphPanel.findMax(
         this.extractMoveableCounts(this.getDistributionHistory()), 0);
+  }
+
+  public int[][] extractMoveableCounts(int[][] data) {
+    int[][] moveableData = new int[data.length][3];
+    for (int i = 0; i < data.length; ++i) {
+      moveableData[i][0] = data[i][1];
+      moveableData[i][1] = data[i][2];
+      moveableData[i][2] = data[i][3];
+    }
+    return moveableData;
   }
 }
