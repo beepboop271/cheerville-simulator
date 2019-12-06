@@ -1,15 +1,15 @@
 import java.util.LinkedList;
 
 public class World {
-  private static final double PLANT_SPAWN_CHANCE = 0.05;
+  private static double plantSpawnChance = 0.05;
 
-  private static final int VISION_SIZE = 4;
-  private static final int[][] VISION_OFFSETS = {
+  private static int visionSize = 4;
+  private static int[][] visionOffsets = {
     {0, 0, 0, 0},    //nothing
-    {-VISION_SIZE, -VISION_SIZE, (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y-4) to (x+4, y) - NORTH
-    {0           , -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1},  // scan 5x9 from (x, y-4) to (x+4, y+4) - EAST
-    {-VISION_SIZE, 0           , (2*VISION_SIZE)+1, VISION_SIZE+1},      // scan 9x5 from (x-4, y) to (x+4, y+4) - SOUTH
-    {-VISION_SIZE, -VISION_SIZE, VISION_SIZE+1    , (2*VISION_SIZE)+1}   // scan 5x9 from (x-4, y-4) to (x, y+4) - WEST
+    {-visionSize, -visionSize, (2*visionSize)+1, visionSize+1},      // scan 9x5 from (x-4, y-4) to (x+4, y) - NORTH
+    {0          , -visionSize, visionSize+1    , (2*visionSize)+1},  // scan 5x9 from (x, y-4) to (x+4, y+4) - EAST
+    {-visionSize, 0          , (2*visionSize)+1, visionSize+1},      // scan 9x5 from (x-4, y) to (x+4, y+4) - SOUTH
+    {-visionSize, -visionSize, visionSize+1    , (2*visionSize)+1}   // scan 5x9 from (x-4, y-4) to (x, y+4) - WEST
   };
 
   private int historyAmount = 300;
@@ -144,7 +144,7 @@ public class World {
               }
             }
           }
-        } else if (Math.random() < PLANT_SPAWN_CHANCE) {
+        } else if (Math.random() < plantSpawnChance) {
           // unoccupied tile can sometimes create a Plant
           this.setMapAt(new Plant(x, y));
         }
@@ -198,7 +198,7 @@ public class World {
    */
   public Spawnable[][] getVision(Moveable viewer) {
     int facingDirection = viewer.getFacingDirection();
-    int[] offsets = VISION_OFFSETS[facingDirection];
+    int[] offsets = visionOffsets[facingDirection];
     Spawnable[][] vision = new Spawnable[offsets[3]][offsets[2]];
     for (int i = 0; i < offsets[3]; ++i) {
       for (int j = 0; j < offsets[2]; ++j) {
@@ -425,6 +425,61 @@ public class World {
     // swing is dumb and i cannot use linked lists
     this.historyArray = this.distributionHistory.toArray(new int[0][0]);
   }
+  
+
+  public static double getPlantSpawnChance() {
+    return plantSpawnChance;
+  }
+
+  public static void setPlantSpawnChance(double plantSpawnChance) {
+    World.plantSpawnChance = plantSpawnChance;
+  }
+
+  
+  /** 
+   * [getVisionSize]
+   * Returns the distance in cells that Moveables can see.
+   * @return int, the distance that Moveables can see.
+   */
+  public static int getVisionSize() {
+    return World.visionSize;
+  }
+
+  
+  /** 
+   * [setVisionSize]
+   * Sets the distance in cells that Moveables can see.
+   * @return int, the distance that Moveables can see.
+   */
+  public static void setVisionSize(int visionSize) {
+    World.visionSize = visionSize;
+    World.updateVisionOffsets();
+  }
+
+  
+  /** 
+   * [getVisionOffsets]
+   * Returns the numbers which specify the rectangle of
+   * vision a Moveable has based on the direction it is facing.
+   * @param direction The direction the Moveable is facing.
+   * @return int[], integers specifying a rectangle around the
+   *         Moveable that is visible.
+   */
+  public static int[] getVisionOffsets(int direction) {
+    return World.visionOffsets[direction];
+  }
+
+
+  public static void updateVisionOffsets() {
+    int[][] visionOffsets = {
+      {0, 0, 0, 0},
+      {-World.visionSize, -World.visionSize, (2*World.visionSize)+1, World.visionSize+1},
+      {0                , -World.visionSize, World.visionSize+1    , (2*World.visionSize)+1},
+      {-World.visionSize, 0                , (2*World.visionSize)+1, World.visionSize+1},
+      {-World.visionSize, -World.visionSize, World.visionSize+1    , (2*World.visionSize)+1}
+    };
+    World.visionOffsets = visionOffsets;
+  }
 
   
   /** 
@@ -459,29 +514,6 @@ public class World {
     while (this.distributionHistory.size() > this.historyAmount) {
       this.distributionHistory.removeFirst();
     }
-  }
-
-  
-  /** 
-   * [getVisionSize]
-   * Returns the distance in cells that Moveables can see.
-   * @return int, the distance that Moveables can see.
-   */
-  public int getVisionSize() {
-    return World.VISION_SIZE;
-  }
-
-  
-  /** 
-   * [getVisionOffsets]
-   * Returns the numbers which specify the rectangle of
-   * vision a Moveable has based on the direction it is facing.
-   * @param direction The direction the Moveable is facing.
-   * @return int[], integers specifying a rectangle around the
-   *         Moveable that is visible.
-   */
-  public int[] getVisionOffsets(int direction) {
-    return World.VISION_OFFSETS[direction];
   }
 
   

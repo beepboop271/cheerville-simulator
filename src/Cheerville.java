@@ -13,21 +13,28 @@ public class Cheerville {
   };
 
   public static void main(String[] args) throws InterruptedException {
-    World cheervilleWorld = new World(35, 35, 400, 0);
+    // World cheervilleWorld = new World(35, 35, 400, 0);
+    WorldManager cheervilleManager = new WorldManager();
     CheervilleFrame display = new CheervilleFrame("Duber 2: Electric Boogaloo",
-                                                  cheervilleWorld);
-    int[] counts = {-1, -1, -1, -1};
-    long turns = 0;
+                                                  cheervilleManager);
     while (true) {
-      if (counts[1]+counts[2]+counts[3] != 0) {
-        counts = cheervilleWorld.doSimulationStep();
-        System.out.printf("Turn %d P:%d H:%d Z:%d\n",
-                          turns++, counts[0], counts[1]+counts[2], counts[3]);
-      } else {
-        counts = cheervilleWorld.resetAndCount();
+      if(cheervilleManager.isRunning()) {
+        cheervilleManager.run();
       }
-      display.refresh();
-      Thread.sleep(50);
+      Thread.sleep(10);
     }
+    // int[] counts = {-1, -1, -1, -1};
+    // long turns = 0;
+    // while (true) {
+    //   if (counts[1]+counts[2]+counts[3] != 0) {
+    //     counts = cheervilleWorld.doSimulationStep();
+    //     System.out.printf("Turn %d P:%d H:%d Z:%d\n",
+    //                       turns++, counts[0], counts[1]+counts[2], counts[3]);
+    //   } else {
+    //     counts = cheervilleWorld.resetAndCount();
+    //   }
+    //   display.refresh();
+    //   Thread.sleep(50);
+    // }
   }
 }

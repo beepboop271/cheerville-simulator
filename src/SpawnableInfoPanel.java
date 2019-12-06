@@ -100,5 +100,6 @@ public class SpawnableInfoPanel extends JPanel {
   public void setSpawnableToShow(Spawnable spawnableToShow) {
     this.textPanel.setSpawnableToShow(spawnableToShow);
     this.visionPanel.setSpawnableToShow(spawnableToShow);   
+    this.visionPanel.repaint();
   }
 }

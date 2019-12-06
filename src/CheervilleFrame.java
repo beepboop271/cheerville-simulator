@@ -1,7 +1,11 @@
 import java.awt.GridBagConstraints;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,67 +20,99 @@ public class CheervilleFrame extends JFrame {
    * @param title          The window title.
    * @param worldToDisplay The World object to show in the window.
    */
-  public CheervilleFrame(String title, World worldToDisplay) {
+  public CheervilleFrame(String title, WorldManager managerToDisplay) {
     super(title);
 
-    JPanel mainPane = new JPanel();
-    mainPane.setLayout(new GridBagLayout());
+    World worldToDisplay = managerToDisplay.getWorldToRun();
 
-    GridBagConstraints c = new GridBagConstraints();
-    c.gridx = 0;
-    c.gridy = 0;
-    c.gridwidth = 1;
-    c.gridheight = 3;
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.4;
-    c.weighty = 1.0;
-    c.insets = new Insets(10, 10, 10, 10);
+    JPanel gridBagPane = new JPanel();
+    gridBagPane.setLayout(new GridBagLayout());
+
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.gridwidth = 1;
+    gbc.gridheight = 4;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 0.4;
+    gbc.weighty = 1.0;
+    gbc.insets = new Insets(10, 10, 10, 10);
     int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
     int cellSize = (int)((screenHeight*0.7)/worldToDisplay.getHeight());
     WorldPanel worldPane = new WorldPanel(cellSize, worldToDisplay);
-    mainPane.add(worldPane, c);
+    gridBagPane.add(worldPane, gbc);
 
-    c = new GridBagConstraints();
-    c.gridx = 1;
-    c.gridy = 0;
-    c.gridwidth = 1;
-    c.gridheight = 1;
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.6;
-    c.weighty = 1.0;
-    c.insets = new Insets(10, 0, 10, 10);
-    mainPane.add(new PercentageGraphPanel(worldToDisplay), c);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.gridwidth = 1;
+    gbc.gridheight = 1;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 0.6;
+    gbc.weighty = 1.0;
+    gbc.insets = new Insets(0, 0, 0, 10);
+    gridBagPane.add(new RunButtonPanel(managerToDisplay));
 
-    c = new GridBagConstraints();
-    c.gridx = 1;
-    c.gridy = 1;
-    c.gridwidth = 1;
-    c.gridheight = 1;
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.6;
-    c.weighty = 1.0;
-    c.insets = new Insets(0, 0, 10, 10);
-    mainPane.add(new CountGraphPanel(worldToDisplay), c);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 1;
+    gbc.gridwidth = 1;
+    gbc.gridheight = 1;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 0.6;
+    gbc.weighty = 0.8;
+    gbc.insets = new Insets(5, 0, 10, 10);
+    gridBagPane.add(new PercentageGraphPanel(worldToDisplay), gbc);
+
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 2;
+    gbc.gridwidth = 1;
+    gbc.gridheight = 1;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 0.6;
+    gbc.weighty = 0.8;
+    gbc.insets = new Insets(0, 0, 10, 10);
+    gridBagPane.add(new CountGraphPanel(worldToDisplay), gbc);
     
-    c = new GridBagConstraints();
-    c.gridx = 1;
-    c.gridy = 2;
-    c.gridwidth = 1;
-    c.gridheight = 1;
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.6;
-    c.weighty = 0.9;
-    c.insets = new Insets(0, 0, 10, 10);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 3;
+    gbc.gridwidth = 1;
+    gbc.gridheight = 1;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 0.6;
+    gbc.weighty = 0.9;
+    gbc.insets = new Insets(0, 0, 10, 10);
     worldPane.setInfoPanel(new SpawnableInfoPanel(new SpawnableVisionPanel(20, worldToDisplay, null),
                                                   new SpawnableTextPanel(190, 200),
                                                   new SpawnableButtonPanel(worldToDisplay)));
-    mainPane.add(worldPane.getInfoPanel(), c);
+    gridBagPane.add(worldPane.getInfoPanel(), gbc);
+
+    gridBagPane.setOpaque(true);
+
+    JPanel mainPane = new JPanel();
+    mainPane.setLayout(new GridBagLayout());
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 1.0;
+    gbc.weighty = 1.0;
+    mainPane.add(gridBagPane, gbc);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    mainPane.add(new SliderPanel(), gbc);
 
     mainPane.setOpaque(true);
+
     this.setContentPane(mainPane);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.pack();
     this.setVisible(true);
+
+    System.out.println(Arrays.deepToString(((GridBagLayout)gridBagPane.getLayout()).getLayoutDimensions()));
   }
 
   

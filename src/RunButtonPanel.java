@@ -16,26 +16,23 @@ public class RunButtonPanel extends JPanel implements ActionListener {
   JButton stopButton;
   JButton resetButton;
 
-  public RunButtonPanel() {
+  WorldManager manager;
+
+  public RunButtonPanel(WorldManager manager) {
+    super();
+
+    this.manager = manager;
 
     this.runButton = new JButton("Run");
     this.runButton.setActionCommand("run");
     this.runButton.addActionListener(this);
     this.add(this.runButton);
 
-    this.stopButton = new JButton("Stop");
-    this.stopButton.setActionCommand("stop");
-    this.stopButton.addActionListener(this);
-    this.stopButton.setEnabled(false);
-    this.add(this.stopButton);
-
     this.resetButton = new JButton("Reset");
     this.resetButton.setActionCommand("reset");
     this.resetButton.addActionListener(this);
     this.add(this.resetButton);
     
-    this.setPreferredSize(new Dimension(100, 100));
-    this.setMinimumSize(new Dimension(100, 100));
     this.setOpaque(false);
   }
 
@@ -43,19 +40,19 @@ public class RunButtonPanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     String command = e.getActionCommand();
     if (command.equals("run")) {
-      this.runButton.setEnabled(false);
-      this.stopButton.setEnabled(true);
-
-
+      this.runButton.setText("Stop");
+      this.runButton.setActionCommand("stop");
+      manager.setRunning(true);
     } else if (command.equals("stop")) {
-      this.stopButton.setEnabled(false);
-      this.runButton.setEnabled(true);
-
-
+      this.runButton.setText("Run");
+      this.runButton.setActionCommand("run");
+      manager.setRunning(false);
     } else if (command.equals("reset")) {
-      this.stopButton.setEnabled(false);
-      this.runButton.setEnabled(true);
-
+      this.runButton.setText("Run");
+      this.runButton.setActionCommand("run");
+      manager.setRunning(false);
+      manager.getWorldToRun().reset(WorldManager.getInitialHumans(),
+                                    WorldManager.getInitialZombies());
 
     }
   }
