@@ -11,6 +11,12 @@ public class Zombie extends Moveable {
 
   private static long NUM_ZOMBIES = 0;
 
+  
+  /** 
+   * @param x
+   * @param y
+   * @return 
+   */
   public Zombie(int x, int y) {
     super(x, y,
           (Zombie.INITIAL_HEALTH
@@ -18,12 +24,22 @@ public class Zombie extends Moveable {
                    * (Zombie.HEALTH_VARIANCE+1))));
   }
 
+  
+  /** 
+   * @param victim
+   * @return 
+   */
   public Zombie(Human victim) {
     super(victim.getX(), victim.getY(),
           Math.min(Zombie.MAX_HEALTH, victim.getHealth()));
     victim.setDead();
   }
 
+  
+  /** 
+   * @param other
+   * @return Spawnable
+   */
   @Override
   public Spawnable act(Spawnable other) {
     if (other instanceof Plant) {
@@ -48,6 +64,10 @@ public class Zombie extends Moveable {
     return null;
   }
 
+  
+  /** 
+   * @return int
+   */
   @Override
   public int getVisionValue() {
     Spawnable[][] vision = this.getVision();
@@ -64,6 +84,11 @@ public class Zombie extends Moveable {
     return value;
   }
 
+  
+  /** 
+   * @param other
+   * @return Vector2D
+   */
   @Override
   public Vector2D getInfluenceVectorFor(Spawnable other) {
     Vector2D influence;
@@ -86,6 +111,11 @@ public class Zombie extends Moveable {
     return influence;
   }
 
+  
+  /** 
+   * @param victim
+   * @return Zombie
+   */
   public Zombie attackHuman(Human victim) {
     if (this.getHealth() > victim.getHealth()) {
       this.heal((int)(victim.getHealth()*Zombie.HUMAN_ENERGY_FACTOR));
@@ -96,36 +126,64 @@ public class Zombie extends Moveable {
     }
   }
 
+  
+  /** 
+   * @return String
+   */
   @Override
   public String toString() {
     return "Zombie#"+this.getID();
   }
 
+  
+  /** 
+   * @return int
+   */
   @Override
   public int getMaxHealth() {
     return Zombie.MAX_HEALTH;
   }
 
+  
+  /** 
+   * @return int
+   */
   @Override
   public int getInitialHealth() {
     return Zombie.INITIAL_HEALTH;
   }
 
+  
+  /** 
+   * @return int
+   */
   @Override
   public int getHealthVariance() {
     return Zombie.HEALTH_VARIANCE;
   }
 
+  
+  /** 
+   * @return double
+   */
   @Override
   public double getRandomMoveChance() {
     return Zombie.RANDOM_MOVE_CHANCE;
   }
 
+  
+  /** 
+   * @return Color
+   */
   @Override
   public Color getColor() {
     return new Color(255, this.getColorChannelValue(), this.getColorChannelValue());
   }
 
+  
+  /** 
+   * @return long
+   */
   @Override
   public long generateID() {
     return Zombie.NUM_ZOMBIES++;

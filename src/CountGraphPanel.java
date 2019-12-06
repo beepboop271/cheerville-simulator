@@ -4,16 +4,30 @@ import java.awt.Graphics;
 @SuppressWarnings("serial")
 public class CountGraphPanel extends GraphPanel {
   private int maxMoveableCount = -1;
-  public final Color[] COLOURS = {
+  public final Color[] COLORS = {
     Color.MAGENTA,
     Color.BLUE,
     Color.RED
   };
 
+  
+  /** 
+   * [CountGraphPanel]
+   * Constructor for a graph panel which displays the pure
+   * counts of Spawnables in a given world.
+   * @param worldToDisplay The World to graph Spawnable counts with.
+   */
   public CountGraphPanel(World worldToDisplay) {
     super(worldToDisplay);
   }
 
+  
+  /** 
+   * [paintComponent]
+   * Determines how much to vertically scale the graph and
+   * plots the data.
+   * @param g The Graphics object to draw with.
+   */
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
@@ -33,11 +47,18 @@ public class CountGraphPanel extends GraphPanel {
 
     this.plotGraph(g,
                    history,
-                   this.COLOURS,
+                   this.COLORS,
                    ((double)this.getHeight())/this.maxMoveableCount,
                    "%d");
   }
 
+
+  /**
+   * [onResize]
+   * Runs when the panel changes size. Recalculates how much
+   * to vertically scale the graph since the data being displayed
+   * will change.
+   */
   @Override
   public void onResize() {
     super.onResize();
@@ -45,6 +66,15 @@ public class CountGraphPanel extends GraphPanel {
         this.extractMoveableCounts(this.getDistributionHistory()), 0);
   }
 
+  
+  /** 
+   * [extractMoveableCounts]
+   * Converts an array which stores the counts of all Spawnables
+   * over time into an array which stores the counts of Moveables
+   * over time.
+   * @param data The 2D array of Spawnable counts over time to convert.
+   * @return int[][], the 2D array of Moveable counts over time.
+   */
   public int[][] extractMoveableCounts(int[][] data) {
     int[][] moveableData = new int[data.length][3];
     for (int i = 0; i < data.length; ++i) {

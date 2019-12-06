@@ -20,6 +20,14 @@ public class WorldPanel extends JPanel {
 
   private Font smallFont = new Font("Courier New", Font.BOLD, 25);
 
+  
+  /** 
+   * [WorldPanel]
+   * 
+   * @param cellSize
+   * @param worldToDisplay
+   * @return 
+   */
   public WorldPanel(int cellSize, World worldToDisplay) {
     this.cellSize = cellSize;
     this.worldToDisplay = worldToDisplay;
@@ -31,16 +39,30 @@ public class WorldPanel extends JPanel {
     this.setOpaque(true);
   }
 
+  
+  /** 
+   * @param clr
+   * @return Color
+   */
   public static Color colorToGrayscale(Color clr) {
     int minChannel = Math.min(Math.min(clr.getRed(), clr.getGreen()), clr.getBlue());
     return new Color(minChannel, minChannel, minChannel);
   }
 
+  
+  /** 
+   * @param x
+   * @param y
+   */
   public void setMapPos(int x, int y) {
     this.mapX = x;
     this.mapY = y;
   }
 
+  
+  /** 
+   * @param g
+   */
   @Override
   public void paintComponent(Graphics g) {
     this.paintComponent(g, new Rectangle(0, 0,
@@ -48,11 +70,22 @@ public class WorldPanel extends JPanel {
                                          this.worldToDisplay.getHeight()));
   }
 
+  
+  /** 
+   * @param g
+   * @param drawRect
+   */
   public void paintComponent(Graphics g, Rectangle drawRect) {
     this.paintComponent(g, drawRect, drawRect);
   }
 
-  public void paintComponent(Graphics g, Rectangle drawRect, Rectangle colourRect) {
+  
+  /** 
+   * @param g
+   * @param drawRect
+   * @param colorRect
+   */
+  public void paintComponent(Graphics g, Rectangle drawRect, Rectangle colorRect) {
     super.repaint();
     setDoubleBuffered(true);
 
@@ -63,7 +96,7 @@ public class WorldPanel extends JPanel {
       for (int x = drawRect.x; x < drawRect.x+drawRect.width; ++x) {
         if (this.worldToDisplay.isInWorld(x, y)) {
           if (this.worldToDisplay.getMapAt(x, y) != null) {
-            if (colourRect.contains(x, y)) {
+            if (colorRect.contains(x, y)) {
               g.setColor(this.worldToDisplay.getMapAt(x, y).getColor());
             } else {
               g.setColor(WorldPanel.colorToGrayscale(this.worldToDisplay
@@ -95,6 +128,12 @@ public class WorldPanel extends JPanel {
     }
   }
 
+  
+  /** 
+   * @param g
+   * @param x
+   * @param y
+   */
   public void paintSelectedCell(Graphics g, int x, int y) {
     g.setColor(Color.BLACK);
     g.fillRect((this.mapX+x)*this.getCellSize(), (this.mapY+y)*this.getCellSize(),
@@ -107,13 +146,21 @@ public class WorldPanel extends JPanel {
                (int)(this.getCellSize()*0.7));
   }
 
-  public void onResize(ComponentEvent e) {
+  
+  /** 
+   * 
+   */
+  public void onResize() {
     this.setCellSize(Math.min(this.getWidth()/this.worldToDisplay.getWidth(),
                               this.getHeight()/this.worldToDisplay.getHeight()));
     this.setSize(new Dimension(this.getCellSize()*this.worldToDisplay.getWidth(),
                                this.getCellSize()*this.worldToDisplay.getHeight()));
   }
 
+  
+  /** 
+   * @param e
+   */
   public void onClick(MouseEvent e) {
     int button = e.getButton();
     if (button == MouseEvent.BUTTON1) {
@@ -129,29 +176,49 @@ public class WorldPanel extends JPanel {
     }
   }
 
+  
+  /** 
+   * @return int
+   */
   public int getCellSize() {
     return this.cellSize;
   }
 
+  
+  /** 
+   * @param cellSize
+   */
   public void setCellSize(int cellSize) {
     this.cellSize = cellSize;
   }
 
+  
+  /** 
+   * @return SpawnableInfoPanel
+   */
   public SpawnableInfoPanel getInfoPanel() {
     return this.infoPanel;
   }
 
+  
+  /** 
+   * @param infoPanel
+   */
   public void setInfoPanel(SpawnableInfoPanel infoPanel) {
     this.infoPanel = infoPanel;
   }
 
+  
+  /** 
+   * @return World
+   */
   public World getWorldToDisplay() {
     return this.worldToDisplay;
   }
 
   public class MapPanelResizeListener extends ComponentAdapter {
     public void componentResized(ComponentEvent e) {
-      onResize(e);
+      onResize();
     }
   }
 

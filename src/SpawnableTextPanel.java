@@ -11,12 +11,27 @@ public class SpawnableTextPanel extends JPanel {
   private Font infoFont = new Font("Courier New", Font.BOLD, 18);
   private Font descendantFont = new Font("Courier New", Font.BOLD, 15);
 
+  
+  /** 
+   * [SpawnableTextPanel]
+   * Constructor for a panel which shows text information
+   * about a Spawnable.
+   * @param width  The width of this panel.
+   * @param height The height of this panel.
+   */
   public SpawnableTextPanel(int width, int height) {
     this.setPreferredSize(new Dimension(width, height));
     this.setMinimumSize(new Dimension(width, height));
     this.setOpaque(false);
   }
 
+  
+  /** 
+   * [paintComponent]
+   * Draws the text information about the Spawnable
+   * to show.
+   * @param g The Graphics object to draw with.
+   */
   @Override
   public void paintComponent(Graphics g) {
     super.repaint();
@@ -65,14 +80,34 @@ public class SpawnableTextPanel extends JPanel {
     }
   }
 
+  
+  /** 
+   * [paintRow]
+   * Draws a line of text in the panel.
+   * @param g      The Graphics object to draw with.
+   * @param row    The row number to draw onto.
+   * @param rowStr The text to draw.
+   */
   public void paintRow(Graphics g, int row, String rowStr) {
     g.drawString(rowStr, 10, row*25);
   }
 
+  
+  /** 
+   * [getSpawnableToShow]
+   * Returns the Spawnable this panel is showing information about.
+   * @return Spawnable, the Spawnable this panel is showing info about.
+   */
   public Spawnable getSpawnableToShow() {
     return this.spawnableToShow;
   }
 
+  
+  /** 
+   * [setSpawnableToShow]
+   * Sets the Spawnable to display information about in this panel.
+   * @param spawnableToShow The Spawnable to show information about.
+   */
   public void setSpawnableToShow(Spawnable spawnableToShow) {
     this.spawnableToShow = spawnableToShow;
   }

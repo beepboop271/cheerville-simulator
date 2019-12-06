@@ -8,6 +8,14 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class CheervilleFrame extends JFrame {
+  
+  /** 
+   * [CheervilleFrame]
+   * Constructor for a window that holds all the panels
+   * for the cheerville program.
+   * @param title          The window title.
+   * @param worldToDisplay The World object to show in the window.
+   */
   public CheervilleFrame(String title, World worldToDisplay) {
     super(title);
 
@@ -71,6 +79,11 @@ public class CheervilleFrame extends JFrame {
     this.setVisible(true);
   }
 
+  
+  /**
+   * [refresh]
+   * Refreshes the frame.
+   */
   public void refresh() {
     this.repaint();
   }

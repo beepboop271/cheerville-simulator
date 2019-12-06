@@ -11,12 +11,19 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class SpawnableButtonPanel extends JPanel implements ActionListener{
-  private World worldToControl;
+public class SpawnableButtonPanel extends JPanel implements ActionListener {
+  private World worldToAccess;
   private SpawnableInfoPanel containingPanel;
 
-  public SpawnableButtonPanel(World worldToControl) {
-    this.worldToControl = worldToControl;
+  
+  /** 
+   * [SpawnableButtonPanel]
+   * Constructor for a panel that presents two buttons
+   * to select random Moveables from the World.
+   * @param worldToAccess The World to select from.
+   */
+  public SpawnableButtonPanel(World worldToAccess) {
+    this.worldToAccess = worldToAccess;
 
     this.setLayout(new GridBagLayout());
 
@@ -56,6 +63,14 @@ public class SpawnableButtonPanel extends JPanel implements ActionListener{
     this.setOpaque(false);
   }
 
+  
+  /** 
+   * [actionPerformed]
+   * Runs whenever an action occurs. Controls the SpawnableInfoPanel
+   * based on the button that was pressed, finding a random Zombie
+   * or Human to display in the info panel.
+   * @param e The ActionEvent to process.
+   */
   @Override
   public void actionPerformed(ActionEvent e) {
     if (this.containingPanel == null) {
@@ -64,14 +79,20 @@ public class SpawnableButtonPanel extends JPanel implements ActionListener{
     String command = e.getActionCommand();
     if (command.equals("selectZombie")) {
       this.containingPanel
-          .setSpawnableToShow(this.worldToControl.selectRandomZombie());
+          .setSpawnableToShow(this.worldToAccess.selectRandomZombie());
     } else if (command.equals("selectHuman")) {
-      System.out.println("hiii");
       this.containingPanel
-          .setSpawnableToShow(this.worldToControl.selectRandomHuman());
+          .setSpawnableToShow(this.worldToAccess.selectRandomHuman());
     }
   }
   
+  
+  /** 
+   * [setContainingPanel]
+   * Sets the SpawnableInfoPanel that the buttons in this
+   * panel control.
+   * @param containingPanel The SpawnableInfoPanel to control.
+   */
   public void setContainingPanel(SpawnableInfoPanel containingPanel) {
     this.containingPanel = containingPanel;
   }

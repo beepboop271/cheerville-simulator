@@ -19,14 +19,35 @@ public class Female extends Human {
     {30.0, 0.6}
   };
 
+  
+  /** 
+   * [Female]
+   * Constructor for a female Human with the given position.
+   * @param x The x coordinate of the Female.
+   * @param y The y coordinate of the Female.
+   */
   public Female(int x, int y) {
     super(x, y);
   }
 
+  /** 
+   * [Female]
+   * Constructor for a female Human with the given position and health.
+   * @param x             The x coordinate of the Female.
+   * @param y             The y coordinate of the Female.
+   * @param initialHealth The health of the Female.
+   */
   public Female(int x, int y, int initialHealth) {
     super(x, y, initialHealth);
   }
 
+  
+  /** 
+   * [getVisionValue]
+   * Determines how useful the Spawnables visible to this Female are
+   * by counting the amount of Plants and Males.
+   * @return int, the number of Plants and Males visible to this Female.
+   */
   @Override
   public int getVisionValue() {
     Spawnable[][] vision = this.getVision();
@@ -43,6 +64,17 @@ public class Female extends Human {
     return value;
   }
 
+  
+  /** 
+   * [getInfluenceVectorFor]
+   * Generates a Vector2D object which represents what direction
+   * this Female should move in to react to a Spawnable, and how much
+   * it should be considering moving in that direction (the longer the
+   * vector returned, the more influence it has over the final movement).
+   * @param other The Spawnable to react to.
+   * @return Vector2D, the vector which stores the direction this Female
+   *         should move in and how important it is to move in that direction.
+   */
   @Override
   public Vector2D getInfluenceVectorFor(Spawnable other) {
     Vector2D influence;
@@ -82,21 +114,52 @@ public class Female extends Human {
     return influence;
   }
 
+  
+  /** 
+   * [getMinBirthInterval]
+   * Returns how many steps a Female needs to take
+   * before it can reproduce again.
+   * @return int, the number of steps required.
+   */
   @Override
   public int getMinBirthInterval() {
     return Female.MIN_BIRTH_INTERVAL;
   }
   
+  
+  /** 
+   * [getAgeBirthChances]
+   * Returns the chances a Female can reproduce at certain
+   * ages.
+   * @return double[][], the array which stores [age, chance]
+   *         pairs for reproduction chance at certain ages.
+   */
   @Override
   public double[][] getAgeBirthChances() {
     return Female.AGE_BIRTH_CHANCES;
   }
   
+  
+  /** 
+   * [getHealthBirthChances]
+   * Returns the chances a Female can reproduce at certain
+   * health levels.
+   * @return double[][], the array which stores [health, chance]
+   *         pairs for reproduction chance at certain health levels.
+   */
   @Override
   public double[][] getHealthBirthChances() {
     return Female.HEALTH_BIRTH_CHANCES;
   }
 
+  
+  /** 
+   * [getColor]
+   * Returns the Color that this Female should be drawn with.
+   * The lower the health, the more pale (white) the colour
+   * will be. Max health means pure magenta.
+   * @return Color, the Color to represent this Female.
+   */
   @Override
   public Color getColor() {
     return new Color(255, this.getColorChannelValue(), 255);

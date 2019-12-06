@@ -11,6 +11,18 @@ public class SpawnableInfoPanel extends JPanel {
   private SpawnableVisionPanel visionPanel;
   private SpawnableTextPanel textPanel;
 
+  
+  /** 
+   * [spawnableInfoPanel]
+   * Constructor for a Spawnable info panel which displays
+   * various panels related to a given Spawnable.
+   * @param visionPanel The SpawnableVisionPanel which displays what
+   *                    a Spawnable can see.
+   * @param textPanel   The SpawnableTextPanel which displays information
+   *                    about a Spawnable in text.
+   * @param buttonPanel The SpawnableButtonPanel which can control
+   *                    the Spawnable viewed in this panel.
+   */
   public SpawnableInfoPanel(SpawnableVisionPanel visionPanel,
                             SpawnableTextPanel textPanel,
                             SpawnableButtonPanel buttonPanel) {
@@ -56,16 +68,35 @@ public class SpawnableInfoPanel extends JPanel {
     this.setOpaque(true);
   }
 
+
+  /**
+   * [update]
+   * Ensures this panel does not show a dead Spawnable,
+   * switching to a descendant (when possible) if the Spawnable
+   * to show has died.
+   */
   public void update() {
     if (this.getSpawnableToShow().getHealth() <= 0) {
       this.setSpawnableToShow(this.getSpawnableToShow().getFirstDescendant());
     }
   }
 
+  
+  /** 
+   * [getSpawnableToShow]
+   * Returns the Spawnable this panel is showing information about.
+   * @return Spawnable, the Spawnable this panel is showing info about.
+   */
   public Spawnable getSpawnableToShow() {
     return this.textPanel.getSpawnableToShow();
   }
 
+  
+  /** 
+   * [setSpawnableToShow]
+   * Sets the Spawnable to display information about in this panel.
+   * @param spawnableToShow The Spawnable to show information about.
+   */
   public void setSpawnableToShow(Spawnable spawnableToShow) {
     this.textPanel.setSpawnableToShow(spawnableToShow);
     this.visionPanel.setSpawnableToShow(spawnableToShow);   

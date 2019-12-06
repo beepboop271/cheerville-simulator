@@ -19,11 +19,25 @@ public class World {
   private final int WIDTH, HEIGHT;
   private Spawnable[][] map;
 
-  public World(int width, int height, int numHumans, int numZombies) {
+
+  public World(int width, int height) {
     this.WIDTH = width;
     this.HEIGHT = height;
     this.map = new Spawnable[height][width];
     this.doSimulationStep();  // let some plants grow
+  }
+  
+  /** 
+   * [World]
+   * Constructor for a World with the given dimensions,
+   * starting Humans, and starting Zombies.
+   * @param width      The width, in cells, of the World.
+   * @param height     The height, in cells, of the World.
+   * @param numHumans  The initial number of Humans.
+   * @param numZombies The initial number of Zombies.
+   */
+  public World(int width, int height, int numHumans, int numZombies) {
+    this(width, height);
     int x, y;
     for (int i = 0; i < numHumans; ++i) {
       x = (int)(Math.random()*width);
@@ -37,6 +51,29 @@ public class World {
     }
   }
 
+
+  public void reset(int numHumans, int numZombies) {
+    this.map = new Spawnable[this.HEIGHT][this.WIDTH];
+    this.doSimulationStep();
+    int x, y;
+    for (int i = 0; i < numHumans; ++i) {
+      x = (int)(Math.random()*this.WIDTH);
+      y = (int)(Math.random()*this.HEIGHT);
+      this.setMapAt(Human.createHuman(x, y));
+    }
+    for (int i = 0; i < numZombies; ++i) {
+      x = (int)(Math.random()*this.WIDTH);
+      y = (int)(Math.random()*this.HEIGHT);
+      this.setMapAt(new Zombie(x, y));
+    }
+  }
+
+  
+  /** 
+   * [doSimulationStep]
+   * Runs the simulation.
+   * @return int[], the current counts of Spawnables.
+   */
   public int[] doSimulationStep() {
     Spawnable s;
     int[] newPos;
@@ -46,10 +83,12 @@ public class World {
       for (int x = 0; x < this.WIDTH; ++x) {
         if (this.isOccupiedAt(x, y)) {
           s = this.getMapAt(x, y);
+
           if (s instanceof Plant) {
             if (s.decay() <= 0) {
               this.removeMapAt(s);
             } else {
+              // let some plants spread
               Plant newPlant = (Plant)(s.act(null));
               if (newPlant != null) {
                 this.growPlantNear(newPlant);
@@ -58,11 +97,13 @@ public class World {
           } else if ((s instanceof Moveable)
                      && !(((Moveable)s).getMoved())) {
             ((Moveable)s).setMoved(true);
+
             if (s.decay() <= 0) {
               this.removeMapAt(s);
             } else {
               ((Moveable)s).setVision(this.getVision((Moveable)s));
               newPos = ((Moveable)s).generateSmartMove();
+              // use random moves if the smart move is not valid
               if (!this.isInWorld(newPos[0], newPos[1])) {
                 moveAttempts = 0;
                 do {
@@ -71,17 +112,19 @@ public class World {
                          && (moveAttempts++ < 5));
               }
 
+              // if the move is not valid still just don't move
               if (this.isInWorld(newPos[0], newPos[1])
                     && !((newPos[0] == x) && (newPos[1] == y))) {
                 newSpawnable = ((Moveable)s).act(this.getMapAt(newPos[0],
                                                                newPos[1]));
                 if (newSpawnable == null) {
+                  // null -> nothing, allow the movement
                   this.removeMapAt(s);
                   s.setPos(newPos[0], newPos[1]);
                   this.setMapAt(s);
                 } else if (newSpawnable.getHealth() <= 0) {
                   this.removeMapAt(s);
-                } else if (newSpawnable != s) {
+                } else if (newSpawnable != s) {  // newSpawnable == s -> don't move
                   if (newSpawnable instanceof Zombie) {
                     // zombies only spawn here if they replace a human
                     // so just replace the map spot with the human
@@ -93,13 +136,16 @@ public class World {
                   }
                 }
               }
+
               if (s instanceof Human) {
+                // some things still happen even if no movement is made
                 ((Human)s).setStepsUntilFertile(((Human)s).getStepsUntilFertile()-1);
                 ((Human)s).incrementAge();
               }
             }
           }
         } else if (Math.random() < PLANT_SPAWN_CHANCE) {
+          // unoccupied tile can sometimes create a Plant
           this.setMapAt(new Plant(x, y));
         }
       }
@@ -107,6 +153,13 @@ public class World {
     return this.resetAndCount();
   }
 
+  
+  /** 
+   * [resetAndCount]
+   * Clears the moved value of all Moveables and counts
+   * how many Spawnables there are.
+   * @return int[], the current counts of Spawnables.
+   */
   public int[] resetAndCount() {
     Spawnable s;
     int[] counts = {0, 0, 0, 0};
@@ -135,6 +188,14 @@ public class World {
     return counts;
   }
 
+  
+  /** 
+   * [getVision]
+   * Return a section of this World that is visible
+   * to the viewer.
+   * @param viewer The Moveable looking at the World.
+   * @return Spawnable[][], the section of the World visible.
+   */
   public Spawnable[][] getVision(Moveable viewer) {
     int facingDirection = viewer.getFacingDirection();
     int[] offsets = VISION_OFFSETS[facingDirection];
@@ -151,6 +212,12 @@ public class World {
     return vision;
   }
 
+  
+  /** 
+   * [spawnHumanNear]
+   * Attempt to place a Human near its (x, y) position.
+   * @param h The Human to place.
+   */
   public void spawnHumanNear(Human h) {
     int x = h.getX();
     int y = h.getY();
@@ -171,6 +238,12 @@ public class World {
     }
   }
 
+  /** 
+   * [spawnHumanNear]
+   * Attempt to place a new Human near the given (x, y).
+   * @param x The x coordinate to place the new Human near.
+   * @param y The y coordinate to place the new Human near.
+   */
   public void spawnHumanNear(int x, int y) {
     int[][] possibleLocations = {
       {x+1, y}, {x, y+1}, {x-1, y}, {x, y-1},
@@ -190,6 +263,13 @@ public class World {
     }
   }
 
+  
+  /** 
+   * [spawnZombieNear]
+   * Attempt to place a new Zombie near the given (x, y).
+   * @param x The x coordinate to place the new Zombie near.
+   * @param y The y coordinate to place the new Zombie near.
+   */
   public void spawnZombieNear(int x, int y) {
     int[][] possibleLocations = {
       {x, y}, {x+1, y}, {x, y+1}, {x-1, y}, {x, y-1},
@@ -206,6 +286,12 @@ public class World {
     }
   }
 
+  
+  /** 
+   * [growPlantNear]
+   * Attempt to place a Plant near its (x, y) position.
+   * @param p The Plant to place.
+   */
   public void growPlantNear(Plant p) {
     int x = p.getX();
     int y = p.getY();
@@ -226,13 +312,20 @@ public class World {
       if (this.isOccupiedAt(newX, newY)) {
         this.getMapAt(newX, newY).act(p);
       } else {
-        // p.act(this.getMapAt(newX, newY));
         p.setPos(newX, newY);
         this.setMapAt(p);
       }
     }
   }
 
+  
+  /** 
+   * [selectRandomZombie]
+   * Find a random Zombie by flood filling from a random
+   * location until a Zombie is found or the whole map has been filled.
+   * @return Zombie, null if no Zombie was found or the
+   *         first Zombie that is found.
+   */
   public Zombie selectRandomZombie() {
     int[] start = {
       (int)(Math.random()*this.getWidth()),
@@ -267,6 +360,14 @@ public class World {
     return null;
   }
 
+  
+  /** 
+   * [selectRandomHuman]
+   * Find a random Human by flood filling from a random
+   * location until a Human is found or the whole map has been filled.
+   * @return Human, null if no Human was found or the
+   *         first Human that is found.
+   */
   public Human selectRandomHuman() {
     int[] start = {
       (int)(Math.random()*this.getWidth()),
@@ -301,6 +402,13 @@ public class World {
     return null;
   }
 
+  
+  /** 
+   * [addHistory]
+   * Adds a Spawnable count record to the history, removing
+   * old records if the history limit is reached.
+   * @param counts The Spawnable count record to add.
+   */
   public void addHistory(int[] counts) {
     int[] record = {
       counts[0],  // plants
@@ -313,17 +421,39 @@ public class World {
     while (this.distributionHistory.size() > this.getHistoryAmount()) {
       this.distributionHistory.removeFirst();
     }
+
+    // swing is dumb and i cannot use linked lists
     this.historyArray = this.distributionHistory.toArray(new int[0][0]);
   }
 
+  
+  /** 
+   * [getDistributionHistory]
+   * Returns the Spawnable counts over time.
+   * @return int[][], the Spawnable counts over time.
+   */
   public int[][] getDistributionHistory() {
     return this.historyArray;
   }
 
+  
+  /** 
+   * [getHistoryAmount]
+   * Returns the maximum amount of records to keep.
+   * @return int, the maximum amount of records to keep.
+   */
   public int getHistoryAmount() {
     return this.historyAmount;
   }
 
+  
+  /** 
+   * [setHistoryAmount]
+   * Sets the maximum amount of records to keep and
+   * deletes records if necessary until the new limit
+   * is satisfied.
+   * @param historyAmount The new maximum amount of records to keep.
+   */
   public void setHistoryAmount(int historyAmount) {
     this.historyAmount = historyAmount;
     while (this.distributionHistory.size() > this.historyAmount) {
@@ -331,42 +461,119 @@ public class World {
     }
   }
 
+  
+  /** 
+   * [getVisionSize]
+   * Returns the distance in cells that Moveables can see.
+   * @return int, the distance that Moveables can see.
+   */
   public int getVisionSize() {
     return World.VISION_SIZE;
   }
 
+  
+  /** 
+   * [getVisionOffsets]
+   * Returns the numbers which specify the rectangle of
+   * vision a Moveable has based on the direction it is facing.
+   * @param direction The direction the Moveable is facing.
+   * @return int[], integers specifying a rectangle around the
+   *         Moveable that is visible.
+   */
   public int[] getVisionOffsets(int direction) {
     return World.VISION_OFFSETS[direction];
   }
 
+  
+  /** 
+   * [getWidth]
+   * Returns the width of the World.
+   * @return int, the width of the World.
+   */
   public int getWidth() {
     return this.WIDTH;
   }
 
+  
+  /** 
+   * [getHeight]
+   * Returns the height of the World.
+   * @return int, the height of the World.
+   */
   public int getHeight() {
     return this.HEIGHT;
   }
 
+  
+  /** 
+   * [isInWorld]
+   * Checks if the given point is within this World.
+   * @param x The x coordinate of the point to check.
+   * @param y The y coordinate of the point to check.
+   * @return boolean, whether or not the point is within the World.
+   */
   public boolean isInWorld(int x, int y) {
     return ((x >= 0) && (x < this.WIDTH) && (y >= 0) && (y < this.HEIGHT));
   }
 
+  
+  /** 
+   * [isOccupiedAt]
+   * Checks if the given point in the World has anything on it.
+   * @param x The x coordinate of the point to check.
+   * @param y The y coordinate of the point to check.
+   * @return boolean, whether or not the specified point in the
+   *         World contains anything on it.
+   */
   public boolean isOccupiedAt(int x, int y) {
     return this.map[y][x] != null;
   }
 
+  
+  /** 
+   * [removeMapAt]
+   * Removes a Spawnable from the World by setting the map
+   * at the Spawnable's position to null.
+   * @param s The Spawnable to remove.
+   */
   public void removeMapAt(Spawnable s) {
     this.map[s.getY()][s.getX()] = null;
   }
 
+  
+  /** 
+   * [hasMoveableAt]
+   * Checks if the given point in the World has a Moveable on it.
+   * @param x The x coordinate of the point to check.
+   * @param y The y coordinate of the point to check.
+   * @return boolean, whether or not the specified point in the
+   *         World contains a Moveable on it.
+   */
   public boolean hasMoveableAt(int x, int y) {
     return this.isOccupiedAt(x, y) && (this.map[y][x] instanceof Moveable);
   }
 
+  
+  /** 
+   * [getMapAt]
+   * Returns the Spawnable at the given point in the World
+   * or null if the point is unoccupied.
+   * @param x The x coordinate of the point to query.
+   * @param y The y coordinate of the point to query.
+   * @return Spawnable, the Spawnable at the given point
+   *         or null if the point is unoccupied.
+   */
   public Spawnable getMapAt(int x, int y) {
     return this.map[y][x];
   }
 
+  
+  /** 
+   * [setMapAt]
+   * Sets the map at the given Spawnable's position to that
+   * Spawnable.
+   * @param s The Spawnable to set.
+   */
   public void setMapAt(Spawnable s) {
     this.map[s.getY()][s.getX()] = s;
   }

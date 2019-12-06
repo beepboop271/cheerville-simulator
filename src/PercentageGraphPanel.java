@@ -4,7 +4,7 @@ import java.awt.Graphics;
 @SuppressWarnings("serial")
 public class PercentageGraphPanel extends GraphPanel {
   private double totalSpaces;
-  public final Color[] COLOURS = {
+  public final Color[] COLORS = {
     Color.GREEN,
     Color.MAGENTA,
     Color.BLUE,
@@ -12,23 +12,46 @@ public class PercentageGraphPanel extends GraphPanel {
     Color.LIGHT_GRAY
   };
 
+  
+  /** 
+   * [PercentageGraphPanel]
+   * Constructor for a graph panel which displays
+   * the percentage of spaces in the World filled up
+   * by each Spawnable type.
+   * @param worldToDisplay The World to graph Spawnable percentages with.
+   */
   public PercentageGraphPanel(World worldToDisplay) {
     super(worldToDisplay);
     this.totalSpaces = (double)(worldToDisplay.getHeight()
                                 * worldToDisplay.getWidth());
   }
 
+  
+  /** 
+   * [paintComponent]
+   * Plots the data.
+   * @param g The Graphics object to draw with.
+   */
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
     this.plotGraph(g,
                     this.getPercentagesFromCounts(this.getDistributionHistory()),
-                    this.COLOURS,
+                    this.COLORS,
                     this.getHeight()/100.0,
                     "%d%%");  // %% produces a literal '%' character
   }
 
+  
+  /** 
+   * [getPercentagesFromCounts]
+   * Converts the Spawnable counts stored in the World into
+   * percentages to plot on this panel.
+   * @param data The Spawnable counts to convert into percentages.
+   * @return double[][], the percent composition of Spawnables of
+   *         the World over time.
+   */
   public double[][] getPercentagesFromCounts(int[][] data) {
     double[][] percentageData = new double[data.length][5];
     double sum;
