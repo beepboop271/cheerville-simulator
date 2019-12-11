@@ -1,7 +1,11 @@
 public class WorldManager {
-  private static int delay = 50;
-  private static int initialHumans = 400;
-  private static int initialZombies = 0;
+  private static final int DEFAULT_DELAY = 50;
+  private static int delay = WorldManager.DEFAULT_DELAY;
+  private static final int DEFAULT_INITIAL_HUMANS = 400;
+  private static int initialHumans = WorldManager.DEFAULT_INITIAL_HUMANS;
+  private static final int DEFAULT_INITIAL_ZOMBIES = 0;
+  private static int initialZombies = WorldManager.DEFAULT_INITIAL_ZOMBIES;
+
   private static int width = 35;
   private static int height = 35;
 
@@ -16,12 +20,6 @@ public class WorldManager {
                                 WorldManager.initialZombies);
   }
 
-  // public void reset() {
-  //   this.worldToRun = new World(WorldManager.width,
-  //                               WorldManager.height,
-  //                               WorldManager.initialHumans,
-  //                               WorldManager.initialZombies);
-  // }
 
   public void run() {
     int[] counts = {-1, -1, -1, -1};
@@ -38,12 +36,18 @@ public class WorldManager {
         Thread.sleep(WorldManager.delay);
       } catch (InterruptedException e) {
       }
-
     }
   }
 
-  public static int getDelay() {
-    return delay;
+
+  public void reset() {
+    this.getWorldToRun().reset(WorldManager.initialHumans,
+                               WorldManager.initialZombies);
+  }
+
+
+  public static int getDefaultDelay() {
+    return WorldManager.DEFAULT_DELAY;
   }
 
   public static void setDelay(int delay) {
@@ -51,27 +55,27 @@ public class WorldManager {
   }
 
   public World getWorldToRun() {
-    return worldToRun;
+    return this.worldToRun;
   }
 
   public boolean isRunning() {
-    return running;
+    return this.running;
   }
 
   public void setRunning(boolean running) {
     this.running = running;
   }
 
-  public static int getInitialHumans() {
-    return initialHumans;
+  public static int getDefaultInitialHumans() {
+    return WorldManager.DEFAULT_INITIAL_HUMANS;
   }
 
   public static void setInitialHumans(int initialHumans) {
     WorldManager.initialHumans = initialHumans;
   }
 
-  public static int getInitialZombies() {
-    return initialZombies;
+  public static int getDefaultInitialZombies() {
+    return WorldManager.DEFAULT_INITIAL_ZOMBIES;
   }
 
   public static void setInitialZombies(int initialZombies) {
@@ -79,7 +83,7 @@ public class WorldManager {
   }
 
   public static int getWidth() {
-    return width;
+    return WorldManager.width;
   }
 
   public static void setWidth(int width) {
@@ -87,7 +91,7 @@ public class WorldManager {
   }
 
   public static int getHeight() {
-    return height;
+    return WorldManager.height;
   }
 
   public static void setHeight(int height) {

@@ -51,7 +51,8 @@ public class CheervilleFrame extends JFrame {
     gbc.weightx = 0.6;
     gbc.weighty = 1.0;
     gbc.insets = new Insets(0, 0, 0, 10);
-    gridBagPane.add(new RunButtonPanel(managerToDisplay));
+    SliderPanel sliders = new SliderPanel();
+    gridBagPane.add(new RunButtonPanel(managerToDisplay, sliders));
 
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
@@ -103,7 +104,8 @@ public class CheervilleFrame extends JFrame {
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
-    mainPane.add(new SliderPanel(), gbc);
+    gbc.insets = new Insets(0, 0, 0, 10);
+    mainPane.add(sliders, gbc);
 
     mainPane.setOpaque(true);
 

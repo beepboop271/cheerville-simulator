@@ -1,13 +1,21 @@
 import java.awt.Color;
 
 public class Zombie extends Moveable {
-  private static final int INITIAL_HEALTH = 10;
-  private static final int HEALTH_VARIANCE = 5;
-  private static final int MAX_HEALTH = 20;
+  private static final int DEFAULT_INITIAL_HEALTH = 10;
+  private static int initialHealth = Zombie.DEFAULT_INITIAL_HEALTH;
 
-  private static final double HUMAN_ENERGY_FACTOR = 0.1;
+  private static final int DEFAULT_HEALTH_VARIANCE = 5;
+  private static int healthVariance = Zombie.DEFAULT_HEALTH_VARIANCE;
 
-  private static final double RANDOM_MOVE_CHANCE = 0.8;
+  private static final int DEFAULT_MAX_HEALTH = 20;
+  private static int maxHealth = Zombie.DEFAULT_MAX_HEALTH;
+
+  private static final double DEFAULT_HUMAN_ENERGY_FACTOR = 0.1;
+  private static double humanEnergyFactor = Zombie.DEFAULT_HUMAN_ENERGY_FACTOR;
+
+  private static final double DEFAULT_RANDOM_MOVE_CHANCE = 0.8;
+  private static double randomMoveChance = Zombie.DEFAULT_RANDOM_MOVE_CHANCE;
+
 
   private static long NUM_ZOMBIES = 0;
 
@@ -19,9 +27,9 @@ public class Zombie extends Moveable {
    */
   public Zombie(int x, int y) {
     super(x, y,
-          (Zombie.INITIAL_HEALTH
+          (Zombie.initialHealth
            + (int)(((Math.random()-0.5)*2)
-                   * (Zombie.HEALTH_VARIANCE+1))));
+                   * (Zombie.healthVariance+1))));
   }
 
   
@@ -31,7 +39,7 @@ public class Zombie extends Moveable {
    */
   public Zombie(Human victim) {
     super(victim.getX(), victim.getY(),
-          Math.min(Zombie.MAX_HEALTH, victim.getHealth()));
+          Math.min(Zombie.maxHealth, victim.getHealth()));
     victim.setDead();
   }
 
@@ -118,7 +126,7 @@ public class Zombie extends Moveable {
    */
   public Zombie attackHuman(Human victim) {
     if (this.getHealth() > victim.getHealth()) {
-      this.heal((int)(victim.getHealth()*Zombie.HUMAN_ENERGY_FACTOR));
+      this.heal((int)(victim.getHealth()*Zombie.humanEnergyFactor));
       victim.setDead();
       return null;
     } else {
@@ -141,7 +149,7 @@ public class Zombie extends Moveable {
    */
   @Override
   public int getMaxHealth() {
-    return Zombie.MAX_HEALTH;
+    return Zombie.maxHealth;
   }
 
   
@@ -150,7 +158,7 @@ public class Zombie extends Moveable {
    */
   @Override
   public int getInitialHealth() {
-    return Zombie.INITIAL_HEALTH;
+    return Zombie.initialHealth;
   }
 
   
@@ -159,7 +167,7 @@ public class Zombie extends Moveable {
    */
   @Override
   public int getHealthVariance() {
-    return Zombie.HEALTH_VARIANCE;
+    return Zombie.healthVariance;
   }
 
   
@@ -168,7 +176,17 @@ public class Zombie extends Moveable {
    */
   @Override
   public double getRandomMoveChance() {
-    return Zombie.RANDOM_MOVE_CHANCE;
+    return Zombie.randomMoveChance;
+  }
+
+
+  public static double getDefaultRandomMoveChance() {
+    return Zombie.DEFAULT_RANDOM_MOVE_CHANCE;
+  }
+
+
+  public static void setRandomMoveChance(double randomMoveChance) {
+    Zombie.randomMoveChance = randomMoveChance;
   }
 
   
@@ -187,5 +205,41 @@ public class Zombie extends Moveable {
   @Override
   public long generateID() {
     return Zombie.NUM_ZOMBIES++;
+  }
+
+  public static int getDefaultInitialHealth() {
+    return Zombie.DEFAULT_INITIAL_HEALTH;
+  }
+
+  public static void setInitialHealth(int initialHealth) {
+    Zombie.initialHealth = initialHealth;
+  }
+
+  public static int getDefaultHealthVariance() {
+    return Zombie.DEFAULT_HEALTH_VARIANCE;
+  }
+
+  public static void setHealthVariance(int healthVariance) {
+    Zombie.healthVariance = healthVariance;
+  }
+
+  public static int getDefaultMaxHealth() {
+    return Zombie.DEFAULT_MAX_HEALTH;
+  }
+
+  public static void setMaxHealth(int maxHealth) {
+    Zombie.maxHealth = maxHealth;
+  }
+
+  public static double getDefaultHumanEnergyFactor() {
+    return Zombie.DEFAULT_HUMAN_ENERGY_FACTOR;
+  }
+
+  public static double getHumanEnergyFactor() {
+    return Zombie.humanEnergyFactor;
+  }
+
+  public static void setHumanEnergyFactor(double humanEnergyFactor) {
+    Zombie.humanEnergyFactor = humanEnergyFactor;
   }
 }

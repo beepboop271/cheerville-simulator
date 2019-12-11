@@ -1,14 +1,23 @@
 import java.awt.Color;
 
 public class Plant extends Spawnable {
-  private static final int INITIAL_HEALTH = 15;
-  private static final int HEALTH_VARIANCE = 5;
-  private static final int MAX_HEALTH = 25;
 
-  private static final double PLANT_ENERGY_FACTOR = 0.5;
+  private static final int DEFAULT_INITIAL_HEALTH = 15;
+  private static int initialHealth = Plant.DEFAULT_INITIAL_HEALTH;
 
-  private static final double SPREAD_CHANCE = 0.05;
+  private static final int DEFAULT_HEALTH_VARIANCE = 5;
+  private static int healthVariance = Plant.DEFAULT_HEALTH_VARIANCE;
 
+  private static final int DEFAULT_MAX_HEALTH = 25;
+  private static int maxHealth = Plant.DEFAULT_MAX_HEALTH;
+
+  private static final double DEFAULT_PLANT_ENERGY_FACTOR = 0.5;
+  private static double plantEnergyFactor = Plant.DEFAULT_PLANT_ENERGY_FACTOR;
+
+  private static final double DEFAULT_SPREAD_CHANCE = 0.05;
+  private static double spreadChance = Plant.DEFAULT_SPREAD_CHANCE;
+
+  
   private static long NUM_PLANTS = 0;
 
   private Plant ancestor;
@@ -22,9 +31,9 @@ public class Plant extends Spawnable {
    */
   public Plant(int x, int y) {
     super(x, y,
-          (Plant.INITIAL_HEALTH
+          (Plant.initialHealth
            + (int)(((Math.random()-0.5)*2)
-                   * (Plant.HEALTH_VARIANCE+1))));
+                   * (Plant.healthVariance+1))));
   }
 
   
@@ -70,11 +79,11 @@ public class Plant extends Spawnable {
     if (other instanceof Plant) {
       // other is only non null when a plant
       // spreads onto another plant
-      this.heal((int)(other.getHealth()*Plant.PLANT_ENERGY_FACTOR));
+      this.heal((int)(other.getHealth()*Plant.plantEnergyFactor));
       other.setDead();
       ((Plant)other).ancestor.addDescendant(this);
     } else {
-      if (Math.random() < Plant.SPREAD_CHANCE) {
+      if (Math.random() < Plant.spreadChance) {
         return this.addDescendantWithAncestor(new Plant(this.getX(), this.getY()));
       }
     }
@@ -107,7 +116,7 @@ public class Plant extends Spawnable {
    */
   @Override
   public int getMaxHealth() {
-    return Plant.MAX_HEALTH;
+    return Plant.maxHealth;
   }
 
   
@@ -119,7 +128,7 @@ public class Plant extends Spawnable {
    */
   @Override
   public int getInitialHealth() {
-    return Plant.INITIAL_HEALTH;
+    return Plant.initialHealth;
   }
 
   
@@ -133,7 +142,7 @@ public class Plant extends Spawnable {
    */
   @Override
   public int getHealthVariance() {
-    return Plant.HEALTH_VARIANCE;
+    return Plant.healthVariance;
   }
 
   
@@ -159,5 +168,45 @@ public class Plant extends Spawnable {
   @Override
   public long generateID() {
     return Plant.NUM_PLANTS++;
+  }
+
+  public static int getDefaultInitialHealth() {
+    return DEFAULT_INITIAL_HEALTH;
+  }
+
+  public static void setInitialHealth(int initialHealth) {
+    Plant.initialHealth = initialHealth;
+  }
+
+  public static int getDefaultHealthVariance() {
+    return DEFAULT_HEALTH_VARIANCE;
+  }
+
+  public static void setHealthVariance(int healthVariance) {
+    Plant.healthVariance = healthVariance;
+  }
+
+  public static int getDefaultMaxHealth() {
+    return DEFAULT_MAX_HEALTH;
+  }
+
+  public static void setMaxHealth(int maxHealth) {
+    Plant.maxHealth = maxHealth;
+  }
+
+  public static double getDefaultPlantEnergyFactor() {
+    return DEFAULT_PLANT_ENERGY_FACTOR;
+  }
+
+  public static void setPlantEnergyFactor(double plantEnergyFactor) {
+    Plant.plantEnergyFactor = plantEnergyFactor;
+  }
+
+  public static double getDefaultSpreadChance() {
+    return DEFAULT_SPREAD_CHANCE;
+  }
+
+  public static void setSpreadChance(double spreadChance) {
+    Plant.spreadChance = spreadChance;
   }
 }

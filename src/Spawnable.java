@@ -155,7 +155,10 @@ public abstract class Spawnable implements Comparable<Spawnable> {
    * @return int, the health of this Spawnable after decaying.
    */
   public int decay() {
-    --this.health;
+    // limit it to maxHealth since the user could
+    // change maxHealth to be lower than the health of
+    // existing plants and we want that change to occur
+    this.health = Math.min(this.health-1, this.getMaxHealth());
     return this.health;
   }
 
@@ -210,8 +213,10 @@ public abstract class Spawnable implements Comparable<Spawnable> {
    * they lose health.
    * @return int, the value of any variable color channels.
    */
-  public int getColorChannelValue() {
-    return (this.getMaxHealth()-this.getHealth())*(255/this.getMaxHealth());
+  public int getColorChannelValue() { 
+    return Math.min(255,
+                    (Math.max(0, this.getMaxHealth()-this.getHealth())
+                     * (255/this.getMaxHealth())));
   }
 
   

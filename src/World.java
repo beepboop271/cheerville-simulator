@@ -1,9 +1,12 @@
 import java.util.LinkedList;
 
 public class World {
-  private static double plantSpawnChance = 0.05;
+  private static final double DEFAULT_PLANT_SPAWN_CHANCE = 0.05;
+  private static double plantSpawnChance = World.DEFAULT_PLANT_SPAWN_CHANCE;
 
-  private static int visionSize = 4;
+  private static final int DEFAULT_VISION_SIZE = 4;
+  private static int visionSize = World.DEFAULT_VISION_SIZE;
+
   private static int[][] visionOffsets = {
     {0, 0, 0, 0},    //nothing
     {-visionSize, -visionSize, (2*visionSize)+1, visionSize+1},      // scan 9x5 from (x-4, y-4) to (x+4, y) - NORTH
@@ -144,7 +147,7 @@ public class World {
               }
             }
           }
-        } else if (Math.random() < plantSpawnChance) {
+        } else if (Math.random() < World.plantSpawnChance) {
           // unoccupied tile can sometimes create a Plant
           this.setMapAt(new Plant(x, y));
         }
@@ -427,8 +430,8 @@ public class World {
   }
   
 
-  public static double getPlantSpawnChance() {
-    return plantSpawnChance;
+  public static double getDefaultPlantSpawnChance() {
+    return World.DEFAULT_PLANT_SPAWN_CHANCE;
   }
 
   public static void setPlantSpawnChance(double plantSpawnChance) {
@@ -441,8 +444,13 @@ public class World {
    * Returns the distance in cells that Moveables can see.
    * @return int, the distance that Moveables can see.
    */
-  public static int getVisionSize() {
+  public int getVisionSize() {
     return World.visionSize;
+  }
+
+
+  public static int getDefaultVisionSize() {
+    return World.DEFAULT_VISION_SIZE;
   }
 
   
