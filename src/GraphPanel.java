@@ -1,13 +1,13 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 @SuppressWarnings("serial")
 public abstract class GraphPanel extends JPanel {
@@ -213,6 +213,17 @@ public abstract class GraphPanel extends JPanel {
   public int[][] getDistributionHistory() {
     return this.worldToDisplay.getDistributionHistory();
   }
+
+
+  /**
+   * [getWorldToDisplay]
+   * Gets the World this panel is displaying information about.
+   * @return World, the World this panel is displaying.
+   */
+  public World getWorldToDisplay() {
+    return this.worldToDisplay;
+  }
+
 
   public class GraphPanelResizeListener extends ComponentAdapter {
     public void componentResized(ComponentEvent e) {

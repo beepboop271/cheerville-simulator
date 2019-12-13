@@ -2,9 +2,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 @SuppressWarnings("serial")
 public class SpawnableInfoPanel extends JPanel {
@@ -51,7 +51,7 @@ public class SpawnableInfoPanel extends JPanel {
     c.weightx = 0;
     c.weighty = 0;
     this.add(buttonPanel, c);
-    buttonPanel.setContainingPanel(this);
+    buttonPanel.setInfoPanel(this);
     
     c = new GridBagConstraints();
     c.gridx = 1;

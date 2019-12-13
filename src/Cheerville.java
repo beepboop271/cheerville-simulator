@@ -1,3 +1,5 @@
+import java.awt.event.ComponentEvent;
+
 public class Cheerville {
   public static final int NO_MOVE = 0;
   public static final int NORTH = 1;
@@ -17,12 +19,13 @@ public class Cheerville {
     WorldManager cheervilleManager = new WorldManager();
     CheervilleFrame display = new CheervilleFrame("Duber 2: Electric Boogaloo",
                                                   cheervilleManager);
-    while (true) {
-      if(cheervilleManager.isRunning()) {
-        cheervilleManager.run();
-      }
-      Thread.sleep(10);
-    }
+    cheervilleManager.run();
+    // while (true) {
+    //   if(cheervilleManager.isRunning()) {
+    //     cheervilleManager.run();
+    //   }
+    //   Thread.sleep(10);
+    // }
     // int[] counts = {-1, -1, -1, -1};
     // long turns = 0;
     // while (true) {

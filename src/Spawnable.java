@@ -1,7 +1,6 @@
 import java.awt.Color;
-
-import java.util.TreeSet;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 public abstract class Spawnable implements Comparable<Spawnable> {
   private int x, y;

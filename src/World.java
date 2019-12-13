@@ -56,6 +56,13 @@ public class World {
 
 
   public void reset(int numHumans, int numZombies) {
+    for (int y = 0; y < this.map.length; ++y) {
+      for (int x = 0; x < this.map[0].length; ++x) {
+        if (this.isOccupiedAt(x, y)) {
+          this.getMapAt(x, y).setDead();
+        }
+      }
+    }
     this.map = new Spawnable[this.HEIGHT][this.WIDTH];
     this.doSimulationStep();
     int x, y;
@@ -444,7 +451,7 @@ public class World {
    * Returns the distance in cells that Moveables can see.
    * @return int, the distance that Moveables can see.
    */
-  public int getVisionSize() {
+  public static int getVisionSize() {
     return World.visionSize;
   }
 

@@ -18,7 +18,7 @@ public class Plant extends Spawnable {
   private static double spreadChance = Plant.DEFAULT_SPREAD_CHANCE;
 
   
-  private static long NUM_PLANTS = 0;
+  private static long numPlants = 0;
 
   private Plant ancestor;
 
@@ -167,7 +167,7 @@ public class Plant extends Spawnable {
    */
   @Override
   public long generateID() {
-    return Plant.NUM_PLANTS++;
+    return Plant.numPlants++;
   }
 
   public static int getDefaultInitialHealth() {

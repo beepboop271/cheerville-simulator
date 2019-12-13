@@ -1,11 +1,21 @@
 public abstract class Human extends Moveable {
-  private static int initialHealth = 20;
-  private static int healthVariance = 5;
-  private static int maxHealth = 30;
+  private static final int DEFAULT_INITIAL_HEALTH = 20;
+  private static int initialHealth = Human.DEFAULT_INITIAL_HEALTH;
 
-  private static double femaleChance = 0.5;
-  private static double plantEnergyFactor = 0.5;
-  private static double randomMoveChance = 0.1;
+  private static final int DEFAULT_HEALTH_VARIANCE = 5;
+  private static int healthVariance = Human.DEFAULT_HEALTH_VARIANCE;
+
+  private static final int DEFAULT_MAX_HEALTH = 20;
+  private static int maxHealth = Human.DEFAULT_MAX_HEALTH;
+
+  private static final double DEFAULT_FEMALE_CHANCE = 0.5;
+  private static double femaleChance = Human.DEFAULT_FEMALE_CHANCE;
+
+  private static final double DEFAULT_PLANT_ENERGY_FACTOR = 0.5;
+  private static double plantEnergyFactor = Human.DEFAULT_PLANT_ENERGY_FACTOR;
+
+  private static final double DEFAULT_RANDOM_MOVE_CHANCE = 0.1;
+  private static double randomMoveChance = Human.DEFAULT_RANDOM_MOVE_CHANCE;
 
   private static long numHumans = 0;
 
@@ -337,4 +347,52 @@ public abstract class Human extends Moveable {
   public abstract double[][] getAgeBirthChances();
 
   public abstract double[][] getHealthBirthChances();
+
+  public static int getDefaultInitialHealth() {
+    return Human.DEFAULT_INITIAL_HEALTH;
+  }
+
+  public static void setInitialHealth(int initialHealth) {
+    Human.initialHealth = initialHealth;
+  }
+
+  public static int getDefaultHealthVariance() {
+    return Human.DEFAULT_HEALTH_VARIANCE;
+  }
+
+  public static void setHealthVariance(int healthVariance) {
+    Human.healthVariance = healthVariance;
+  }
+
+  public static int getDefaultMaxHealth() {
+    return Human.DEFAULT_MAX_HEALTH;
+  }
+
+  public static void setMaxHealth(int maxHealth) {
+    Human.maxHealth = maxHealth;
+  }
+
+  public static double getDefaultFemaleChance() {
+    return Human.DEFAULT_FEMALE_CHANCE;
+  }
+
+  public static void setFemaleChance(double femaleChance) {
+    Human.femaleChance = femaleChance;
+  }
+
+  public static double getDefaultPlantEnergyFactor() {
+    return Human.DEFAULT_PLANT_ENERGY_FACTOR;
+  }
+
+  public static void setPlantEnergyFactor(double plantEnergyFactor) {
+    Human.plantEnergyFactor = plantEnergyFactor;
+  }
+
+  public static double getDefaultRandomMoveChance() {
+    return Human.DEFAULT_RANDOM_MOVE_CHANCE;
+  }
+
+  public static void setRandomMoveChance(double randomMoveChance) {
+    Human.randomMoveChance = randomMoveChance;
+  }
 }

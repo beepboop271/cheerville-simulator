@@ -1,12 +1,12 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -208,13 +208,6 @@ public class WorldPanel extends JPanel {
     this.infoPanel = infoPanel;
   }
 
-  
-  /** 
-   * @return World
-   */
-  public World getWorldToDisplay() {
-    return this.worldToDisplay;
-  }
 
   public class MapPanelResizeListener extends ComponentAdapter {
     public void componentResized(ComponentEvent e) {

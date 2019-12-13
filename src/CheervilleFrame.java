@@ -1,7 +1,4 @@
 import java.awt.GridBagConstraints;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
@@ -113,8 +110,6 @@ public class CheervilleFrame extends JFrame {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.pack();
     this.setVisible(true);
-
-    System.out.println(Arrays.deepToString(((GridBagLayout)gridBagPane.getLayout()).getLayoutDimensions()));
   }
 
   

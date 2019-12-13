@@ -1,8 +1,10 @@
 public class WorldManager {
   private static final int DEFAULT_DELAY = 50;
   private static int delay = WorldManager.DEFAULT_DELAY;
+
   private static final int DEFAULT_INITIAL_HUMANS = 400;
   private static int initialHumans = WorldManager.DEFAULT_INITIAL_HUMANS;
+  
   private static final int DEFAULT_INITIAL_ZOMBIES = 0;
   private static int initialZombies = WorldManager.DEFAULT_INITIAL_ZOMBIES;
 
@@ -22,18 +24,24 @@ public class WorldManager {
 
 
   public void run() {
-    int[] counts = {-1, -1, -1, -1};
-    long turns = 0;
-    while (this.running) {
-      if (counts[1]+counts[2]+counts[3] != 0) {
-        counts = this.worldToRun.doSimulationStep();
-        System.out.printf("Turn %d P:%d H:%d Z:%d\n",
-                          turns++, counts[0], counts[1]+counts[2], counts[3]);
-      } else {
-        counts = this.worldToRun.resetAndCount();
+    while(true) {
+      int[] counts = {-1, -1, -1, -1};
+      long turns = 0;
+      while (this.running) {
+        if (counts[1]+counts[2]+counts[3] != 0) {
+          counts = this.worldToRun.doSimulationStep();
+          System.out.printf("Turn %d P:%d H:%d Z:%d\n",
+                            turns++, counts[0], counts[1]+counts[2], counts[3]);
+        } else {
+          counts = this.worldToRun.resetAndCount();
+        }
+        try {
+          Thread.sleep(WorldManager.delay);
+        } catch (InterruptedException e) {
+        }
       }
       try {
-        Thread.sleep(WorldManager.delay);
+        Thread.sleep(15);
       } catch (InterruptedException e) {
       }
     }

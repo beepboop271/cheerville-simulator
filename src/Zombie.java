@@ -17,7 +17,7 @@ public class Zombie extends Moveable {
   private static double randomMoveChance = Zombie.DEFAULT_RANDOM_MOVE_CHANCE;
 
 
-  private static long NUM_ZOMBIES = 0;
+  private static long numZombies = 0;
 
   
   /** 
@@ -204,7 +204,7 @@ public class Zombie extends Moveable {
    */
   @Override
   public long generateID() {
-    return Zombie.NUM_ZOMBIES++;
+    return Zombie.numZombies++;
   }
 
   public static int getDefaultInitialHealth() {

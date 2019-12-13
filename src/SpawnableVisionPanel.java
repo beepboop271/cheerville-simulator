@@ -1,12 +1,12 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Line2D;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
 
 @SuppressWarnings("serial")
 public class SpawnableVisionPanel extends WorldPanel {
@@ -53,7 +53,7 @@ public class SpawnableVisionPanel extends WorldPanel {
     }
 
     // draw a square around the spawnable of correct size
-    int visionSize = this.getWorldToDisplay().getVisionSize();
+    int visionSize = World.getVisionSize();
     Rectangle drawRect = new Rectangle(this.spawnableToShow.getX()-visionSize,
                                        this.spawnableToShow.getY()-visionSize,
                                        this.getNumCells(),
@@ -62,9 +62,8 @@ public class SpawnableVisionPanel extends WorldPanel {
 
     if (this.spawnableToShow instanceof Moveable) {
       // only draw what the spawnable can see in color
-      int[] offsets = this.getWorldToDisplay()
-                          .getVisionOffsets(((Moveable)this.spawnableToShow)
-                                                           .getFacingDirection());
+      int[] offsets = World.getVisionOffsets(((Moveable)this.spawnableToShow)
+                                                            .getFacingDirection());
       Rectangle colorRect = new Rectangle(this.spawnableToShow.getX()+offsets[0],
                                            this.spawnableToShow.getY()+offsets[1],
                                            offsets[2], offsets[3]);
@@ -144,7 +143,7 @@ public class SpawnableVisionPanel extends WorldPanel {
           // scale all vectors so the longest always takes up the same
           // screen space
           newLength = (vectorsToDraw[i][j].getLength()/secondMaxLength)
-                      * (this.getCellSize()*this.getWorldToDisplay().getVisionSize());
+                      * (this.getCellSize()*World.getVisionSize());
           vectorToDraw = (Vector2D)vectorsToDraw[i][j].clone();
           vectorToDraw.setLength(newLength);
           // black outline
@@ -175,7 +174,7 @@ public class SpawnableVisionPanel extends WorldPanel {
    * @return int, the number of cells on each side of this panel.
    */
   public int getNumCells() {
-    return (2*this.getWorldToDisplay().getVisionSize())+1;
+    return (2*World.getVisionSize())+1;
   }
 
   

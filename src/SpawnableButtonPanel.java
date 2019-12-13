@@ -1,9 +1,9 @@
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 @SuppressWarnings("serial")
 public class SpawnableButtonPanel extends JPanel implements ActionListener {
   private World worldToAccess;
-  private SpawnableInfoPanel containingPanel;
+  private SpawnableInfoPanel infoPanel;
 
   
   /** 
@@ -73,27 +73,27 @@ public class SpawnableButtonPanel extends JPanel implements ActionListener {
    */
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (this.containingPanel == null) {
+    if (this.infoPanel == null) {
       return;
     }
     String command = e.getActionCommand();
     if (command.equals("selectZombie")) {
-      this.containingPanel
+      this.infoPanel
           .setSpawnableToShow(this.worldToAccess.selectRandomZombie());
     } else if (command.equals("selectHuman")) {
-      this.containingPanel
+      this.infoPanel
           .setSpawnableToShow(this.worldToAccess.selectRandomHuman());
     }
   }
   
   
   /** 
-   * [setContainingPanel]
+   * [setInfoPanel]
    * Sets the SpawnableInfoPanel that the buttons in this
    * panel control.
-   * @param containingPanel The SpawnableInfoPanel to control.
+   * @param infoPanel The SpawnableInfoPanel to control.
    */
-  public void setContainingPanel(SpawnableInfoPanel containingPanel) {
-    this.containingPanel = containingPanel;
+  public void setInfoPanel(SpawnableInfoPanel infoPanel) {
+    this.infoPanel = infoPanel;
   }
 }
