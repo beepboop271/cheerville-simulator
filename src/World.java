@@ -19,16 +19,9 @@ public class World {
   private LinkedList<int[]> distributionHistory = new LinkedList<int[]>();
   private int[][] historyArray;
 
-  private final int WIDTH, HEIGHT;
+  private int width, height;
   private Spawnable[][] map;
 
-
-  public World(int width, int height) {
-    this.WIDTH = width;
-    this.HEIGHT = height;
-    this.map = new Spawnable[height][width];
-    this.doSimulationStep();  // let some plants grow
-  }
   
   /** 
    * [World]
@@ -40,7 +33,10 @@ public class World {
    * @param numZombies The initial number of Zombies.
    */
   public World(int width, int height, int numHumans, int numZombies) {
-    this(width, height);
+    this.width = width;
+    this.height = height;
+    this.map = new Spawnable[height][width];
+    this.doSimulationStep();  // let some plants grow
     int x, y;
     for (int i = 0; i < numHumans; ++i) {
       x = (int)(Math.random()*width);
@@ -55,6 +51,34 @@ public class World {
   }
 
 
+  /** 
+   * [resize]
+   * Copies over as much of the existing World as possible
+   * into a World with a different size.
+   * @param newWidth  The new width, in number of cells.
+   * @param newHeight The new height, in number of cells.
+   */
+  public void resize(int newWidth, int newHeight) {
+    Spawnable[][] newMap = new Spawnable[newHeight][newWidth];
+    for (int y = 0; y < Math.min(this.height, newHeight); ++y) {
+      for (int x = 0; x < Math.min(this.width, newWidth); ++x) {
+        if (this.isOccupiedAt(x, y)) {
+          newMap[y][x] = this.getMapAt(x, y);
+        }
+      }
+    }
+    this.map = newMap;
+    this.width = newWidth;
+    this.height = newHeight;
+  }
+
+  
+  /** 
+   * [reset]
+   * Clears the map and creates initial Spawnables again.
+   * @param numHumans  The number of attempts to place Humans after clearing.
+   * @param numZombies The number of attempts to place Zombies after clearing.
+   */
   public void reset(int numHumans, int numZombies) {
     for (int y = 0; y < this.map.length; ++y) {
       for (int x = 0; x < this.map[0].length; ++x) {
@@ -63,17 +87,17 @@ public class World {
         }
       }
     }
-    this.map = new Spawnable[this.HEIGHT][this.WIDTH];
+    this.map = new Spawnable[this.height][this.width];
     this.doSimulationStep();
     int x, y;
     for (int i = 0; i < numHumans; ++i) {
-      x = (int)(Math.random()*this.WIDTH);
-      y = (int)(Math.random()*this.HEIGHT);
+      x = (int)(Math.random()*this.width);
+      y = (int)(Math.random()*this.height);
       this.setMapAt(Human.createHuman(x, y));
     }
     for (int i = 0; i < numZombies; ++i) {
-      x = (int)(Math.random()*this.WIDTH);
-      y = (int)(Math.random()*this.HEIGHT);
+      x = (int)(Math.random()*this.width);
+      y = (int)(Math.random()*this.height);
       this.setMapAt(new Zombie(x, y));
     }
   }
@@ -89,8 +113,8 @@ public class World {
     int[] newPos;
     Spawnable newSpawnable;
     int moveAttempts;
-    for (int y = 0; y < this.HEIGHT; ++y) {
-      for (int x = 0; x < this.WIDTH; ++x) {
+    for (int y = 0; y < this.height; ++y) {
+      for (int x = 0; x < this.width; ++x) {
         if (this.isOccupiedAt(x, y)) {
           s = this.getMapAt(x, y);
 
@@ -173,8 +197,8 @@ public class World {
   public int[] resetAndCount() {
     Spawnable s;
     int[] counts = {0, 0, 0, 0};
-    for (int y = 0; y < this.HEIGHT; ++y) {
-      for (int x = 0; x < this.WIDTH; ++x) {
+    for (int y = 0; y < this.height; ++y) {
+      for (int x = 0; x < this.width; ++x) {
         if (this.isOccupiedAt(x, y)) {
           s = this.getMapAt(x, y);
           if (s instanceof Plant) {
@@ -425,7 +449,7 @@ public class World {
       counts[1],  // females
       counts[2],  // males
       counts[3],  // zombies
-      (this.WIDTH*this.HEIGHT)-counts[0]-counts[1]-counts[2]-counts[3]
+      (this.width*this.height)-counts[0]-counts[1]-counts[2]-counts[3]
     };
     this.distributionHistory.addLast(record);
     while (this.distributionHistory.size() > this.getHistoryAmount()) {
@@ -437,12 +461,37 @@ public class World {
   }
   
 
+  /** 
+   * [getDefaultPlantSpawnChance]
+   * Returns the default chance that an empty cell will turn
+   * into a Plant when running the simulation step.
+   * @return double, the default chance a Plant will appear
+   *         in an empty spot on the map.
+   */
   public static double getDefaultPlantSpawnChance() {
     return World.DEFAULT_PLANT_SPAWN_CHANCE;
   }
 
+  
+  /** 
+   * [setPlantSpawnChance]
+   * Sets the chance that an empty cell will turn into a Plant
+   * when running the simulation step.
+   * @param plantSpawnChance The chance [0, 1] that a Plant will
+   *                         appear in an empty spot on the map.
+   */
   public static void setPlantSpawnChance(double plantSpawnChance) {
     World.plantSpawnChance = plantSpawnChance;
+  }
+
+  
+  /** 
+   * [getDefaultVisionSize]
+   * Returns the default distance in cells that Moveables can see.
+   * @return int, the default distance that Moveables can see.
+   */
+  public static int getDefaultVisionSize() {
+    return World.DEFAULT_VISION_SIZE;
   }
 
   
@@ -453,11 +502,6 @@ public class World {
    */
   public static int getVisionSize() {
     return World.visionSize;
-  }
-
-
-  public static int getDefaultVisionSize() {
-    return World.DEFAULT_VISION_SIZE;
   }
 
   
@@ -485,6 +529,11 @@ public class World {
   }
 
 
+  /**
+   * [updateVisionOffsets]
+   * Recalculates the vision rectangles when
+   * the vision distance is changed.
+   */
   public static void updateVisionOffsets() {
     int[][] visionOffsets = {
       {0, 0, 0, 0},
@@ -538,7 +587,7 @@ public class World {
    * @return int, the width of the World.
    */
   public int getWidth() {
-    return this.WIDTH;
+    return this.width;
   }
 
   
@@ -548,7 +597,7 @@ public class World {
    * @return int, the height of the World.
    */
   public int getHeight() {
-    return this.HEIGHT;
+    return this.height;
   }
 
   
@@ -560,7 +609,7 @@ public class World {
    * @return boolean, whether or not the point is within the World.
    */
   public boolean isInWorld(int x, int y) {
-    return ((x >= 0) && (x < this.WIDTH) && (y >= 0) && (y < this.HEIGHT));
+    return ((x >= 0) && (x < this.width) && (y >= 0) && (y < this.height));
   }
 
   

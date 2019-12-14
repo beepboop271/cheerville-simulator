@@ -10,24 +10,36 @@ import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
 public class SliderPanel extends JTabbedPane implements ChangeListener {
-  public static final int NUM_SLIDERS = 21;
+  public static final int NUM_SLIDERS = 23;
   private JSlider[] sliders = new JSlider[NUM_SLIDERS];
   private int[] defaultValues = new int[NUM_SLIDERS];
+  private CheervilleManager manager;
 
-  public SliderPanel() {
+  
+  /** 
+   * [SliderPanel]
+   * Constructor for a JPanel with sliders to control settings.
+   * @param manager The simulation manager to control some settings with.
+   */
+  public SliderPanel(CheervilleManager manager) {
     super();
-    this.setPreferredSize(new Dimension(300, 400));
+    this.manager = manager;
+    this.setPreferredSize(new Dimension(300, 600));
     int i = 0;
 
     JPanel worldTab = new JPanel();
     worldTab.setLayout(new BoxLayout(worldTab, BoxLayout.Y_AXIS));
     
     this.addSlider(worldTab, "Step delay:", "World delay", i++,
-                   0, 500, WorldManager.getDefaultDelay(), 100);
+                   0, 500, CheervilleManager.getDefaultDelay(), 100);
+    this.addSlider(worldTab, "Width:", "World width", i++,
+                   5, 50, CheervilleManager.getDefaultWidth(), 5);
+    this.addSlider(worldTab, "Height:", "World height", i++,
+                   5, 50, CheervilleManager.getDefaultHeight(), 5);
     this.addSlider(worldTab, "Initial humans:", "World initialHumans", i++,
-                   0, 500, WorldManager.getDefaultInitialHumans(), 100);
+                   0, 500, CheervilleManager.getDefaultInitialHumans(), 100);
     this.addSlider(worldTab, "Initial zombies:", "World initialZombies", i++,
-                   0, 500, WorldManager.getDefaultInitialZombies(), 100);
+                   0, 500, CheervilleManager.getDefaultInitialZombies(), 100);
     this.addSlider(worldTab, "Vision range:", "World visionRange", i++,
                    1, 10, World.getDefaultVisionSize(), 1);
     this.addSlider(worldTab, "Plant spawn chance:", "World plantSpawnChance", i++,
@@ -93,6 +105,20 @@ public class SliderPanel extends JTabbedPane implements ChangeListener {
     }
   }
 
+  
+  /** 
+   * [addSlider]
+   * Creates a new JLabel and JSlider for a panel and
+   * records it in the JSlider array.
+   * @param panelToAdd  The JPanel to add the JLable and JSlider to.
+   * @param label       The String to display on the GUI above the JSlider.
+   * @param name        The name of the JSlider to use internally.
+   * @param index       The index in the slider array to place the new JSlider.
+   * @param min         The minimum value of the JSlider.
+   * @param max         The maximum value of the JSlider.
+   * @param start       The initial value of the JSlider.
+   * @param tickSpacing The spacing to place labels at.
+   */
   public void addSlider(JPanel panelToAdd,
                         String label, String name,
                         int index,
@@ -105,6 +131,14 @@ public class SliderPanel extends JTabbedPane implements ChangeListener {
     panelToAdd.add(this.sliders[index]);
   }
 
+  
+  /** 
+   * [stateChanged]
+   * Runs when a ChangeEvent on a JSlider is emitted.
+   * Checks to see which JSlider has changed and calls
+   * the correct setter to update the setting.
+   * @param e The ChangeEvent emitted.
+   */
   @Override
   public void stateChanged(ChangeEvent e) {
     JSlider source = (JSlider)e.getSource();
@@ -118,13 +152,19 @@ public class SliderPanel extends JTabbedPane implements ChangeListener {
       // String.equals method were being used."
       switch (source.getName()) {
         case "World delay":
-          WorldManager.setDelay(source.getValue());
+          CheervilleManager.setDelay(source.getValue());
+          break;
+        case "World width":
+          this.manager.setWidth(source.getValue());
+          break;
+        case "World height":
+          this.manager.setHeight(source.getValue());
           break;
         case "World initialHumans":
-          WorldManager.setInitialHumans(source.getValue());
+          CheervilleManager.setInitialHumans(source.getValue());
           break;
         case "World initialZombies":
-          WorldManager.setInitialZombies(source.getValue());
+          CheervilleManager.setInitialZombies(source.getValue());
           break;
         case "World visionRange":
           World.setVisionSize(source.getValue());
@@ -184,6 +224,11 @@ public class SliderPanel extends JTabbedPane implements ChangeListener {
     }
   }
 
+
+  /**
+   * [reset]
+   * Resets all sliders to their starting values.
+   */
   public void reset() {
     for(int i = 0; i < this.sliders.length; ++i) {
       this.sliders[i].setValue(this.defaultValues[i]);

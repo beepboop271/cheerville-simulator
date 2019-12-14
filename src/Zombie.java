@@ -21,6 +21,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [Zombie]
    * @param x
    * @param y
    * @return 
@@ -32,8 +33,8 @@ public class Zombie extends Moveable {
                    * (Zombie.healthVariance+1))));
   }
 
-  
   /** 
+   * [Zombie]
    * @param victim
    * @return 
    */
@@ -45,6 +46,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [act]
    * @param other
    * @return Spawnable
    */
@@ -74,6 +76,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [getVisionValue]
    * @return int
    */
   @Override
@@ -94,6 +97,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [getInfluenceVectorFor]
    * @param other
    * @return Vector2D
    */
@@ -121,6 +125,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [attackHuman]
    * @param victim
    * @return Zombie
    */
@@ -136,6 +141,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [toString]
    * @return String
    */
   @Override
@@ -145,6 +151,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [getMaxHealth]
    * @return int
    */
   @Override
@@ -154,6 +161,24 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [getDefaultMaxHealth]
+   * @return int
+   */
+  public static int getDefaultMaxHealth() {
+    return Zombie.DEFAULT_MAX_HEALTH;
+  }
+
+  
+  /** 
+   * @param maxHealth
+   */
+  public static void setMaxHealth(int maxHealth) {
+    Zombie.maxHealth = maxHealth;
+  }
+
+  
+  /** 
+   * [getInitialHealth]
    * @return int
    */
   @Override
@@ -163,6 +188,25 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [getDefaultInitialHealth]
+   * @return int
+   */
+  public static int getDefaultInitialHealth() {
+    return Zombie.DEFAULT_INITIAL_HEALTH;
+  }
+
+  
+  /** 
+   * [setInitialHealth]
+   * @param initialHealth
+   */
+  public static void setInitialHealth(int initialHealth) {
+    Zombie.initialHealth = initialHealth;
+  }
+
+  
+  /** 
+   * [getHealthVariance]
    * @return int
    */
   @Override
@@ -172,6 +216,25 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [getDefaultHealthVariance]
+   * @return int
+   */
+  public static int getDefaultHealthVariance() {
+    return Zombie.DEFAULT_HEALTH_VARIANCE;
+  }
+
+  
+  /** 
+   * [setHealthVariance]
+   * @param healthVariance
+   */
+  public static void setHealthVariance(int healthVariance) {
+    Zombie.healthVariance = healthVariance;
+  }
+
+  
+  /** 
+   * [getRandomMoveChance]
    * @return double
    */
   @Override
@@ -179,18 +242,27 @@ public class Zombie extends Moveable {
     return Zombie.randomMoveChance;
   }
 
-
+  
+  /** 
+   * [getDefaultRandomMoveChance]
+   * @return double
+   */
   public static double getDefaultRandomMoveChance() {
     return Zombie.DEFAULT_RANDOM_MOVE_CHANCE;
   }
 
 
+  /** 
+   * [setRandomMoveChance]
+   * @param randomMoveChance
+   */
   public static void setRandomMoveChance(double randomMoveChance) {
     Zombie.randomMoveChance = randomMoveChance;
   }
 
   
   /** 
+   * [getColor]
    * @return Color
    */
   @Override
@@ -200,6 +272,7 @@ public class Zombie extends Moveable {
 
   
   /** 
+   * [generateID]
    * @return long
    */
   @Override
@@ -207,38 +280,26 @@ public class Zombie extends Moveable {
     return Zombie.numZombies++;
   }
 
-  public static int getDefaultInitialHealth() {
-    return Zombie.DEFAULT_INITIAL_HEALTH;
-  }
-
-  public static void setInitialHealth(int initialHealth) {
-    Zombie.initialHealth = initialHealth;
-  }
-
-  public static int getDefaultHealthVariance() {
-    return Zombie.DEFAULT_HEALTH_VARIANCE;
-  }
-
-  public static void setHealthVariance(int healthVariance) {
-    Zombie.healthVariance = healthVariance;
-  }
-
-  public static int getDefaultMaxHealth() {
-    return Zombie.DEFAULT_MAX_HEALTH;
-  }
-
-  public static void setMaxHealth(int maxHealth) {
-    Zombie.maxHealth = maxHealth;
-  }
-
+  
+  /** 
+   * @return double
+   */
   public static double getDefaultHumanEnergyFactor() {
     return Zombie.DEFAULT_HUMAN_ENERGY_FACTOR;
   }
 
+  
+  /** 
+   * @return double
+   */
   public static double getHumanEnergyFactor() {
     return Zombie.humanEnergyFactor;
   }
 
+  
+  /** 
+   * @param humanEnergyFactor
+   */
   public static void setHumanEnergyFactor(double humanEnergyFactor) {
     Zombie.humanEnergyFactor = humanEnergyFactor;
   }

@@ -6,14 +6,22 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class RunButtonPanel extends JPanel implements ActionListener {
-  JButton runButton;
-  JButton resetButton;
-  JButton defaultSettingsButton;
+  private JButton runButton;
+  private JButton resetButton;
+  private JButton defaultSettingsButton;
 
-  WorldManager manager;
-  SliderPanel sliders;
+  private CheervilleManager manager;
+  private SliderPanel sliders;
 
-  public RunButtonPanel(WorldManager manager, SliderPanel sliders) {
+  
+  /** 
+   * [runButtonPanel]
+   * Constructor for a panel which contains JButtons to
+   * control the simulation.
+   * @param manager The CheervilleManager of the simulation.
+   * @param sliders The JSlider panel which this can reset.
+   */
+  public RunButtonPanel(CheervilleManager manager, SliderPanel sliders) {
     super();
 
     this.manager = manager;
@@ -37,6 +45,13 @@ public class RunButtonPanel extends JPanel implements ActionListener {
     this.setOpaque(false);
   }
 
+  
+  /** 
+   * [actionPerformed]
+   * Method that runs when an ActionEvent is emitted.
+   * Handles button presses to control the simulation.
+   * @param e The ActionEvent emitted.
+   */
   @Override
   public void actionPerformed(ActionEvent e) {
     String command = e.getActionCommand();

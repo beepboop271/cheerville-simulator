@@ -2,13 +2,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class CheervilleFrame extends JFrame {
+  private WorldPanel worldPane;
+  private PercentageGraphPanel percentGraphPane;
+
   
   /** 
    * [CheervilleFrame]
@@ -17,7 +19,7 @@ public class CheervilleFrame extends JFrame {
    * @param title          The window title.
    * @param worldToDisplay The World object to show in the window.
    */
-  public CheervilleFrame(String title, WorldManager managerToDisplay) {
+  public CheervilleFrame(String title, CheervilleManager managerToDisplay) {
     super(title);
 
     World worldToDisplay = managerToDisplay.getWorldToRun();
@@ -36,8 +38,8 @@ public class CheervilleFrame extends JFrame {
     gbc.insets = new Insets(10, 10, 10, 10);
     int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
     int cellSize = (int)((screenHeight*0.7)/worldToDisplay.getHeight());
-    WorldPanel worldPane = new WorldPanel(cellSize, worldToDisplay);
-    gridBagPane.add(worldPane, gbc);
+    this.worldPane = new WorldPanel(cellSize, worldToDisplay);
+    gridBagPane.add(this.worldPane, gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
@@ -48,7 +50,7 @@ public class CheervilleFrame extends JFrame {
     gbc.weightx = 0.6;
     gbc.weighty = 1.0;
     gbc.insets = new Insets(0, 0, 0, 10);
-    SliderPanel sliders = new SliderPanel();
+    SliderPanel sliders = new SliderPanel(managerToDisplay);
     gridBagPane.add(new RunButtonPanel(managerToDisplay, sliders));
 
     gbc = new GridBagConstraints();
@@ -60,7 +62,8 @@ public class CheervilleFrame extends JFrame {
     gbc.weightx = 0.6;
     gbc.weighty = 0.8;
     gbc.insets = new Insets(5, 0, 10, 10);
-    gridBagPane.add(new PercentageGraphPanel(worldToDisplay), gbc);
+    this.percentGraphPane = new PercentageGraphPanel(worldToDisplay);
+    gridBagPane.add(this.percentGraphPane, gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
@@ -119,5 +122,18 @@ public class CheervilleFrame extends JFrame {
    */
   public void refresh() {
     this.repaint();
+  }
+
+  
+  /** 
+   * [updateWorldSize]
+   * Updates the display when the size of the simulation
+   * World changes.
+   * @param width  The new width, in number of cells
+   * @param height The new height, in number of cells
+   */
+  public void updateWorldSize(int width, int height) {
+    this.worldPane.onResize();
+    this.percentGraphPane.setTotalSpaces(width*height);
   }
 }

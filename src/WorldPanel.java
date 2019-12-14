@@ -41,6 +41,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [colorToGrayscale]
    * @param clr
    * @return Color
    */
@@ -51,6 +52,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [setMapPos]
    * @param x
    * @param y
    */
@@ -61,6 +63,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [paintComponent]
    * @param g
    */
   @Override
@@ -70,8 +73,8 @@ public class WorldPanel extends JPanel {
                                          this.worldToDisplay.getHeight()));
   }
 
-  
   /** 
+   * [paintComponent]
    * @param g
    * @param drawRect
    */
@@ -79,8 +82,8 @@ public class WorldPanel extends JPanel {
     this.paintComponent(g, drawRect, drawRect);
   }
 
-  
   /** 
+   * [paintComponent]
    * @param g
    * @param drawRect
    * @param colorRect
@@ -89,8 +92,8 @@ public class WorldPanel extends JPanel {
     super.repaint();
     setDoubleBuffered(true);
 
-    g.setColor(Color.GRAY);
-    g.fillRect(0, 0, this.getCellSize()*drawRect.width, this.getCellSize()*drawRect.height);
+    g.setColor(this.getBackground());
+    g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
     for (int y = drawRect.y; y < drawRect.y+drawRect.height; ++y) {
       for (int x = drawRect.x; x < drawRect.x+drawRect.width; ++x) {
@@ -130,6 +133,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [paintSelectedCell]
    * @param g
    * @param x
    * @param y
@@ -148,17 +152,19 @@ public class WorldPanel extends JPanel {
 
   
   /** 
-   * 
+   * [onResize]
    */
   public void onResize() {
+    System.out.println(this.getBounds().toString());
     this.setCellSize(Math.min(this.getWidth()/this.worldToDisplay.getWidth(),
                               this.getHeight()/this.worldToDisplay.getHeight()));
-    this.setSize(new Dimension(this.getCellSize()*this.worldToDisplay.getWidth(),
-                               this.getCellSize()*this.worldToDisplay.getHeight()));
+    // this.setSize(new Dimension(this.getCellSize()*this.worldToDisplay.getWidth(),
+    //                            this.getCellSize()*this.worldToDisplay.getHeight()));
   }
 
   
   /** 
+   * [onClick]
    * @param e
    */
   public void onClick(MouseEvent e) {
@@ -178,6 +184,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [getCellSize]
    * @return int
    */
   public int getCellSize() {
@@ -186,6 +193,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [setCellSize]
    * @param cellSize
    */
   public void setCellSize(int cellSize) {
@@ -194,6 +202,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [getInfoPanel]
    * @return SpawnableInfoPanel
    */
   public SpawnableInfoPanel getInfoPanel() {
@@ -202,6 +211,7 @@ public class WorldPanel extends JPanel {
 
   
   /** 
+   * [setInfoPanel]
    * @param infoPanel
    */
   public void setInfoPanel(SpawnableInfoPanel infoPanel) {

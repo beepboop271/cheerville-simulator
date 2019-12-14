@@ -1,7 +1,6 @@
 import java.awt.Color;
 
 public class Plant extends Spawnable {
-
   private static final int DEFAULT_INITIAL_HEALTH = 15;
   private static int initialHealth = Plant.DEFAULT_INITIAL_HEALTH;
 
@@ -121,10 +120,30 @@ public class Plant extends Spawnable {
 
   
   /** 
+   * [getDefaultMaxHealth]
+   * Returns the default maximum health a Plant can have.
+   * @return int, the default maximum health possible for a Plant.
+   */
+  public static int getDefaultMaxHealth() {
+    return DEFAULT_MAX_HEALTH;
+  }
+
+  
+  /** 
+   * [setMaxHealth]
+   * Sets the maximum health a Plant can have.
+   * @param maxHealth The maximum health possible for a Plant.
+   */
+  public static void setMaxHealth(int maxHealth) {
+    Plant.maxHealth = maxHealth;
+  }
+
+  
+  /** 
    * [getInitialHealth]
    * Returns the health a new Plant with unspecified
    * health should have.
-   * @return int, the default starting health of a Plant.
+   * @return int, the starting health of a Plant.
    */
   @Override
   public int getInitialHealth() {
@@ -133,16 +152,64 @@ public class Plant extends Spawnable {
 
   
   /** 
+   * [getDefaultInitialHealth]
+   * Returns the default health a new Plant with unspecified
+   * health should have.
+   * @return int, the default starting health of a Plant.
+   */
+  public static int getDefaultInitialHealth() {
+    return DEFAULT_INITIAL_HEALTH;
+  }
+
+  
+  /** 
+   * [setInitialHealth]
+   * Sets the health a new Plant with unspecified
+   * health should have.
+   * @param initialHealth The new starting health of a Plant.
+   */
+  public static void setInitialHealth(int initialHealth) {
+    Plant.initialHealth = initialHealth;
+  }
+
+  
+  /** 
    * [getHealthVariance]
    * Returns the maximum difference between the
    * actual initial health of a Plant and the
-   * default initial health from getInitialHealth()
+   * default initial health from getInitialHealth().
    * @return int, the maximum variance in initial health
    *         for a Plant.
    */
   @Override
   public int getHealthVariance() {
     return Plant.healthVariance;
+  }
+
+  
+  /** 
+   * [getDefaultHealthVariance]
+   * Returns the default maximum difference between
+   * the actual initial health of a Plant and the default
+   * initial health from getInitialHealth().
+   * @return int, the default maximum variance in initial
+   *         health for a Plant.
+   */
+  public static int getDefaultHealthVariance() {
+    return DEFAULT_HEALTH_VARIANCE;
+  }
+
+  
+  /** 
+   * [setHealthVariance]
+   * Sets the maximum difference between the actual initial
+   * health of a Plant and the default initial health from
+   * getInitialHealth().
+   * @param healthVariance The new maximum variance in initial
+   *                       health for a Plant.
+   */
+  public static void setHealthVariance(int healthVariance) {
+    Plant.healthVariance = healthVariance;
   }
 
   
@@ -170,42 +237,51 @@ public class Plant extends Spawnable {
     return Plant.numPlants++;
   }
 
-  public static int getDefaultInitialHealth() {
-    return DEFAULT_INITIAL_HEALTH;
-  }
-
-  public static void setInitialHealth(int initialHealth) {
-    Plant.initialHealth = initialHealth;
-  }
-
-  public static int getDefaultHealthVariance() {
-    return DEFAULT_HEALTH_VARIANCE;
-  }
-
-  public static void setHealthVariance(int healthVariance) {
-    Plant.healthVariance = healthVariance;
-  }
-
-  public static int getDefaultMaxHealth() {
-    return DEFAULT_MAX_HEALTH;
-  }
-
-  public static void setMaxHealth(int maxHealth) {
-    Plant.maxHealth = maxHealth;
-  }
-
+  
+  /** 
+   * [getDefaultPlantEnergyFactor]
+   * Returns the default factor that a Plant's health is
+   * multiplied by when calculating how much health it
+   * restores. Used when a Plant spreads onto another.
+   * @return double, the factor between a Plant's health and
+   *         the amount of health it restores.
+   */
   public static double getDefaultPlantEnergyFactor() {
     return DEFAULT_PLANT_ENERGY_FACTOR;
   }
 
+  
+  /** 
+   * [setPlantEnergyFactor]
+   * Sets the factor that a Plant's health is multiplied by
+   * when calculating how much health it restores.
+   * @param plantEnergyFactor The factor between a Plant's health
+   *                          and the amount of health that Plant restores.
+   */
   public static void setPlantEnergyFactor(double plantEnergyFactor) {
     Plant.plantEnergyFactor = plantEnergyFactor;
   }
 
+  
+  /** 
+   * [getDefaultSpreadChance]
+   * Returns the default chance [0, 1] that a Plant will spread
+   * to produce a new Plant beside it in one simulation step.
+   * @return double, the chance a Plant will spread to a new
+   *         cell in one simulation step.
+   */
   public static double getDefaultSpreadChance() {
     return DEFAULT_SPREAD_CHANCE;
   }
 
+  
+  /** 
+   * [setSpreadChance]
+   * Sets the chance [0, 1] that a Plant will spread to produce
+   * a new Plant beside it in one simulation step.
+   * @param spreadChance The chance a Plant will spread to a new
+   *                     cell in one simulation step.
+   */
   public static void setSpreadChance(double spreadChance) {
     Plant.spreadChance = spreadChance;
   }

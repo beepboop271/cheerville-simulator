@@ -4,7 +4,7 @@ import java.awt.Graphics;
 @SuppressWarnings("serial")
 public class CountGraphPanel extends GraphPanel {
   private int maxMoveableCount = -1;
-  public final Color[] COLORS = {
+  private final Color[] COLORS = {
     Color.MAGENTA,
     Color.BLUE,
     Color.RED

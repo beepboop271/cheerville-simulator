@@ -222,6 +222,21 @@ public abstract class Human extends Moveable {
                     1.0);
   }
 
+
+  /** 
+   * [canReproduce]
+   * Determines if this Human (without considering another
+   * Human) is able to reproduce. Must have been enough time since
+   * any last reproduction and must either be very lucky or have
+   * good health and age.
+   * @return boolean, whether or not this Human is physically
+   *         capable of reproducing.
+   */
+  public boolean canReproduce() {
+    return (this.getStepsUntilFertile() == 0)
+           && (Math.random() < this.getBirthChance());
+  }
+
   
   /** 
    * [generateID]
@@ -247,21 +262,64 @@ public abstract class Human extends Moveable {
 
   
   /** 
+   * [getDefaultMaxHealth]
+   * Returns the default maximum health a Human can have.
+   * @return int, the default maximum health possible for a Human.
+   */
+  public static int getDefaultMaxHealth() {
+    return Human.DEFAULT_MAX_HEALTH;
+  }
+
+  
+  /** 
+   * [setMaxHealth]
+   * Sets the maximum health a Human can have.
+   * @param maxHealth The new maximum health possible for a Human.
+   */
+  public static void setMaxHealth(int maxHealth) {
+    Human.maxHealth = maxHealth;
+  }
+
+  
+  /** 
    * [getInitialHealth]
    * Returns the health a new Human with unspecified
    * health should have.
-   * @return int, the default starting health of a Human.
+   * @return int, the starting health of a Human.
    */
   @Override
   public int getInitialHealth() {
     return Human.initialHealth;
   }
 
+  
+  /** 
+   * [getDefaultInitialHealth]
+   * Returns the default health a new Human with unspecified
+   * health should have.
+   * @return int, the default starting health of a Human.
+   */
+  public static int getDefaultInitialHealth() {
+    return Human.DEFAULT_INITIAL_HEALTH;
+  }
+
+  
+  /** 
+   * [setInitialHealth]
+   * Sets the default health a new Human with unspecified
+   * health should have.
+   * @param initialHealth The new starting health of a Human.
+   */
+  public static void setInitialHealth(int initialHealth) {
+    Human.initialHealth = initialHealth;
+  }
+
+
   /** 
    * [getHealthVariance]
    * Returns the maximum difference between the
    * actual initial health of a Human and the
-   * default initial health from getInitialHealth()
+   * default initial health from getInitialHealth().
    * @return int, the maximum variance in initial health
    *         for a Human.
    */
@@ -272,9 +330,35 @@ public abstract class Human extends Moveable {
 
   
   /** 
+   * [getDefaultHealthVariance]
+   * Returns the default maximum difference between the
+   * actual initial health of a Human and the default
+   * initial health from getInitialHealth().
+   * @return int, the default maximum variance in initial health
+   *         for a Human.
+   */
+  public static int getDefaultHealthVariance() {
+    return Human.DEFAULT_HEALTH_VARIANCE;
+  }
+
+  
+  /** 
+   * [setHealthVariance]
+   * Sets the default maximum difference between the actual
+   * initial health of a Human and the default initial health
+   * from getInitialHealth().
+   * @param healthVariance The new maximum variance in initial health
+   *                       for a Human.
+   */
+  public static void setHealthVariance(int healthVariance) {
+    Human.healthVariance = healthVariance;
+  }
+
+  
+  /** 
    * [getRandomMoveChance]
    * Returns the chance [0, 1] a Human will move in a
-   * randomly chose direction instead of determining the
+   * randomly chosen direction instead of determining the
    * best movement.
    * @return double, the chance [0, 1] a Human will move
    *         randomly.
@@ -282,6 +366,32 @@ public abstract class Human extends Moveable {
   @Override
   public double getRandomMoveChance() {
     return Human.randomMoveChance;
+  }
+
+  
+  /** 
+   * [getDefaultRandomMoveChance]
+   * Returns the default chance [0, 1] a Human will move in
+   * a randomly chosen direction instead of determining the
+   * best movement.
+   * @return double, the default chance [0, 1] a Human will move
+   *         randomly.
+   */
+  public static double getDefaultRandomMoveChance() {
+    return Human.DEFAULT_RANDOM_MOVE_CHANCE;
+  }
+
+  
+  /** 
+   * [setRandomMoveChance]
+   * Sets the chance [0, 1] a Human will move in
+   * a randomly chosen direction instead of determining the
+   * best movement.
+   * @param randomMoveChance The new default chacne [0, 1] a Human
+   *                         will move randomly.
+   */
+  public static void setRandomMoveChance(double randomMoveChance) {
+    Human.randomMoveChance = randomMoveChance;
   }
 
   
@@ -329,70 +439,57 @@ public abstract class Human extends Moveable {
 
   
   /** 
-   * [canReproduce]
-   * Determines if this Human (without considering another
-   * Human) is able to reproduce. Must have been enough time since
-   * any last reproduction and must either be very lucky or have
-   * good health and age.
-   * @return boolean, whether or not this Human is physically
-   *         capable of reproducing.
+   * [getDefaultFemaleChance]
+   * Returns the default Female:Male ratio [0, 1] used to
+   * create new Humans.
+   * @return double, the default Female:Male ratio [0, 1]
+   *         used to create new Humans.
    */
-  public boolean canReproduce() {
-    return (this.getStepsUntilFertile() == 0)
-           && (Math.random() < this.getBirthChance());
+  public static double getDefaultFemaleChance() {
+    return Human.DEFAULT_FEMALE_CHANCE;
   }
+
+  
+  /** 
+   * [setFemaleChance]
+   * Sets the Female:Male ratio [0, 1] used to create
+   * new Humans.
+   * @param femaleChance The Female:Male ratio [0, 1] used to
+   *                     create new Humans.
+   */
+  public static void setFemaleChance(double femaleChance) {
+    Human.femaleChance = femaleChance;
+  }
+
+  
+  /** 
+   * [getDefaultPlantEnergyFactor]
+   * Returns the default factor that a Plant's health is
+   * multiplied by when calculating how much health it
+   * restores.
+   * @return double, the factor between a Plant's health and
+   *         the amount of health that Plant restores.
+   */
+  public static double getDefaultPlantEnergyFactor() {
+    return Human.DEFAULT_PLANT_ENERGY_FACTOR;
+  }
+
+  
+  /** 
+   * [setPlantEnergyFactor]
+   * Sets the factor that a Plant's health is multiplied
+   * by when calculating how much health it restores.
+   * @param plantEnergyFactor The factor between a Plant's health and
+   *                          the amount of health that Plant restores.
+   */
+  public static void setPlantEnergyFactor(double plantEnergyFactor) {
+    Human.plantEnergyFactor = plantEnergyFactor;
+  }
+
 
   public abstract int getMinBirthInterval();
 
   public abstract double[][] getAgeBirthChances();
 
   public abstract double[][] getHealthBirthChances();
-
-  public static int getDefaultInitialHealth() {
-    return Human.DEFAULT_INITIAL_HEALTH;
-  }
-
-  public static void setInitialHealth(int initialHealth) {
-    Human.initialHealth = initialHealth;
-  }
-
-  public static int getDefaultHealthVariance() {
-    return Human.DEFAULT_HEALTH_VARIANCE;
-  }
-
-  public static void setHealthVariance(int healthVariance) {
-    Human.healthVariance = healthVariance;
-  }
-
-  public static int getDefaultMaxHealth() {
-    return Human.DEFAULT_MAX_HEALTH;
-  }
-
-  public static void setMaxHealth(int maxHealth) {
-    Human.maxHealth = maxHealth;
-  }
-
-  public static double getDefaultFemaleChance() {
-    return Human.DEFAULT_FEMALE_CHANCE;
-  }
-
-  public static void setFemaleChance(double femaleChance) {
-    Human.femaleChance = femaleChance;
-  }
-
-  public static double getDefaultPlantEnergyFactor() {
-    return Human.DEFAULT_PLANT_ENERGY_FACTOR;
-  }
-
-  public static void setPlantEnergyFactor(double plantEnergyFactor) {
-    Human.plantEnergyFactor = plantEnergyFactor;
-  }
-
-  public static double getDefaultRandomMoveChance() {
-    return Human.DEFAULT_RANDOM_MOVE_CHANCE;
-  }
-
-  public static void setRandomMoveChance(double randomMoveChance) {
-    Human.randomMoveChance = randomMoveChance;
-  }
 }
