@@ -1,7 +1,14 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
-@SuppressWarnings("serial")
+/**
+ * [PercentageGraphPanel]
+ * GraphPanel that displays how much (%) of the map Zombies,
+ * Males, Females, and Plants cover over time.
+ * 2019-12-13
+ * @version 1.2
+ * @author Kevin Qiao
+ */
 public class PercentageGraphPanel extends GraphPanel {
   private double totalSpaces;
   private final Color[] COLORS = {

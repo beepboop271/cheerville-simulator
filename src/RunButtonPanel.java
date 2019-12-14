@@ -4,7 +4,14 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
+/**
+ * [RunButtonPanel]
+ * Holds three buttons to control the simulation. Pause/resume, reset,
+ * and reset settings.
+ * 2019-12-13
+ * @version 1.1
+ * @author Kevin Qiao
+ */
 public class RunButtonPanel extends JPanel implements ActionListener {
   private JButton runButton;
   private JButton resetButton;

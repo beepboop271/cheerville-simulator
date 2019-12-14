@@ -1,5 +1,11 @@
 import java.awt.Color;
-
+/**
+ * [Vector2D]
+ * A 2D vector specified with rectangular or polar coordinates.
+ * 2019-12-06
+ * @version 1.2
+ * @author Kevin Qiao
+ */
 public class Vector2D implements Cloneable {
   private double x;
   private double y;

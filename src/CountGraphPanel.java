@@ -1,7 +1,14 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
-@SuppressWarnings("serial")
+/**
+ * [CountGraphPanel]
+ * GraphPanel that displays the counts of Zombies,
+ * Males, and Females. Vertically scales graph to fit the panel.
+ * 2019-12-06
+ * @version 1.1
+ * @author Kevin Qiao
+ */
 public class CountGraphPanel extends GraphPanel {
   private int maxMoveableCount = -1;
   private final Color[] COLORS = {

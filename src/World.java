@@ -1,5 +1,13 @@
 import java.util.LinkedList;
 
+/**
+ * [World]
+ * The class that contains the map of Cheerville and performs
+ * the simulation, is like the physical world.
+ * 2019-12-13
+ * @version 2.5
+ * @author Kevin Qiao
+ */
 public class World {
   private static final double DEFAULT_PLANT_SPAWN_CHANCE = 0.05;
   private static double plantSpawnChance = World.DEFAULT_PLANT_SPAWN_CHANCE;

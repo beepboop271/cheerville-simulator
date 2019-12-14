@@ -6,7 +6,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-@SuppressWarnings("serial")
+/**
+ * [SpawnableInfoPanel]
+ * Panel which holds other panels that display
+ * information about a Spawnable.
+ * 2019-12-06
+ * @version 1.2
+ * @author Kevin Qiao
+ */
 public class SpawnableInfoPanel extends JPanel {
   private SpawnableVisionPanel visionPanel;
   private SpawnableTextPanel textPanel;

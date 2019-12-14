@@ -1,3 +1,11 @@
+/**
+ * [Cheerville]
+ * Starts the Cheerville program and contains constants for
+ * direction.
+ * 2019-12-13
+ * @version 2.1
+ * @author Kevin Qiao
+ */
 public class Cheerville {
   public static final int NO_MOVE = 0;
   public static final int NORTH = 1;

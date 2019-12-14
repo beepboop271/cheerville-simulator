@@ -1,3 +1,11 @@
+/**
+ * [Moveable]
+ * Abstract class of a Spawnable that can move itself
+ * around the World.
+ * 2019-12-06
+ * @version 2.2
+ * @author Kevin Qiao
+ */
 public abstract class Moveable extends Spawnable {
   private boolean moved = false;
   private int facingDirection;

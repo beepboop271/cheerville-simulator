@@ -6,7 +6,14 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
+/**
+ * [CheervilleFrame]
+ * JFrame that contains all graphical elements of the
+ * Cheerville project.
+ * 2019-12-13
+ * @version 1.7
+ * @author Kevin Qiao
+ */
 public class CheervilleFrame extends JFrame {
   private WorldPanel worldPane;
   private PercentageGraphPanel percentGraphPane;
@@ -27,6 +34,7 @@ public class CheervilleFrame extends JFrame {
     JPanel gridBagPane = new JPanel();
     gridBagPane.setLayout(new GridBagLayout());
 
+    // large WorldPanel which shows the map on the left
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -41,6 +49,7 @@ public class CheervilleFrame extends JFrame {
     this.worldPane = new WorldPanel(cellSize, worldToDisplay);
     gridBagPane.add(this.worldPane, gbc);
 
+    // small panel of 3 buttons in the top middle
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
@@ -53,6 +62,7 @@ public class CheervilleFrame extends JFrame {
     SliderPanel sliders = new SliderPanel(managerToDisplay);
     gridBagPane.add(new RunButtonPanel(managerToDisplay, sliders));
 
+    // graph that shows % composition of the map below the buttons
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 1;
@@ -65,6 +75,7 @@ public class CheervilleFrame extends JFrame {
     this.percentGraphPane = new PercentageGraphPanel(worldToDisplay);
     gridBagPane.add(this.percentGraphPane, gbc);
 
+    // graph that shows counts of Male, Female, Zombie below the % graph panel
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 2;
@@ -76,6 +87,7 @@ public class CheervilleFrame extends JFrame {
     gbc.insets = new Insets(0, 0, 10, 10);
     gridBagPane.add(new CountGraphPanel(worldToDisplay), gbc);
     
+    // panel which shows information about a selected Spawnable at the bottom middle
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 3;
@@ -92,6 +104,10 @@ public class CheervilleFrame extends JFrame {
 
     gridBagPane.setOpaque(true);
 
+    // for some reason, grid bag layout really doesn't like it
+    // when i add a JTabbedPane, and i'm not sure how to go about
+    // fixing it, so just put the grid bag from above into another
+    // grid bag
     JPanel mainPane = new JPanel();
     mainPane.setLayout(new GridBagLayout());
     gbc = new GridBagConstraints();
@@ -101,6 +117,8 @@ public class CheervilleFrame extends JFrame {
     gbc.weightx = 1.0;
     gbc.weighty = 1.0;
     mainPane.add(gridBagPane, gbc);
+
+    // panel of sliders on the right
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;

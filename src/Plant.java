@@ -1,5 +1,13 @@
 import java.awt.Color;
 
+/**
+ * [Plant]
+ * A Plant which grows in Cheerville. Can spread around
+ * and be consumed by Humans.
+ * 2019-12-10
+ * @version 1.4
+ * @author Kevin Qiao
+ */
 public class Plant extends Spawnable {
   private static final int DEFAULT_INITIAL_HEALTH = 15;
   private static int initialHealth = Plant.DEFAULT_INITIAL_HEALTH;

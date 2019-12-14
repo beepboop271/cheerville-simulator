@@ -1,3 +1,11 @@
+/**
+ * [Human]
+ * A citizen of Cheerville. Can reproduce with other Humans
+ * and eat Plants.
+ * 2019-12-13
+ * @version 2.3
+ * @author Kevin Qiao
+ */
 public abstract class Human extends Moveable {
   private static final int DEFAULT_INITIAL_HEALTH = 20;
   private static int initialHealth = Human.DEFAULT_INITIAL_HEALTH;
@@ -153,11 +161,14 @@ public abstract class Human extends Moveable {
   @Override
   public Spawnable act(Spawnable other) {
     if (other instanceof Plant) {
+      // move onto plant, eat and replace
       this.heal((int)(other.getHealth()*Human.plantEnergyFactor));
       other.setDead();
       other.addDescendant(this);
       return null;
     } else if (other instanceof Human) {
+      // must move back to original location, possible to
+      // create new human
       Human newHuman = this.tryReproduceWith((Human)other);
       if (newHuman == null) {
         this.turnAround();
@@ -167,6 +178,7 @@ public abstract class Human extends Moveable {
         return this.addDescendant(newHuman);
       }
     } else if (other instanceof Zombie) {
+      // either replaced by zombie or removed completely
       Zombie newZombie = ((Zombie)other).attackHuman(this);
       if (newZombie == null) {
         this.setDead();
@@ -242,7 +254,7 @@ public abstract class Human extends Moveable {
    * [generateID]
    * Generates a unique ID for this Human. A Human with
    * the ID of n is the nth Human to be created.
-   * @return long
+   * @return long, the new ID.
    */
   @Override
   public long generateID() {

@@ -1,5 +1,13 @@
 import java.awt.Color;
 
+/**
+ * [Zombie]
+ * A being that can eat Humans or convert Humans
+ * to more Zombies.
+ * 2019-12-13
+ * @version 2.3
+ * @author Kevin Qiao
+ */
 public class Zombie extends Moveable {
   private static final int DEFAULT_INITIAL_HEALTH = 10;
   private static int initialHealth = Zombie.DEFAULT_INITIAL_HEALTH;
@@ -22,9 +30,9 @@ public class Zombie extends Moveable {
   
   /** 
    * [Zombie]
-   * @param x
-   * @param y
-   * @return 
+   * Constructor for a Zombie with the given position.
+   * @param x The x coordinate of the Zombie.
+   * @param y The y coordinate of the Zombie.
    */
   public Zombie(int x, int y) {
     super(x, y,
@@ -35,8 +43,10 @@ public class Zombie extends Moveable {
 
   /** 
    * [Zombie]
-   * @param victim
-   * @return 
+   * Constructor for a Zombie to convert a Human into
+   * a Zombie.
+   * @param victim The Human to copy properties from (to convert
+   *               to a Zombie)
    */
   public Zombie(Human victim) {
     super(victim.getX(), victim.getY(),
@@ -44,11 +54,28 @@ public class Zombie extends Moveable {
     victim.setDead();
   }
 
+
+  /** 
+   * [toString]
+   * @return String
+   */
+  @Override
+  public String toString() {
+    return "Zombie#"+this.getID();
+  }
   
+
   /** 
    * [act]
-   * @param other
-   * @return Spawnable
+   * Determine how to act when colliding with the given
+   * Spawnable.
+   * @param other The Spawnable that this collided with.
+   * @return Spawnable, either null to indicate this Zombie can
+   *         move onto the location of the Spawnable, this to
+   *         indicate the Zombie must move back to its original
+   *         location, or a new Spawnable to indicate the Zombie
+   *         must move back to its original location and create
+   *         a new Spawnable on the World it is in.
    */
   @Override
   public Spawnable act(Spawnable other) {
@@ -77,7 +104,9 @@ public class Zombie extends Moveable {
   
   /** 
    * [getVisionValue]
-   * @return int
+   * Determines how useful the Spawnables visible to this Zombie are
+   * by counting the amount of Humans.
+   * @return int, the number of Humans visible to this Zombie.
    */
   @Override
   public int getVisionValue() {
@@ -98,8 +127,13 @@ public class Zombie extends Moveable {
   
   /** 
    * [getInfluenceVectorFor]
-   * @param other
-   * @return Vector2D
+   * Generates a Vector2D object which represents what direction
+   * this Zombie should move in to react to a Spawnable, and how much
+   * it should be considering moving in that direction (the longer the
+   * vector returned, the more influence it has over the final movement).
+   * @param other The Spawnable to react to.
+   * @return Vector2D, the vector which stores the direction this Zombie
+   *         should move in and how important it is to move in that direction.
    */
   @Override
   public Vector2D getInfluenceVectorFor(Spawnable other) {
@@ -126,8 +160,12 @@ public class Zombie extends Moveable {
   
   /** 
    * [attackHuman]
-   * @param victim
-   * @return Zombie
+   * Handles collision with a Human. Either the Human
+   * is consumed by the Zombie or the Human is converted
+   * to a new Zombie.
+   * @param victim The Human to attack.
+   * @return Zombie, null if the Human was consumed or a new
+   *         Zombie that the Human was converted to.
    */
   public Zombie attackHuman(Human victim) {
     if (this.getHealth() > victim.getHealth()) {
@@ -141,18 +179,21 @@ public class Zombie extends Moveable {
 
   
   /** 
-   * [toString]
-   * @return String
+   * [generateID]
+   * Generates a unique ID for this Zombie. A Zombie with
+   * the ID of n is hte nth Zombie to be created.
+   * @return long, the new ID.
    */
   @Override
-  public String toString() {
-    return "Zombie#"+this.getID();
+  public long generateID() {
+    return Zombie.numZombies++;
   }
 
   
   /** 
    * [getMaxHealth]
-   * @return int
+   * Returns the maximum health a Zombie can have.
+   * @return int, the maximum health possible for a Zombie.
    */
   @Override
   public int getMaxHealth() {
@@ -162,7 +203,8 @@ public class Zombie extends Moveable {
   
   /** 
    * [getDefaultMaxHealth]
-   * @return int
+   * Returns the default maximum health a Zombie can have.
+   * @return int, the default maximum health possible for a Zombie.
    */
   public static int getDefaultMaxHealth() {
     return Zombie.DEFAULT_MAX_HEALTH;
@@ -170,7 +212,9 @@ public class Zombie extends Moveable {
 
   
   /** 
-   * @param maxHealth
+   * [setMaxHealth]
+   * Sets the maximum health a Zombie can have.
+   * @param maxHealth The new maximum health possible for a Zombie.
    */
   public static void setMaxHealth(int maxHealth) {
     Zombie.maxHealth = maxHealth;
@@ -179,7 +223,9 @@ public class Zombie extends Moveable {
   
   /** 
    * [getInitialHealth]
-   * @return int
+   * Returns the health a new Zombie with unspecified
+   * health should have.
+   * @return int, the starting health of a Zombie.
    */
   @Override
   public int getInitialHealth() {
@@ -189,7 +235,9 @@ public class Zombie extends Moveable {
   
   /** 
    * [getDefaultInitialHealth]
-   * @return int
+   * Returns the default health a new Zombie with unspecified
+   * health should have.
+   * @return int, the default starting health of a Zombie.
    */
   public static int getDefaultInitialHealth() {
     return Zombie.DEFAULT_INITIAL_HEALTH;
@@ -198,16 +246,22 @@ public class Zombie extends Moveable {
   
   /** 
    * [setInitialHealth]
-   * @param initialHealth
+   * Sets the default health a new Zombie with unspecified
+   * health should have.
+   * @param initialHealth The new starting health of a Zombie.
    */
   public static void setInitialHealth(int initialHealth) {
     Zombie.initialHealth = initialHealth;
   }
 
-  
+
   /** 
    * [getHealthVariance]
-   * @return int
+   * Returns the maximum difference between the
+   * actual initial health of a Zombie and the
+   * default initial health from getInitialHealth().
+   * @return int, the maximum variance in initial health
+   *         for a Zombie.
    */
   @Override
   public int getHealthVariance() {
@@ -217,7 +271,11 @@ public class Zombie extends Moveable {
   
   /** 
    * [getDefaultHealthVariance]
-   * @return int
+   * Returns the default maximum difference between the
+   * actual initial health of a Zombie and the default
+   * initial health from getInitialHealth().
+   * @return int, the default maximum variance in initial health
+   *         for a Zombie.
    */
   public static int getDefaultHealthVariance() {
     return Zombie.DEFAULT_HEALTH_VARIANCE;
@@ -226,7 +284,11 @@ public class Zombie extends Moveable {
   
   /** 
    * [setHealthVariance]
-   * @param healthVariance
+   * Sets the default maximum difference between the actual
+   * initial health of a Zombie and the default initial health
+   * from getInitialHealth().
+   * @param healthVariance The new maximum variance in initial health
+   *                       for a Zombie.
    */
   public static void setHealthVariance(int healthVariance) {
     Zombie.healthVariance = healthVariance;
@@ -235,7 +297,11 @@ public class Zombie extends Moveable {
   
   /** 
    * [getRandomMoveChance]
-   * @return double
+   * Returns the chance [0, 1] a Zombie will move in a
+   * randomly chosen direction instead of determining the
+   * best movement.
+   * @return double, the chance [0, 1] a Zombie will move
+   *         randomly.
    */
   @Override
   public double getRandomMoveChance() {
@@ -245,16 +311,24 @@ public class Zombie extends Moveable {
   
   /** 
    * [getDefaultRandomMoveChance]
-   * @return double
+   * Returns the default chance [0, 1] a Zombie will move in
+   * a randomly chosen direction instead of determining the
+   * best movement.
+   * @return double, the default chance [0, 1] a Zombie will move
+   *         randomly.
    */
   public static double getDefaultRandomMoveChance() {
     return Zombie.DEFAULT_RANDOM_MOVE_CHANCE;
   }
 
-
+  
   /** 
    * [setRandomMoveChance]
-   * @param randomMoveChance
+   * Sets the chance [0, 1] a Zombie will move in
+   * a randomly chosen direction instead of determining the
+   * best movement.
+   * @param randomMoveChance The new default chacne [0, 1] a Zombie
+   *                         will move randomly.
    */
   public static void setRandomMoveChance(double randomMoveChance) {
     Zombie.randomMoveChance = randomMoveChance;
@@ -262,27 +336,12 @@ public class Zombie extends Moveable {
 
   
   /** 
-   * [getColor]
-   * @return Color
-   */
-  @Override
-  public Color getColor() {
-    return new Color(255, this.getColorChannelValue(), this.getColorChannelValue());
-  }
-
-  
-  /** 
-   * [generateID]
-   * @return long
-   */
-  @Override
-  public long generateID() {
-    return Zombie.numZombies++;
-  }
-
-  
-  /** 
-   * @return double
+   * [getDefaultHumanEnergyFactor]
+   * Returns the default factor that a Human's health is
+   * multiplied by when calculating how much health it
+   * restores.
+   * @return double, the factor between a Human's health and
+   *         the amount of health that Human restores.
    */
   public static double getDefaultHumanEnergyFactor() {
     return Zombie.DEFAULT_HUMAN_ENERGY_FACTOR;
@@ -290,17 +349,26 @@ public class Zombie extends Moveable {
 
   
   /** 
-   * @return double
+   * [setHumanEnergyFactor]
+   * Sets the factor that a Human's health is multiplied
+   * by when calculating how much health it restores.
+   * @param plantEnergyFactor The factor between a Human's health and
+   *                          the amount of health that Human restores.
    */
-  public static double getHumanEnergyFactor() {
-    return Zombie.humanEnergyFactor;
+  public static void setHumanEnergyFactor(double humanEnergyFactor) {
+    Zombie.humanEnergyFactor = humanEnergyFactor;
   }
 
   
   /** 
-   * @param humanEnergyFactor
+   * [getColor]
+   * Returns the Color that this Zombie should be drawn with.
+   * The lower the health, the more pale (white) the colour
+   * will be. Max health means pure red.
+   * @return Color, the Color to represent this Zombie.
    */
-  public static void setHumanEnergyFactor(double humanEnergyFactor) {
-    Zombie.humanEnergyFactor = humanEnergyFactor;
+  @Override
+  public Color getColor() {
+    return new Color(255, this.getColorChannelValue(), this.getColorChannelValue());
   }
 }

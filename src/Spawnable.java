@@ -2,6 +2,13 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+/**
+ * [Spawnable]
+ * A being that can exist in the Cheerville World.
+ * 2019-12-06
+ * @version 1.5
+ * @author Kevin Qiao
+ */
 public abstract class Spawnable implements Comparable<Spawnable> {
   private int x, y;
   private int health;

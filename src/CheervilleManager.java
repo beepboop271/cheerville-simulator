@@ -1,3 +1,11 @@
+/**
+ * [CheervilleManager]
+ * Holds a World and CheervilleFrame, as well as some
+ * settings. Runs and resets the program.
+ * 2019-12-13
+ * @version 1.2
+ * @author Kevin Qiao
+ */
 public class CheervilleManager {
   private static final int DEFAULT_DELAY = 50;
   private static int delay = CheervilleManager.DEFAULT_DELAY;

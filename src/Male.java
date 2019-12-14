@@ -1,5 +1,13 @@
 import java.awt.Color;
 
+/**
+ * [Male]
+ * A Male Human. Essentially a Female with some
+ * different numbers.
+ * 2019-12-06
+ * @version 1.3
+ * @author Kevin Qiao
+ */
 public class Male extends Human {
   private static final int MIN_BIRTH_INTERVAL = 2;
   private static final double[][] AGE_BIRTH_CHANCES = {

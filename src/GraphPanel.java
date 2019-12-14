@@ -9,7 +9,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-@SuppressWarnings("serial")
+/**
+ * [GraphPanel]
+ * Abstract class that graphs values over time.
+ * 2019-12-13
+ * @version 1.4
+ * @author Kevin Qiao
+ */
 public abstract class GraphPanel extends JPanel {
   private Font graphFont = new Font("Courier New", Font.BOLD, 20);
   private int graphWidth;
@@ -224,7 +230,14 @@ public abstract class GraphPanel extends JPanel {
     return this.worldToDisplay;
   }
 
+  // Inner class:
 
+  /**
+   * [GraphPanelResizeListener]
+   * Calls a method whenever the panel is resized.
+   * @version 1.0
+   * @author Kevin Qiao
+   */
   public class GraphPanelResizeListener extends ComponentAdapter {
     public void componentResized(ComponentEvent e) {
       // call method in GraphPanel so that

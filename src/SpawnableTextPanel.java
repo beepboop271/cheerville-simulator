@@ -5,7 +5,14 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
+/**
+ * [SpawnableTextPanel]
+ * Displays text based information about
+ * the selected Spawnable.
+ * 2019-12-06
+ * @version 1.2
+ * @author Kevin Qiao
+ */
 public class SpawnableTextPanel extends JPanel {
   private Spawnable spawnableToShow;
   private Font infoFont = new Font("Courier New", Font.BOLD, 18);

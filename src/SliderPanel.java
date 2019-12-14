@@ -8,7 +8,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-@SuppressWarnings("serial")
+/**
+ * [SliderPanel]
+ * Tabbed panel that contains sliders for many
+ * different settings.
+ * 2019-12-13
+ * @version 2.1
+ * @author Kevin Qiao
+ */
 public class SliderPanel extends JTabbedPane implements ChangeListener {
   public static final int NUM_SLIDERS = 23;
   private JSlider[] sliders = new JSlider[NUM_SLIDERS];
@@ -33,9 +40,9 @@ public class SliderPanel extends JTabbedPane implements ChangeListener {
     this.addSlider(worldTab, "Step delay:", "World delay", i++,
                    0, 500, CheervilleManager.getDefaultDelay(), 100);
     this.addSlider(worldTab, "Width:", "World width", i++,
-                   5, 50, CheervilleManager.getDefaultWidth(), 5);
+                   5, 75, CheervilleManager.getDefaultWidth(), 10);
     this.addSlider(worldTab, "Height:", "World height", i++,
-                   5, 50, CheervilleManager.getDefaultHeight(), 5);
+                   5, 75, CheervilleManager.getDefaultHeight(), 10);
     this.addSlider(worldTab, "Initial humans:", "World initialHumans", i++,
                    0, 500, CheervilleManager.getDefaultInitialHumans(), 100);
     this.addSlider(worldTab, "Initial zombies:", "World initialZombies", i++,
@@ -93,7 +100,7 @@ public class SliderPanel extends JTabbedPane implements ChangeListener {
     this.addSlider(humanTab, "Plant energy factor %:", "Human plantEnergyFactor", i++,
                    0, 200, (int)(Human.getDefaultPlantEnergyFactor()*100), 25);
     this.addSlider(humanTab, "Random move chance %:", "Human randomMoveChance", i++,
-                   0, 100, (int)(Human.getDefaultRandomMoveChance()*100), 25);
+                   0, 100, (int)(Human.getDefaultRandomMoveChance()*100), 10);
 
     this.addTab("Human", humanTab);
 

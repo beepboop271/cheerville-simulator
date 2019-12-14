@@ -8,7 +8,14 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 
-@SuppressWarnings("serial")
+/**
+ * [SpawnableVisionPanel]
+ * Displays part of the World that is visible to the
+ * selected Spawnable.
+ * 2019-12-06
+ * @version 1.3
+ * @author Kevin Qiao
+ */
 public class SpawnableVisionPanel extends WorldPanel {
   private Spawnable spawnableToShow;
 

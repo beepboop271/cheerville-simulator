@@ -10,7 +10,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-@SuppressWarnings("serial")
+/**
+ * [SpawnableButtonPanel]
+ * Panel which contains two buttons to select a random
+ * Human or Zombie in the World.
+ * 2019-12-13
+ * @version 1.1
+ * @author Kevin Qiao
+ */
 public class SpawnableButtonPanel extends JPanel implements ActionListener {
   private World worldToAccess;
   private SpawnableInfoPanel infoPanel;
